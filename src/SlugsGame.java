@@ -1,6 +1,9 @@
 import java.util.ArrayList;
 import processing.core.*;
-import box2d.Box2DProcessing;
+import shiffman.box2d.*;
+import org.jbox2d.common.*;
+import org.jbox2d.dynamics.*;
+import org.jbox2d.collision.shapes.*;
 
 public class SlugsGame extends PApplet
 {
@@ -10,7 +13,7 @@ public class SlugsGame extends PApplet
 		PApplet.main("Entity");
 	}
 	
-	Box2DProcessing world;
+	public Box2DProcessing world;
 	public int gameState;
 	ArrayList<Crate> crates;
 	
@@ -44,6 +47,7 @@ public class SlugsGame extends PApplet
 				break;
 			case 3:
 				background(255);
+				world.step();
 				testScreen();
 				break;
 		}
@@ -75,7 +79,7 @@ public class SlugsGame extends PApplet
 	{
 		if (mousePressed)
 		{
-			Crate c = new Crate(this, mouseX, mouseY);
+			Crate c = new Crate(this, mouseX, mouseY, world);
 			crates.add(c);
 		}
 		for(Crate c: crates)
