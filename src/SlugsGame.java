@@ -1,13 +1,18 @@
+import java.util.ArrayList;
 import processing.core.*;
+import box2d.Box2DProcessing;
 
 public class SlugsGame extends PApplet
 {
 	public static void main(String[] args)
 	{
 		PApplet.main("SlugsGame");
+		PApplet.main("Entity");
 	}
 	
-	int gameState = 0;
+	Box2DProcessing world;
+	public int gameState;
+	ArrayList<Crate> crates;
 	
 	public void settings()
 	{
@@ -16,10 +21,15 @@ public class SlugsGame extends PApplet
 	
 	public void setup()
 	{
+		world = new Box2DProcessing(this);
+		world.createWorld();
+		crates = new ArrayList<Crate>();
+		initScreen();
 	}
 	
 	public void draw()
 	{
+		// current state of game
 		switch (gameState)
 		{
 			case 0:
@@ -27,37 +37,50 @@ public class SlugsGame extends PApplet
 				break;
 			case 1:
 				gameScreen();
+				world.step();
 				break;
 			case 2:
 				endScreen();
+				break;
+			case 3:
+				background(255);
+				testScreen();
 				break;
 		}
 	}
 	
 	public void initScreen()
 	{
+		gameState = 0;
 		background(0);
 		textAlign(CENTER);
 		text("SLUGS", width/2, height/3);
 		text("Click to begin", width/2, height/2);
+		if (mousePressed)
+		{
+			gameState = 3;
+		}
 	}
 	
 	public void gameScreen()
 	{
-		
+		background(0);
 	}
 	
 	public void endScreen()
 	{
-		
 	}
 	
-	public void mousePressed()
+	public void testScreen()
 	{
-	  // if we are on the initial screen when clicked, start the game
-	  if (gameState == 0)
-	  {
-		  gameScreen();
-	  }
+		if (mousePressed)
+		{
+			Crate c = new Crate(this, mouseX, mouseY);
+			crates.add(c);
+		}
+		for(Crate c: crates)
+		{
+			c.display();
+		}
 	}
 }
