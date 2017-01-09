@@ -1,44 +1,39 @@
-import java.awt.Polygon;
-import processing.core.PVector;
-import java.awt.Rectangle;
-import org.jbox2d.common.*;
+import org.jbox2d.collision.shapes.*;
 import org.jbox2d.dynamics.*;
 import shiffman.box2d.*;
 
 public abstract class Entity
 {
 	SlugsGame p5;
-	PVector centre;
-	BodyDef bd;
-	Polygon shape;
-	Body body;
+	Box2DProcessing world;
 	
-	public Entity(SlugsGame p5, float x, float y, Box2DProcessing world)
+	BodyDef bd;
+	Body body;
+	PolygonShape shape;
+	FixtureDef fd;
+	
+	public Entity(SlugsGame p5, float x, float y, Box2DProcessing world, BodyType type, float density, float friction, float restitution)
 	{
 		this.p5 = p5;
-		
-		this.centre = new PVector(x, y);
+		this.world = world;
 		
 		// define the physical properties
 		bd = new BodyDef();
-		bd.type = BodyType.DYNAMIC;
+		bd.type = type;
 		bd.fixedRotation = true;
-		Vec2 centre = world.coordPixelsToWorld(x, y);
-		bd.position.set(centre);
+		bd.position.set(world.coordPixelsToWorld(x, y));
 		
 		// create body
 		body = world.createBody(bd);
 		
-		// create shape
-		createShape();
-	}
-	
-	public boolean collisionCheck(Rectangle r)
-	{
-		// check if the shapes intersect
-		return this.shape.getBounds().intersects(r);
+		/* declare new fixture definition,
+		 * and define some physical properties
+		 */
+		fd = new FixtureDef();
+		fd.density = density;
+		fd.friction = friction;
+		fd.restitution = restitution;
 	}
 	
 	public abstract void display();
-	abstract void createShape();
 }

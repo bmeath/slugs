@@ -1,16 +1,12 @@
 import java.util.ArrayList;
 import processing.core.*;
 import shiffman.box2d.*;
-import org.jbox2d.common.*;
-import org.jbox2d.dynamics.*;
-import org.jbox2d.collision.shapes.*;
 
 public class SlugsGame extends PApplet
 {
 	public static void main(String[] args)
 	{
 		PApplet.main("SlugsGame");
-		PApplet.main("Entity");
 	}
 	
 	public Box2DProcessing world;
