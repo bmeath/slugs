@@ -7,10 +7,11 @@ public class Crate extends Entity
 {
 	float w;
 	float h;
+	PolygonShape shape;
 	
 	public Crate(SlugsGame p5, float x, float y, Box2DProcessing world)
 	{
-		super(p5, x, y, world, BodyType.DYNAMIC, 1.0f, 0.3f, 0.5f);
+		super(p5, x, y, world, BodyType.DYNAMIC, true, 1.0f, 0.3f, 0.5f);
 		
 		w = 20;
 		h = 20;
@@ -24,8 +25,6 @@ public class Crate extends Entity
 		
 		// affix shape to body
 		body.createFixture(fd);
-		
-		
 	}
 	
 	public void display()

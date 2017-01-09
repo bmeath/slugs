@@ -1,4 +1,3 @@
-import org.jbox2d.collision.shapes.*;
 import org.jbox2d.dynamics.*;
 import shiffman.box2d.*;
 
@@ -9,10 +8,9 @@ public abstract class Entity
 	
 	BodyDef bd;
 	Body body;
-	PolygonShape shape;
 	FixtureDef fd;
 	
-	public Entity(SlugsGame p5, float x, float y, Box2DProcessing world, BodyType type, float density, float friction, float restitution)
+	public Entity(SlugsGame p5, float x, float y, Box2DProcessing world, BodyType type, boolean fixedRotation, float density, float friction, float restitution)
 	{
 		this.p5 = p5;
 		this.world = world;
@@ -20,7 +18,7 @@ public abstract class Entity
 		// define the physical properties
 		bd = new BodyDef();
 		bd.type = type;
-		bd.fixedRotation = true;
+		bd.fixedRotation = fixedRotation;
 		bd.position.set(world.coordPixelsToWorld(x, y));
 		
 		// create body

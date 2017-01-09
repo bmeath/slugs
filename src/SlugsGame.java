@@ -11,6 +11,7 @@ public class SlugsGame extends PApplet
 	
 	public Box2DProcessing world;
 	public int gameState;
+	public Terrain map;
 	ArrayList<Crate> crates;
 	
 	public void settings()
@@ -23,6 +24,7 @@ public class SlugsGame extends PApplet
 		world = new Box2DProcessing(this);
 		world.createWorld();
 		crates = new ArrayList<Crate>();
+		map = new Terrain(this, world);
 		initScreen();
 	}
 	
@@ -82,5 +84,6 @@ public class SlugsGame extends PApplet
 		{
 			c.display();
 		}
+		map.display();
 	}
 }
