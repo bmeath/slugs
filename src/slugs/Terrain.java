@@ -1,53 +1,58 @@
+package slugs;
 import java.util.ArrayList;
 import org.jbox2d.collision.shapes.ChainShape;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
-import processing.core.PApplet;
 import processing.core.PConstants;
-import shiffman.box2d.Box2DProcessing;
 
-public class Terrain extends Entity
+public class Terrain
 {
+	Slugs p5;
 	ChainShape shape;
 	ArrayList<Vec2> screenMap;
 	Vec2[] worldMap;
+	BodyDef bd;
+	Body body;
 	
-	public Terrain(SlugsGame p5, Box2DProcessing world)
+	public Terrain(Slugs p5)
 	{
-		super(p5, 0, 0, world, BodyType.STATIC, true, 1, 1, 0);
+		this.p5 = p5;
+		bd = new BodyDef();
+		bd.type = BodyType.STATIC;
+		body = p5.world.createBody(bd);
 		
 		// generate pixel coords for the terrain
 		screenMap = new ArrayList<Vec2>();
-		// begin at a random height to the left of the screen
-		Vec2 mapGenCoord = new Vec2(-1, p5.random(p5.height, 0));
-		while(mapGenCoord.x < p5.width)
+		float seed = 0;
+		for(float x = 0; x < p5.width; x += 10)
 		{
-			mapGenCoord.x ++;
-			mapGenCoord.y = PApplet.map(p5.noise(mapGenCoord.x, mapGenCoord.y), 0, 1, p5.height/2, -(p5.height/2));
-			screenMap.add(mapGenCoord);
+			screenMap.add(new Vec2(x, p5.noise(seed) * p5.height));
+			seed += 0.05;
 		}
 		
 		// convert pixel coords to JBox2D world coords
 		worldMap = new Vec2[screenMap.size()];
 		for(int i = 0; i < worldMap.length; i ++)
 		{
-			worldMap[i] = world.coordPixelsToWorld(screenMap.get(i));
+			worldMap[i] = p5.world.coordPixelsToWorld(screenMap.get(i));
 		}
 		shape = new ChainShape();
 		shape.createChain(worldMap, worldMap.length);
 		
-		fd.shape = shape;
-		
-		// affix shape to body
-		body.createFixture(fd);
+		// affix shape to body using fixture with default properties
+		body.createFixture(shape, 1.0f);
 	}
 
-	public void display() {
-		p5.noStroke();
+	public void display()
+	{
+		p5.stroke(0);
 		p5.fill(0);
 		p5.beginShape();
 		for(Vec2 coord: screenMap)
 		{
+			p5.point(coord.x, coord.y);
 			p5.vertex(coord.x, coord.y);
 		}
 		p5.vertex(p5.width, p5.height);

@@ -1,18 +1,19 @@
+package slugs;
 import java.util.ArrayList;
 import processing.core.*;
 import shiffman.box2d.*;
 
-public class SlugsGame extends PApplet
+public class Slugs extends PApplet
 {
 	public static void main(String[] args)
 	{
-		PApplet.main("SlugsGame");
+		PApplet.main("slugs.Slugs");
 	}
 	
 	public Box2DProcessing world;
 	public int gameState;
 	public Terrain map;
-	ArrayList<Crate> crates;
+	ArrayList<WeaponBox> crates;
 	
 	public void settings()
 	{
@@ -23,8 +24,8 @@ public class SlugsGame extends PApplet
 	{
 		world = new Box2DProcessing(this);
 		world.createWorld();
-		crates = new ArrayList<Crate>();
-		map = new Terrain(this, world);
+		map = new Terrain(this);
+		crates = new ArrayList<WeaponBox>();
 		initScreen();
 	}
 	
@@ -77,10 +78,10 @@ public class SlugsGame extends PApplet
 	{
 		if (mousePressed)
 		{
-			Crate c = new Crate(this, mouseX, mouseY, world);
+			WeaponBox c = new WeaponBox(this, mouseX, mouseY);
 			crates.add(c);
 		}
-		for(Crate c: crates)
+		for(WeaponBox c: crates)
 		{
 			c.display();
 		}
