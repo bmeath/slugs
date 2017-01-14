@@ -10,7 +10,8 @@ public abstract class Entity
 	Body body;
 	FixtureDef fd;
 	
-	public Entity(Slugs p5, float x, float y, BodyType type, boolean fixedRotation)
+	public Entity(Slugs p5, float x, float y, BodyType type, boolean fixedRotation, 
+			float density, float friction, float restitution)
 	{
 		this.p5 = p5;
 		
@@ -27,10 +28,10 @@ public abstract class Entity
 		 * and define some physical properties
 		 */
 		fd = new FixtureDef();
-		
 	}
 	
-	/* call this if shape needs a translation and rotation
+	/* repetitive setup/teardown process is contained here,
+	 * subclass needs not worry about it.
 	 */
 	public void display()
 	{
@@ -39,15 +40,12 @@ public abstract class Entity
 		p5.translate(pos.x, pos.y);
 		p5.rotate(-body.getAngle());
 		
-		// display shape as defined by subclass
-		drawEntity();
+		// draw to screen as per definition by subclass
+		render();
 		
 		p5.popMatrix();
 	}
 	
-	/* where the actual drawing code is placed.
-	 * subclass could call this directly
-	 * if no translation/rotation is needed, e.g the map
-	 */
-	abstract protected void drawEntity();
+	// where the actual drawing code is placed.
+	abstract protected void render();
 }

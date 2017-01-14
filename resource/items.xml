@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+item types:
+	throwable
+	gun
+	melee
+	tool
+	airdrop
+shape types:
+	circle
+	polygon
+projectile types:
+	bullet
+	bomb
+explosion type:
+	impact
+	timed
+	player
+
+example:
+<item type="">
+    <id></id>
+    <name></name>
+    <projectile type="" amount="" interval="" timed="">
+        <damage affect-terrain=""></damage>
+    	<radius></radius>
+        <spawnPoint>
+            <x></x>
+            <y></y>
+        </spawnPoint>
+        <density></density>
+    	<friction></friction>
+   		<restitution></restitution>
+        <shape type="" offset="">
+        	<point>
+            	<x></x>
+           		<y></y>
+        	</point>
+    	</shape>
+    	<cluster amount="">
+            <velocity></velocity>
+            <density></density>
+    		<friction></friction>
+   			<restitution></restitution>
+        </cluster>
+   	</projectile>
+    <centre>
+        <x></x>
+        <y></y>
+    </centre>
+    <shape type="" offset="">
+        <point>
+            <x></x>
+            <y></y>
+        </point>
+    </shape>
+</item>
+-->
+
+<item type="gun">
+    <id>0</id>
+    <name>Bazooka</name>
+    <projectile type="bomb" amount="1" interval="0">
+        <damage >
+        </damage>
+        <explosion type="impact" affects-terrain="true">
+            <force></force>
+            <radius>2</radius>
+        </explosion>
+        <density></density>
+    	<friction></friction>
+   		<restitution></restitution>
+   		<spawnPoint>
+            <x></x>
+            <y></y>
+        </spawnPoint>
+        <shape type="polygon">
+            <offset>
+                <x></x>
+           		<y></y>
+            </offset>
+        	<point>
+            	<x></x>
+           		<y></y>
+        	</point>
+    	</shape>
+   	</projectile>
+    <centre>
+        <x></x>
+        <y></y>
+    </centre>
+    <shape type="">
+        <offset>
+            <x></x>
+            <y></y>
+        </offset>
+        <point>
+            <x></x>
+            <y></y>
+        </point>
+    </shape>
+</item>
