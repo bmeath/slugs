@@ -1,7 +1,12 @@
 package slugs;
+
 import java.util.ArrayList;
 import processing.core.*;
 import shiffman.box2d.*;
+import javax.xml.parsers.*;
+import java.io.*;
+import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 public class Slugs extends PApplet
 {
@@ -86,5 +91,27 @@ public class Slugs extends PApplet
 			c.display();
 		}
 		map.display();
+	}
+	
+	public static void itemParser(String path) 
+	{
+		try 
+		{
+			File itemFile = new File(path);
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = factory.newDocumentBuilder();
+			Document itemsDoc = docBuilder.parse(itemFile);
+			itemsDoc.getDocumentElement().normalize();
+			NodeList itemNodeList = itemsDoc.getElementsByTagName("item");
+			for(int i = 0; i < itemNodeList.getLength(); i++)
+			{
+				Node itemNode = itemNodeList.item(i);
+				
+			}
+		} 
+		catch (ParserConfigurationException | SAXException | IOException e) 
+		{
+			e.printStackTrace();
+		}		
 	}
 }

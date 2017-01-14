@@ -15,54 +15,14 @@ projectile types:
 explosion type:
 	impact
 	timed
-	player
+	player-controlled
 
 example:
-<item type="">
-    <id></id>
-    <name></name>
-    <projectile type="" amount="" interval="" timed="">
-        <damage affect-terrain=""></damage>
-    	<radius></radius>
-        <spawnPoint>
-            <x></x>
-            <y></y>
-        </spawnPoint>
-        <density></density>
-    	<friction></friction>
-   		<restitution></restitution>
-        <shape type="" offset="">
-        	<point>
-            	<x></x>
-           		<y></y>
-        	</point>
-    	</shape>
-    	<cluster amount="">
-            <velocity></velocity>
-            <density></density>
-    		<friction></friction>
-   			<restitution></restitution>
-        </cluster>
-   	</projectile>
-    <centre>
-        <x></x>
-        <y></y>
-    </centre>
-    <shape type="" offset="">
-        <point>
-            <x></x>
-            <y></y>
-        </point>
-    </shape>
-</item>
--->
-
 <item type="gun">
     <id>0</id>
     <name>Bazooka</name>
-    <projectile type="bomb" amount="1" interval="0">
-        <damage >
-        </damage>
+    <projectile type="bomb" amount="1">
+        <damage></damage>
         <explosion type="impact" affects-terrain="true">
             <force></force>
             <radius>2</radius>
@@ -84,6 +44,12 @@ example:
            		<y></y>
         	</point>
     	</shape>
+    	<cluster amount="">
+            <velocity></velocity>
+            <density></density>
+    		<friction></friction>
+   			<restitution></restitution>
+        </cluster>
    	</projectile>
     <centre>
         <x></x>
@@ -100,3 +66,7 @@ example:
         </point>
     </shape>
 </item>
+-->
+<items>
+    
+</items>

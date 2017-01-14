@@ -1,2 +1,2 @@
 # slugs
-Slugs: A clone of the classic turn-based strategy game Worms
+Slugs: A game heavily based upon the classic turn-based strategy Worms
