@@ -2,11 +2,8 @@ package slugs;
 
 import java.util.ArrayList;
 import processing.core.*;
+import processing.data.XML;
 import shiffman.box2d.*;
-import javax.xml.parsers.*;
-import java.io.*;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 
 public class Slugs extends PApplet
 {
@@ -61,6 +58,10 @@ public class Slugs extends PApplet
 	{
 		gameState = 0;
 		background(0);
+		
+		// load all weapons and tools
+		loadItems("items.xml");
+		
 		textAlign(CENTER);
 		text("SLUGS", width/2, height/3);
 		text("Click to begin", width/2, height/2);
@@ -93,7 +94,17 @@ public class Slugs extends PApplet
 		map.display();
 	}
 	
-	public static void itemParser(String path) 
+	public void loadWeapons(String path) 
+	{
+		XML weaponFile = loadXML(path);
+		XML[] weapons = weaponFile.getChildren("item");
+		for(int i = 0; i < weapons.length; i++)
+		{
+			
+		}
+	}
+	
+	/*public static void itemParser(String path) 
 	{
 		try 
 		{
@@ -113,5 +124,5 @@ public class Slugs extends PApplet
 		{
 			e.printStackTrace();
 		}		
-	}
+	}*/
 }

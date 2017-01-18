@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-item types:
+weapon types:
 	throwable
 	gun
 	melee
-	tool
 	airdrop
 shape types:
 	circle
@@ -18,7 +17,7 @@ explosion type:
 	player-controlled
 
 example:
-<item type="gun">
+<weapon type="gun">
     <id>0</id>
     <name>Bazooka</name>
     <projectile type="bomb" amount="1">
@@ -65,8 +64,8 @@ example:
             <y></y>
         </point>
     </shape>
-</item>
+</weapon>
 -->
-<items>
+<weapons>
     
-</items>
+</weapons>
