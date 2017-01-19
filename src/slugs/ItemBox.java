@@ -15,7 +15,7 @@ public abstract class ItemBox extends Entity
 	
 	public ItemBox(Slugs p5, Box2DProcessing world, Vec2 spawnPoint, float w, float h, int itemID) 
 	{
-		super(p5, spawnPoint, BodyType.DYNAMIC, true, 1, 0.3f, 0.5f);
+		super(p5, world, spawnPoint, BodyType.DYNAMIC, true, 1, 0.3f, 0.5f);
 		
 		this.itemID = itemID;
 		this.w = w;

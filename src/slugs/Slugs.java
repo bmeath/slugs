@@ -60,14 +60,14 @@ public class Slugs extends PApplet
 		background(0);
 		
 		// load all weapons and tools
-		loadWeapons("weapons.xml");
+		//loadWeapons("weapons.xml");
 		
 		textAlign(CENTER);
 		text("SLUGS", width/2, height/3);
 		text("Click to begin", width/2, height/2);
 		if (mousePressed)
 		{
-			player1 = new Player(this, world, randomSpawn(map, 10));
+			player1 = new Player(this, world, randomSpawn(map));
 			gameState = 1;
 		}
 	}
@@ -86,6 +86,7 @@ public class Slugs extends PApplet
 		{
 			c.display();
 		}
+		player1.display();
 		world.step();
 	}
 	
@@ -120,16 +121,12 @@ public class Slugs extends PApplet
 		}
 	}
 	
-	/* generate a random location on the terrain at the given height above the surface */
-	Vec2 randomSpawn(Terrain map, float h)
+	Vec2 randomSpawn(Terrain map)
 	{
 		Vec2 spawn = new Vec2();
-		spawn.x = (int) random(0, map.screenMap.size() - 1);
-		spawn.y = map.screenMap.get((int) spawn.x).y + h;
-		if (spawn.y > height)
-		{
-			spawn.y = height;
-		}
+		int i = (int) random(0, map.screenMap.size() - 1);
+		spawn.x = map.screenMap.get(i).x;
+		spawn.y = map.screenMap.get(i).y;
 		return spawn;
 	}
 	
