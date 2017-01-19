@@ -1,92 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- contains vertices of shapes that form the player -->
+<!-- contains vertices of shapes that together form the player's body-->
 <player>
-    <shape x-offset="0" y-offset="0">
+    <shape>
         <point>
-            <x>-20</x>
-            <y>-10</y>
+            <x>-10</x>
+            <y>-5</y>
         </point>
         <point>
             <x>0</x>
-            <y>35</y>
+            <y>17.5</y>
         </point>
         <point>
-            <x>70</x>
-            <y>35</y>
-        </point>
-        <point>
-            <x>-20</x>
-            <y>10</y>
-        </point>
-    </shape>
-    <shape x-offset="0" y-offset="0">
-        <point>
-            <x>-15</x>
-            <y>-30</y>
-        </point>
-        <point>
-            <x>-5</x>
-            <y>-30</y>
+            <x>35</x>
+            <y>17.5</y>
         </point>
         <point>
             <x>-10</x>
-            <y>-20</y>
-        </point>
-        <point>
-            <x>-15</x>
-            <y>-30</y>
+            <y>5</y>
         </point>
     </shape>
-    <shape x-offset="0" y-offset="0">
+    <shape>
         <point>
-            <x>15</x>
-            <y>-30</y>
+            <x>-7.5</x>
+            <y>-15</y>
+        </point>
+        <point>
+            <x>-2.5</x>
+            <y>-15</y>
+        </point>
+        <point>
+            <x>-5</x>
+            <y>-10</y>
+        </point>
+        <point>
+            <x>-7.5</x>
+            <y>-15</y>
+        </point>
+    </shape>
+    <shape>
+        <point>
+            <x>7.5</x>
+            <y>-15</y>
+        </point>
+        <point>
+            <x>2.5</x>
+            <y>-15</y>
         </point>
         <point>
             <x>5</x>
-            <y>-30</y>
+            <y>-10</y>
+        </point>
+        <point>
+            <x>7.5</x>
+            <y>-15</y>
+        </point>
+    </shape>
+    <shape>
+        <point>
+            <x>-10</x>
+            <y>5</y>
+        </point>
+        <point>
+            <x>-10</x>
+            <y>-7.5</y>
+        </point>
+        <point>
+            <x>-7.5</x>
+            <y>-10</y>
+        </point>
+        <point>
+            <x>7.5</x>
+            <y>-10</y>
         </point>
         <point>
             <x>10</x>
-            <y>-20</y>
+            <y>-7.5</y>
         </point>
         <point>
-            <x>15</x>
-            <y>-30</y>
+            <x>10</x>
+            <y>5</y>
         </point>
-    </shape>
-    <shape x-offset="0" y-offset="0">
         <point>
-            <x>-20</x>
+            <x>7.5</x>
             <y>10</y>
         </point>
         <point>
-            <x>-20</x>
-            <y>-15</y>
-        </point>
-        <point>
-            <x>-15</x>
-            <y>-20</y>
-        </point>
-        <point>
-            <x>15</x>
-            <y>-20</y>
-        </point>
-        <point>
-            <x>20</x>
-            <y>-15</y>
-        </point>
-        <point>
-            <x>20</x>
-            <y>10</y>
-        </point>
-        <point>
-            <x>15</x>
-            <y>20</y>
-        </point>
-        <point>
-            <x>-20</x>
-            <y>10</y>
+            <x>-10</x>
+            <y>5</y>
         </point>
     </shape>
 </player>

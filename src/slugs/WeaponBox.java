@@ -14,6 +14,8 @@ public class WeaponBox extends ItemBox
 	
 	protected void render()
 	{
+		p5.translate(pos.x, pos.y);
+		p5.rotate(-body.getAngle());
 		p5.stroke(0, 0, 0);
 		p5.fill(247, 238, 158);
 		p5.rectMode(PConstants.CENTER);

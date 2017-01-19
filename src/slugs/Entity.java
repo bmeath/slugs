@@ -13,6 +13,8 @@ public abstract class Entity
 	FixtureDef fd;
 	Box2DProcessing world;
 	
+	Vec2 pos;
+	
 	public Entity(Slugs p5, Box2DProcessing world, Vec2 spawnPoint, BodyType bodyType, boolean fixedRotation, 
 			float density, float friction, float restitution)
 	{
@@ -23,7 +25,7 @@ public abstract class Entity
 		bd = new BodyDef();
 		bd.type = bodyType;
 		bd.fixedRotation = fixedRotation;
-		bd.position.set(world.coordPixelsToWorld(spawnPoint.x, spawnPoint.y));
+		bd.position.set(world.coordPixelsToWorld(spawnPoint));
 		
 		// create body
 		body = world.createBody(bd);
@@ -34,14 +36,14 @@ public abstract class Entity
 		fd = new FixtureDef();
 	}
 	
-	/* repetitive setup/teardown process is contained here,
+	/* does the universal setup and teardown work,
+	 * then lets the subclass decide the rest.
 	 */
 	public void display()
 	{
-		Vec2 pos = world.getBodyPixelCoord(body);
+		pos = world.getBodyPixelCoord(body);
+		System.out.println(pos.toString());
 		p5.pushMatrix();
-		p5.translate(pos.x, pos.y);
-		p5.rotate(-body.getAngle());
 		
 		// draw to screen as per definition by subclass
 		render();

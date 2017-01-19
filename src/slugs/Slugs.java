@@ -67,7 +67,7 @@ public class Slugs extends PApplet
 		text("Click to begin", width/2, height/2);
 		if (mousePressed)
 		{
-			player1 = new Player(this, world, randomSpawn(map));
+			player1 = new Player(this, world, randomSpawn(map, 15));
 			gameState = 1;
 		}
 	}
@@ -121,34 +121,14 @@ public class Slugs extends PApplet
 		}
 	}
 	
-	Vec2 randomSpawn(Terrain map)
+	/* picks a random coordinate h pixels above the surface of the terrain */
+	Vec2 randomSpawn(Terrain map, float h)
 	{
 		Vec2 spawn = new Vec2();
-		int i = (int) random(0, map.screenMap.size() - 1);
+		int i = (int) random(map.screenMap.size());
 		spawn.x = map.screenMap.get(i).x;
-		spawn.y = map.screenMap.get(i).y;
+		spawn.y = map.screenMap.get(i).y - h;
+		System.out.println(spawn.toString());
 		return spawn;
 	}
-	
-	/*public static void itemParser(String path) 
-	{
-		try 
-		{
-			File itemFile = new File(path);
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = factory.newDocumentBuilder();
-			Document itemsDoc = docBuilder.parse(itemFile);
-			itemsDoc.getDocumentElement().normalize();
-			NodeList itemNodeList = itemsDoc.getElementsByTagName("item");
-			for(int i = 0; i < itemNodeList.getLength(); i++)
-			{
-				Node itemNode = itemNodeList.item(i);
-				
-			}
-		} 
-		catch (ParserConfigurationException | SAXException | IOException e) 
-		{
-			e.printStackTrace();
-		}		
-	}*/
 }
