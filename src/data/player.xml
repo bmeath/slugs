@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- contains vertices of shapes that form the player -->
+<player>
+    <shape x-offset="0" y-offset="0">
+        <point>
+            <x>-20</x>
+            <y>-10</y>
+        </point>
+        <point>
+            <x>0</x>
+            <y>35</y>
+        </point>
+        <point>
+            <x>70</x>
+            <y>35</y>
+        </point>
+        <point>
+            <x>-20</x>
+            <y>10</y>
+        </point>
+    </shape>
+    <shape x-offset="0" y-offset="0">
+        <point>
+            <x>-15</x>
+            <y>-30</y>
+        </point>
+        <point>
+            <x>-5</x>
+            <y>-30</y>
+        </point>
+        <point>
+            <x>-10</x>
+            <y>-20</y>
+        </point>
+        <point>
+            <x>-15</x>
+            <y>-30</y>
+        </point>
+    </shape>
+    <shape x-offset="0" y-offset="0">
+        <point>
+            <x>15</x>
+            <y>-30</y>
+        </point>
+        <point>
+            <x>5</x>
+            <y>-30</y>
+        </point>
+        <point>
+            <x>10</x>
+            <y>-20</y>
+        </point>
+        <point>
+            <x>15</x>
+            <y>-30</y>
+        </point>
+    </shape>
+    <shape x-offset="0" y-offset="0">
+        <point>
+            <x>-20</x>
+            <y>10</y>
+        </point>
+        <point>
+            <x>-20</x>
+            <y>-15</y>
+        </point>
+        <point>
+            <x>-15</x>
+            <y>-20</y>
+        </point>
+        <point>
+            <x>15</x>
+            <y>-20</y>
+        </point>
+        <point>
+            <x>20</x>
+            <y>-15</y>
+        </point>
+        <point>
+            <x>20</x>
+            <y>10</y>
+        </point>
+        <point>
+            <x>15</x>
+            <y>20</y>
+        </point>
+        <point>
+            <x>-20</x>
+            <y>10</y>
+        </point>
+    </shape>
+</player>

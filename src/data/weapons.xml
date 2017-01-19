@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+weapon types:
+	throwable
+	gun
+	melee
+	airdrop
+shape types:
+	circle
+	polygon
+projectile types:
+	bullet
+	bomb
+
+-->
+<weapons>
+	<weapon type="gun">
+	    <id>0</id>
+	    <name>Bazooka</name>
+	    <projectile type="bomb" amount="1">
+	        <damage>45</damage>
+	        <explosion player-controlled="false" on-impact="true">
+	            <force></force>
+	            <radius>2</radius>
+	        </explosion>
+	        <density></density>
+	    	<friction></friction>
+	   		<restitution></restitution>
+	   		<spawnPoint>
+	            <x></x>
+	            <y></y>
+	        </spawnPoint>
+	        <shape type="polygon">
+	            <offset>
+	                <x></x>
+	           		<y></y>
+	            </offset>
+	        	<point>
+	            	<x></x>
+	           		<y></y>
+	        	</point>
+	    	</shape>
+	    	<cluster amount="">
+	            <velocity></velocity>
+	            <density></density>
+	    		<friction></friction>
+	   			<restitution></restitution>
+	        </cluster>
+	   	</projectile>
+	    <centre>
+	        <x></x>
+	        <y></y>
+	    </centre>
+	    <shape type="">
+	        <offset>
+	            <x></x>
+	            <y></y>
+	        </offset>
+	        <point>
+	            <x></x>
+	            <y></y>
+	        </point>
+	    </shape>
+	</weapon>
+</weapons>

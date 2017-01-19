@@ -10,7 +10,7 @@ public abstract class Entity
 	Body body;
 	FixtureDef fd;
 	
-	public Entity(Slugs p5, float x, float y, BodyType type, boolean fixedRotation, 
+	public Entity(Slugs p5, Vec2 spawn, BodyType type, boolean fixedRotation, 
 			float density, float friction, float restitution)
 	{
 		this.p5 = p5;
@@ -19,7 +19,7 @@ public abstract class Entity
 		bd = new BodyDef();
 		bd.type = type;
 		bd.fixedRotation = fixedRotation;
-		bd.position.set(p5.world.coordPixelsToWorld(x, y));
+		bd.position.set(p5.world.coordPixelsToWorld(spawn.x, spawn.y));
 		
 		// create body
 		body = p5.world.createBody(bd);

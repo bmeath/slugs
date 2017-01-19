@@ -1,34 +1,15 @@
 package slugs;
-import org.jbox2d.collision.shapes.*;
-import org.jbox2d.dynamics.BodyType;
-import processing.core.PConstants;
+import org.jbox2d.common.Vec2;
 
-public class WeaponBox extends Entity
+import processing.core.PConstants;
+import shiffman.box2d.Box2DProcessing;
+
+public class WeaponBox extends ItemBox
 {
-	float w;
-	float h;
-	PolygonShape shape;
-	int weapon; 
 	
-	public WeaponBox(Slugs p5, float x, float y)
+	public WeaponBox(Slugs p5, Box2DProcessing world, Vec2 spawnPoint, int itemID)
 	{
-		super(p5, x, y, BodyType.DYNAMIC, true, 1, 0.3f, 0.5f);
-		
-		w = 20;
-		h = 20;
-		
-		// define the shape
-		shape = new PolygonShape();
-		/* divide by two.
-		 * jbox2d expects width/height values as dist from shape's centre to respective edge
-		 */
-		
-		shape.setAsBox(p5.world.scalarPixelsToWorld(w/2), p5.world.scalarPixelsToWorld(h/2));
-		
-		fd.shape = shape;
-		
-		// affix shape to body
-		body.createFixture(fd);
+		super(p5, world, spawnPoint, 20, 20, itemID);
 	}
 	
 	protected void render()
