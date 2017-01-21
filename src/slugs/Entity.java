@@ -6,7 +6,7 @@ import shiffman.box2d.Box2DProcessing;
 
 public abstract class Entity
 {
-	Slugs p5;
+	Slugs p;
 	
 	BodyDef bd;
 	Body body;
@@ -15,10 +15,10 @@ public abstract class Entity
 	
 	Vec2 pos;
 	
-	public Entity(Slugs p5, Box2DProcessing world, Vec2 spawnPoint, BodyType bodyType, boolean fixedRotation, 
+	public Entity(Slugs p, Box2DProcessing world, Vec2 spawnPoint, BodyType bodyType, boolean fixedRotation, 
 			float density, float friction, float restitution)
 	{
-		this.p5 = p5;
+		this.p = p;
 		this.world = world;
 		
 		// define the physical properties
@@ -34,21 +34,31 @@ public abstract class Entity
 		 * and define some physical properties
 		 */
 		fd = new FixtureDef();
+		fd.restitution = restitution;
+		fd.friction = friction;
+		fd.density = density;
 	}
 	
-	/* does the universal setup and teardown work,
+	/* does the universal setup and tear down work,
 	 * then lets the subclass decide the rest.
 	 */
 	public void display()
 	{
 		pos = world.getBodyPixelCoord(body);
-		System.out.println(pos.toString());
-		p5.pushMatrix();
+		p.pushMatrix();
+		p.translate(pos.x, pos.y);
+		p.rotate(-body.getAngle());
 		
 		// draw to screen as per definition by subclass
 		render();
 		
-		p5.popMatrix();
+		p.popMatrix();
+	}
+	
+	/* wrapper method to apply a force to the centre of the entity's body */
+	public void applyForce(Vec2 force)
+	{
+		body.applyForce(force, body.getWorldCenter());
 	}
 	
 	// where the actual drawing code is placed.

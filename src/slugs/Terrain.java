@@ -5,59 +5,75 @@ import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.FixtureDef;
+
 import processing.core.PConstants;
 
 public class Terrain
 {
-	Slugs p5;
+	Slugs p;
 	ChainShape shape;
 	ArrayList<Vec2> screenMap;
 	Vec2[] worldMap;
 	BodyDef bd;
 	Body body;
+	FixtureDef fd;
 	
-	public Terrain(Slugs p5)
+	/* steepness is a factor to control how severe the hills are
+	 * where 1 is very rough
+	 * and 0 is completely flat
+	 */
+	public Terrain(Slugs p, float steepness)
 	{
-		this.p5 = p5;
+		this.p = p;
 		bd = new BodyDef();
 		bd.type = BodyType.STATIC;
-		body = p5.world.createBody(bd);
+		body = p.world.createBody(bd);
 		
 		// generate pixel coords for the terrain
 		screenMap = new ArrayList<Vec2>();
 		float seed = 0;
-		for(float x = 0; x < p5.width; x += 10)
+		for(float x = 0; x <= p.width; x += 10)
 		{
-			screenMap.add(new Vec2(x, p5.noise(seed) * p5.height));
-			seed += 0.05;
+			screenMap.add(new Vec2(x, p.height/3 + p.noise(seed) * p.height * 0.66f));
+			seed += 0.1 * steepness;
 		}
 		
 		// convert pixel coords to JBox2D world coords
 		worldMap = new Vec2[screenMap.size()];
 		for(int i = 0; i < worldMap.length; i ++)
 		{
-			worldMap[i] = p5.world.coordPixelsToWorld(screenMap.get(i));
+			worldMap[i] = p.world.coordPixelsToWorld(screenMap.get(i));
 		}
 		shape = new ChainShape();
 		shape.createChain(worldMap, worldMap.length);
 		
-		// affix shape to body using fixture with default properties
-		body.createFixture(shape, 1.0f);
+		fd = new FixtureDef();
+		fd.restitution = 0;
+		fd.friction = 1;
+		fd.shape = shape;
+		body.createFixture(fd);
+	}
+	
+	// create terrain with the default steepness factor 0.5
+	public Terrain(Slugs p)
+	{
+		this(p, 0.5f);
 	}
 
 	public void display()
 	{
-		p5.stroke(0);
-		p5.fill(0);
-		p5.beginShape();
+		p.stroke(0);
+		p.fill(0);
+		p.beginShape();
 		for(Vec2 coord: screenMap)
 		{
-			p5.point(coord.x, coord.y);
-			p5.vertex(coord.x, coord.y);
+			p.point(coord.x, coord.y);
+			p.vertex(coord.x, coord.y);
 		}
-		p5.vertex(p5.width, p5.height);
-		p5.vertex(0, p5.height);
-		p5.endShape(PConstants.CLOSE);
+		p.vertex(p.width, p.height);
+		p.vertex(0, p.height);
+		p.endShape(PConstants.CLOSE);
 	}
 
 }

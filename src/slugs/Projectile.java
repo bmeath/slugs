@@ -14,10 +14,10 @@ public class Projectile extends Entity
 	boolean affectsTerrain; // can it destroy the terrain?
 	
 	
-	public Projectile(Slugs p5, Box2DProcessing world, Vec2 spawnPoint, BodyType type, boolean fixedRotation, float density, float friction,
+	public Projectile(Slugs p, Box2DProcessing world, Vec2 spawnPoint, BodyType type, boolean fixedRotation, float density, float friction,
 			float restitution)
 	{
-		super(p5, world, spawnPoint, type, fixedRotation, density, friction, restitution);
+		super(p, world, spawnPoint, type, fixedRotation, density, friction, restitution);
 		// TODO Auto-generated constructor stub
 	}
 

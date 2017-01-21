@@ -13,9 +13,9 @@ public abstract class ItemBox extends Entity
 	PolygonShape shape;
 	int itemID; 
 	
-	public ItemBox(Slugs p5, Box2DProcessing world, Vec2 spawnPoint, float w, float h, int itemID) 
+	public ItemBox(Slugs p, Box2DProcessing world, Vec2 spawnPoint, float w, float h, int itemID) 
 	{
-		super(p5, world, spawnPoint, BodyType.DYNAMIC, true, 1, 0.3f, 0.5f);
+		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 0.3f, 0.5f);
 		
 		this.itemID = itemID;
 		this.w = w;
@@ -23,10 +23,10 @@ public abstract class ItemBox extends Entity
 		
 		// define the shape
 		shape = new PolygonShape();
+		
 		/* divide by two.
 		 * jbox2d expects width/height values as dist from shape's centre to respective edge
 		 */
-		
 		shape.setAsBox(world.scalarPixelsToWorld(w/2), world.scalarPixelsToWorld(h/2));
 		
 		fd.shape = shape;

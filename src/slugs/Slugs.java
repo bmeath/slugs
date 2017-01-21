@@ -15,9 +15,10 @@ public class Slugs extends PApplet
 		PApplet.main("slugs.Slugs");
 	}
 	
-	public Box2DProcessing world;
-	public int gameState;
-	public Terrain map;
+	boolean[] keys = new boolean[1000];
+	Box2DProcessing world;
+	int gameState;
+	Terrain map;
 	ArrayList<WeaponBox> crates;
 	Player player1;
 	
@@ -30,7 +31,8 @@ public class Slugs extends PApplet
 	{
 		world = new Box2DProcessing(this);
 		world.createWorld();
-		map = new Terrain(this);
+		world.setGravity(0f, -20f);
+		map = new Terrain(this, 0.5f);
 		crates = new ArrayList<WeaponBox>();
 		gameState = 0;
 	}
@@ -67,7 +69,7 @@ public class Slugs extends PApplet
 		text("Click to begin", width/2, height/2);
 		if (mousePressed)
 		{
-			player1 = new Player(this, world, randomSpawn(map, 15));
+			player1 = new Player(this, world, randomSpawn());
 			gameState = 1;
 		}
 	}
@@ -82,7 +84,7 @@ public class Slugs extends PApplet
 			WeaponBox c = new WeaponBox(this, world, new Vec2(mouseX, mouseY), 0);
 			crates.add(c);
 		}
-		for(WeaponBox c: crates)
+		for (WeaponBox c: crates)
 		{
 			c.display();
 		}
@@ -103,7 +105,7 @@ public class Slugs extends PApplet
 			WeaponBox c = new WeaponBox(this, world, new Vec2(mouseX, mouseY), 0);
 			crates.add(c);
 		}
-		for(WeaponBox c: crates)
+		for (WeaponBox c: crates)
 		{
 			c.display();
 		}
@@ -115,20 +117,43 @@ public class Slugs extends PApplet
 	{
 		XML weaponFile = loadXML(path);
 		XML[] weapons = weaponFile.getChildren("item");
-		for(int i = 0; i < weapons.length; i++)
+		for (int i = 0; i < weapons.length; i++)
 		{
 			
 		}
 	}
 	
-	/* picks a random coordinate h pixels above the surface of the terrain */
-	Vec2 randomSpawn(Terrain map, float h)
+	/* picks a random position along the terrain at h pixels above surface*/
+	public Vec2 randomSpawn(Terrain map, float h)
 	{
 		Vec2 spawn = new Vec2();
 		int i = (int) random(map.screenMap.size());
 		spawn.x = map.screenMap.get(i).x;
 		spawn.y = map.screenMap.get(i).y - h;
-		System.out.println(spawn.toString());
 		return spawn;
+	}
+	
+	public Vec2 randomSpawn()
+	{
+		return randomSpawn(map, 40);
+	}
+	
+	public void keyPressed()
+	{ 
+	  keys[keyCode] = true;
+	}
+	 
+	public void keyReleased()
+	{
+	  keys[keyCode] = false; 
+	}
+	
+	public boolean checkKey(int k)
+	{
+	  if (keys.length >= k) 
+	  {
+	    return keys[k] || keys[Character.toUpperCase(k)];
+	  }
+	  return false;
 	}
 }
