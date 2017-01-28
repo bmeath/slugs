@@ -5,6 +5,7 @@ import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
+import org.jbox2d.dynamics.joints.RevoluteJoint;
 import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
 import processing.core.PConstants;
@@ -15,6 +16,7 @@ public class Player extends Entity
 {
 	String name;
 	Vec2 dir;
+	RevoluteJoint motor;
 	
 	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, float scaleFactor)
 	{
@@ -24,8 +26,8 @@ public class Player extends Entity
 		shape = new PolygonShape();
 		
 		// create main body
-		float w = world.scalarPixelsToWorld(7 * scaleFactor);
-		float h = world.scalarPixelsToWorld(12 * scaleFactor);
+		float w = world.scalarPixelsToWorld(4 * scaleFactor);
+		float h = world.scalarPixelsToWorld(7 * scaleFactor);
 		shape.setAsBox(w, h);
 		
 		fd.shape = shape;
@@ -45,8 +47,12 @@ public class Player extends Entity
 	    fd.shape = wheelShape;
 	    bodyList[1].createFixture(fd);
 	    
-	    RevoluteJointDef RevoluteJD = new RevoluteJointDef();
-	    
+	    RevoluteJointDef revJD = new RevoluteJointDef();
+	    revJD.initialize(bodyList[0], bodyList[1], bodyList[1].getWorldCenter());
+	    revJD.motorSpeed = -PConstants.PI*2;
+	    revJD.maxMotorTorque = 300f;
+	    revJD.enableMotor = true;
+	    motor = (RevoluteJoint) world.createJoint(revJD);
 	}
 	
 	// create player with default size
@@ -59,11 +65,18 @@ public class Player extends Entity
 	{
 		if (p.checkKey(PConstants.LEFT))
 		{
-			applyForce(new Vec2(-200, 0));
+			motor.setMotorSpeed(5);
+			//motor.enableMotor(true);
 		}
-		if (p.checkKey(PConstants.RIGHT))
+		else if (p.checkKey(PConstants.RIGHT))
 		{
-			applyForce(new Vec2(200, 0));
+			motor.setMotorSpeed(-5);
+			//motor.enableMotor(true);
+		}
+		else
+		{
+			motor.setMotorSpeed(0);
+			//motor.enableMotor(false);
 		}
 		if (p.checkKey(PConstants.ENTER))
 		{
