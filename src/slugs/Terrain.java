@@ -55,6 +55,8 @@ public class Terrain
 		fd.friction = 10;
 		fd.shape = shape;
 		body.createFixture(fd);
+		
+		body.setUserData(this);
 	}
 	
 	// create terrain with the default steepness factor 0.5

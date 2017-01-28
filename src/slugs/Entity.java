@@ -42,6 +42,12 @@ public abstract class Entity
 		fd.density = density;
 	}
 	
+	/* if bodyCount is not specified, assume there will only be one body */
+	public Entity(Slugs p, Box2DProcessing world, Vec2 spawnPoint, BodyType bodyType, boolean fixedRotation, 
+			float density, float friction, float restitution)
+	{
+		this(p, world, spawnPoint, bodyType, fixedRotation, density, friction, restitution, 1);
+	}
 	abstract protected void update();
 	
 	/* does the universal setup and tear down work,
@@ -82,9 +88,10 @@ public abstract class Entity
 	{
 		for (Fixture f = b.getFixtureList(); f != null; f = f.getNext())
 		{
-			if (f.getShape() instanceof PolygonShape)
+			Object o = f.getShape();
+			if (o instanceof PolygonShape)
 			{
-				PolygonShape shape = (PolygonShape) f.getShape();
+				PolygonShape shape = (PolygonShape) o;
 				p.beginShape();
 				for(int i = 0; i < shape.getVertexCount(); i++)
 				{
@@ -94,9 +101,9 @@ public abstract class Entity
 				p.endShape(PConstants.CLOSE);
 			}
 			
-			if (f.getShape() instanceof CircleShape)
+			if (o instanceof CircleShape)
 			{
-				CircleShape shape = (CircleShape) f.getShape();
+				CircleShape shape = (CircleShape) o;
 				Vec2 centre = world.vectorWorldToPixels(shape.m_p);
 				float diameter = 2 * world.scalarWorldToPixels(shape.m_radius);
 				p.ellipse(centre.x, centre.y, diameter, diameter);

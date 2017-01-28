@@ -16,11 +16,17 @@ public class Player extends Entity
 {
 	String name;
 	Vec2 dir;
+	Vec2 jump;
 	RevoluteJoint motor;
+	private boolean grounded;
 	
 	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, float scaleFactor)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 1f, 0f, 2);
+		
+		dir = new Vec2(1000, 0);
+		jump = new Vec2(0, 850 * scaleFactor);
+		
 		PolygonShape shape = new PolygonShape();
 		// define the shape
 		shape = new PolygonShape();
@@ -46,6 +52,7 @@ public class Player extends Entity
 	    wheelShape.m_radius = w;
 	    fd.shape = wheelShape;
 	    bodyList[1].createFixture(fd);
+	    bodyList[1].setUserData(this);
 	    
 	    RevoluteJointDef revJD = new RevoluteJointDef();
 	    revJD.initialize(bodyList[0], bodyList[1], bodyList[1].getWorldCenter());
@@ -61,26 +68,38 @@ public class Player extends Entity
 		this(p, world, spawnPoint, 1f);
 	}
 	
+	public boolean isGrounded()
+	{
+		return grounded;
+	}
+	
+	public void setGrounded(boolean isGrounded)
+	{
+		this.grounded = isGrounded;
+	}
+	
 	protected void update()
 	{
+		System.out.println(grounded);
 		if (p.checkKey(PConstants.LEFT))
 		{
 			motor.setMotorSpeed(5);
-			//motor.enableMotor(true);
 		}
 		else if (p.checkKey(PConstants.RIGHT))
 		{
 			motor.setMotorSpeed(-5);
-			//motor.enableMotor(true);
 		}
 		else
 		{
 			motor.setMotorSpeed(0);
-			//motor.enableMotor(false);
 		}
 		if (p.checkKey(PConstants.ENTER))
 		{
-			applyForce(new Vec2(0, 300));
+			if(grounded == true)
+			{
+				applyForce(jump);
+				grounded = false;
+			}
 		}
 	}
 

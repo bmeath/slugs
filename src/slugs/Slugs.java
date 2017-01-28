@@ -3,6 +3,8 @@ package slugs;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
@@ -163,11 +165,22 @@ public class Slugs extends PApplet
 	
 	public void beginContact(Contact c)
 	{
-		
+		// get object which body attached to fixture belongs to
+		Object a = c.getFixtureA().getBody().getUserData();
+		Object b = c.getFixtureB().getBody().getUserData();
+		if(a instanceof Terrain && b instanceof Player)
+		{
+			Player player = (Player) b;
+			player.setGrounded(true);
+		}
+		if(a instanceof Player && b instanceof Terrain)
+		{
+			Player player = (Player) a;
+			player.setGrounded(true);
+		}
 	}
 	
 	public void endContact(Contact c)
 	{
-		
 	}
 }
