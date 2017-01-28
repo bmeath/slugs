@@ -182,5 +182,6 @@ public class Slugs extends PApplet
 	
 	public void endContact(Contact c)
 	{
+
 	}
 }

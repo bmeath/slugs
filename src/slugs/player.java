@@ -15,17 +15,25 @@ import shiffman.box2d.Box2DProcessing;
 public class Player extends Entity
 {
 	String name;
-	Vec2 dir;
+	
+	Vec2 left;
+	Vec2 right;
 	Vec2 jump;
+	int lastJumped;
+	boolean dir; // true if facing right, false otherwise
+	
 	RevoluteJoint motor;
 	private boolean grounded;
+	
 	
 	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, float scaleFactor)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 1f, 0f, 2);
-		
-		dir = new Vec2(1000, 0);
+		left = new Vec2(-200 * scaleFactor, 0);
+		right = new Vec2(200 * scaleFactor, 0);
 		jump = new Vec2(0, 850 * scaleFactor);
+		dir = true;
+		lastJumped = p.millis();
 		
 		PolygonShape shape = new PolygonShape();
 		// define the shape
@@ -80,14 +88,15 @@ public class Player extends Entity
 	
 	protected void update()
 	{
-		System.out.println(grounded);
 		if (p.checkKey(PConstants.LEFT))
 		{
 			motor.setMotorSpeed(5);
+			dir = false;
 		}
 		else if (p.checkKey(PConstants.RIGHT))
 		{
 			motor.setMotorSpeed(-5);
+			dir = true;
 		}
 		else
 		{
@@ -97,8 +106,12 @@ public class Player extends Entity
 		{
 			if(grounded == true)
 			{
-				applyForce(jump);
-				grounded = false;
+				if(p.millis() > lastJumped + 1000)
+				{
+					applyForce(jump.add(dir ? right : left));
+					lastJumped = p.millis();
+					grounded = false;
+				}
 			}
 		}
 	}
