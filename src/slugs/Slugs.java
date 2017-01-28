@@ -82,6 +82,7 @@ public class Slugs extends PApplet
 		
 		background(255);
 		map.display();
+		
 		if (mousePressed)
 		{
 			WeaponBox c = new WeaponBox(this, world, new Vec2(mouseX, mouseY), 0);

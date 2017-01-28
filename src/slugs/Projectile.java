@@ -17,14 +17,13 @@ public class Projectile extends Entity
 	public Projectile(Slugs p, Box2DProcessing world, Vec2 spawnPoint, BodyType type, boolean fixedRotation, float density, float friction,
 			float restitution)
 	{
-		super(p, world, spawnPoint, type, fixedRotation, density, friction, restitution);
+		super(p, world, spawnPoint, type, fixedRotation, density, friction, restitution, 1);
 		// TODO Auto-generated constructor stub
 	}
-
-	protected void render()
+	
+	protected void update()
 	{
-		// TODO Auto-generated method stub
-
+		
 	}
 
 }
