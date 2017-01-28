@@ -3,9 +3,11 @@ package slugs;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
 import processing.data.XML;
+
 import shiffman.box2d.*;
 
 public class Slugs extends PApplet
@@ -31,6 +33,7 @@ public class Slugs extends PApplet
 	{
 		world = new Box2DProcessing(this);
 		world.createWorld();
+		world.listenForCollisions();
 		world.setGravity(0f, -20f);
 		map = new Terrain(this, 0.5f);
 		crates = new ArrayList<WeaponBox>();
@@ -155,5 +158,15 @@ public class Slugs extends PApplet
 	    return keys[k] || keys[Character.toUpperCase(k)];
 	  }
 	  return false;
+	}
+	
+	public void beginContact(Contact c)
+	{
+		
+	}
+	
+	public void endContact(Contact c)
+	{
+		
 	}
 }

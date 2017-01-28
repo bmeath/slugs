@@ -1,5 +1,7 @@
 package slugs;
+
 import java.util.ArrayList;
+
 import org.jbox2d.collision.shapes.ChainShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -33,10 +35,10 @@ public class Terrain
 		// generate pixel coords for the terrain
 		screenMap = new ArrayList<Vec2>();
 		float seed = 0;
-		for(float x = 0; x <= p.width; x += 10)
+		for(float x = 0; x <= p.width; x ++)
 		{
 			screenMap.add(new Vec2(x, p.height/3 + p.noise(seed) * p.height * 0.66f));
-			seed += 0.1 * steepness;
+			seed += 0.01 * steepness;
 		}
 		
 		// convert pixel coords to JBox2D world coords
@@ -50,7 +52,7 @@ public class Terrain
 		
 		fd = new FixtureDef();
 		fd.restitution = 0;
-		fd.friction = 1;
+		fd.friction = 10;
 		fd.shape = shape;
 		body.createFixture(fd);
 	}
