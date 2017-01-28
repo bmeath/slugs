@@ -3,8 +3,6 @@ package slugs;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
-import org.jbox2d.dynamics.Fixture;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
@@ -168,14 +166,18 @@ public class Slugs extends PApplet
 		// get object which body attached to fixture belongs to
 		Object a = c.getFixtureA().getBody().getUserData();
 		Object b = c.getFixtureB().getBody().getUserData();
-		if(a instanceof Terrain && b instanceof Player)
-		{
-			Player player = (Player) b;
-			player.setGrounded(true);
-		}
-		if(a instanceof Player && b instanceof Terrain)
+		
+		/* check if the player is standing on something.
+		 * we don't really care what it is they're standing on.
+		 */
+		if(a instanceof Player)
 		{
 			Player player = (Player) a;
+			player.setGrounded(true);
+		}
+		if(b instanceof Player)
+		{
+			Player player = (Player) b;
 			player.setGrounded(true);
 		}
 	}

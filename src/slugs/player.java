@@ -18,6 +18,7 @@ public class Player extends Entity
 	
 	Vec2 left;
 	Vec2 right;
+	Vec2 highJump;
 	Vec2 jump;
 	int lastJumped;
 	boolean dir; // true if facing right, false otherwise
@@ -29,9 +30,10 @@ public class Player extends Entity
 	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, float scaleFactor)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 1f, 0f, 2);
-		left = new Vec2(-200 * scaleFactor, 0);
-		right = new Vec2(200 * scaleFactor, 0);
-		jump = new Vec2(0, 850 * scaleFactor);
+		left = new Vec2(-250 * scaleFactor, 0);
+		right = new Vec2(250 * scaleFactor, 0);
+		jump = new Vec2(0, 750 * scaleFactor);
+		highJump = new Vec2(0, 1250 * scaleFactor);
 		dir = true;
 		lastJumped = p.millis();
 		
@@ -65,7 +67,7 @@ public class Player extends Entity
 	    RevoluteJointDef revJD = new RevoluteJointDef();
 	    revJD.initialize(bodyList[0], bodyList[1], bodyList[1].getWorldCenter());
 	    revJD.motorSpeed = -PConstants.PI*2;
-	    revJD.maxMotorTorque = 300f;
+	    revJD.maxMotorTorque = 500f;
 	    revJD.enableMotor = true;
 	    motor = (RevoluteJoint) world.createJoint(revJD);
 	}
@@ -102,6 +104,8 @@ public class Player extends Entity
 		{
 			motor.setMotorSpeed(0);
 		}
+		
+		//forward jump
 		if (p.checkKey(PConstants.ENTER))
 		{
 			if(grounded == true)
@@ -109,6 +113,20 @@ public class Player extends Entity
 				if(p.millis() > lastJumped + 1000)
 				{
 					applyForce(jump.add(dir ? right : left));
+					lastJumped = p.millis();
+					grounded = false;
+				}
+			}
+		}
+		
+		// backward jump (like backflip in Worms)
+		if (p.checkKey(PConstants.BACKSPACE))
+		{
+			if(grounded == true)
+			{
+				if(p.millis() > lastJumped + 1000)
+				{
+					applyForce(highJump.add(dir ? left : right));
 					lastJumped = p.millis();
 					grounded = false;
 				}
