@@ -1,5 +1,7 @@
 package slugs;
 
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;
@@ -23,6 +25,8 @@ public class Slugs extends PApplet
 	Terrain map;
 	ArrayList<WeaponBox> crates;
 	Player player1;
+	Area circle;
+	int lastClick = millis();
 	
 	public void settings()
 	{
@@ -72,7 +76,7 @@ public class Slugs extends PApplet
 		text("Click to begin", width/2, height/2);
 		if (mousePressed)
 		{
-			player1 = new Player(this, world, randomSpawn());
+			player1 = new Player(this, world, map.randomSpawn());
 			gameState = 1;
 		}
 	}
@@ -85,8 +89,8 @@ public class Slugs extends PApplet
 		
 		if (mousePressed)
 		{
-			WeaponBox c = new WeaponBox(this, world, new Vec2(mouseX, mouseY), 0);
-			crates.add(c);
+			//WeaponBox c = new WeaponBox(this, world, new Vec2(mouseX, mouseY), 0);
+			//crates.add(c);
 		}
 		for (WeaponBox c: crates)
 		{
@@ -125,21 +129,6 @@ public class Slugs extends PApplet
 		{
 			
 		}
-	}
-	
-	/* picks a random position along the terrain at h pixels above surface*/
-	public Vec2 randomSpawn(Terrain map, float h)
-	{
-		Vec2 spawn = new Vec2();
-		int i = (int) random(map.screenMap.size());
-		spawn.x = map.screenMap.get(i).x;
-		spawn.y = map.screenMap.get(i).y - h;
-		return spawn;
-	}
-	
-	public Vec2 randomSpawn()
-	{
-		return randomSpawn(map, 40);
 	}
 	
 	public void keyPressed()
