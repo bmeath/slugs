@@ -39,7 +39,7 @@ public class Slugs extends PApplet
 		world.createWorld();
 		world.listenForCollisions();
 		world.setGravity(0f, -20f);
-		map = new Terrain(this, 0.5f);
+		map = new Terrain(this, world, 0.5f);
 		crates = new ArrayList<WeaponBox>();
 		gameState = 0;
 	}

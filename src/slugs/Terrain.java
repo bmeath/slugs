@@ -3,8 +3,8 @@ package slugs;
 import java.awt.Polygon;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
-import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import org.jbox2d.collision.shapes.ChainShape;
@@ -15,29 +15,33 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
 import processing.core.PConstants;
+import shiffman.box2d.Box2DProcessing;
 
 public class Terrain
 {
 	Slugs p;
-	ChainShape shape;
 	//ArrayList<Vec2> screenMap;
 	Vec2[] worldMap;
+	int maxVertices = 2048;
 	BodyDef bd;
-	Body body;
 	FixtureDef fd;
 	Area screenMap;
 	Polygon screenMapPoly;
+	ArrayList<Body> bodies;
+	Box2DProcessing world;
 	
 	/* steepness is a factor to control how severe the hills are
 	 * where 1 is very rough
 	 * and 0 is completely flat
 	 */
-	public Terrain(Slugs p, float steepness)
+	public Terrain(Slugs p, Box2DProcessing world, float steepness)
 	{
+		this.world = world;
 		this.p = p;
 		bd = new BodyDef();
 		bd.type = BodyType.STATIC;
-		body = p.world.createBody(bd);
+		bodies = new ArrayList<Body>();
+		Body b = world.createBody(bd);
 		
 		screenMapPoly = new Polygon();
 		float seed = 0;
@@ -52,27 +56,27 @@ public class Terrain
 		worldMap = new Vec2[screenMapPoly.npoints];
 		for(int i = 0; i < worldMap.length; i ++)
 		{
-			worldMap[i] = p.world.coordPixelsToWorld(screenMapPoly.xpoints[i], screenMapPoly.ypoints[i]);
+			worldMap[i] = world.coordPixelsToWorld(screenMapPoly.xpoints[i], screenMapPoly.ypoints[i]);
 		}
 		
 		screenMap = new Area(screenMapPoly);
 		
-		shape = new ChainShape();
+		ChainShape shape = new ChainShape();
 		shape.createChain(worldMap, worldMap.length);
 		
 		fd = new FixtureDef();
 		fd.restitution = 0;
 		fd.friction = 10;
 		fd.shape = shape;
-		body.createFixture(fd);
+		b.createFixture(fd);
+		bodies.add(b);
 		
-		body.setUserData(this);
 	}
 	
 	// create terrain with the default steepness factor 0.5
-	public Terrain(Slugs p)
+	public Terrain(Slugs p, Box2DProcessing world)
 	{
-		this(p, 0.5f);
+		this(p, world, 0.5f);
 	}
 
 	public void display()
@@ -96,8 +100,6 @@ public class Terrain
 					break;
 			}
 		}
-		p.vertex(p.width, p.height);
-		p.vertex(0, p.height);
 	}
 	
 	// picks a random position along the terrain at h pixels above surface
@@ -116,11 +118,53 @@ public class Terrain
 		return randomSpawn(40);
 	}
 	
-	void update()
+	protected void update()
 	{
 		if (p.mousePressed)
 		{
-			screenMap.subtract(new Area(new Ellipse2D.Float(p.mouseX, p.mouseY, 25, 25)));
+			p.lastClick = p.millis();
+			//screenMap.subtract(new Area(new Ellipse2D.Float(p.mouseX, p.mouseY, 25, 25)));
+			screenMap.subtract(new Area(new Rectangle2D.Float(p.mouseX, p.mouseY, 25, 25)));
+			reCreate();
+		}
+	}
+	
+	protected void reCreate()
+	{
+		for(Body b: bodies)
+		{
+			world.destroyBody(b);
+		}
+		bodies.clear();
+		
+		Vec2[] points = new Vec2[maxVertices];
+		ChainShape shape = new ChainShape();
+		Body b = world.createBody(bd);
+		int index = 0;
+		for (PathIterator i = screenMap.getPathIterator(null); !i.isDone(); i.next())
+		{
+			float[] point = new float[6];
+			switch (i.currentSegment(point))
+			{
+				case PathIterator.SEG_MOVETO:
+					b = world.createBody(bd);
+					shape = new ChainShape();
+					points = new Vec2[maxVertices];
+					index = 0;
+					points[index] = world.coordPixelsToWorld(point[0],point[1]);
+					index++;
+					break;
+				case PathIterator.SEG_CLOSE:
+					shape.createChain(points, index);
+					fd.shape = shape;
+					b.createFixture(fd);
+					bodies.add(b);
+					break;
+				default:
+					points[index] = world.coordPixelsToWorld(point[0],point[1]);
+					index++;
+					break;
+			}
 		}
 	}
 }
