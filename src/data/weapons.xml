@@ -11,7 +11,6 @@ shape types:
 projectile types:
 	bullet
 	bomb
-
 -->
 <weapons>
 	<weapon type="gun">
@@ -47,19 +46,5 @@ projectile types:
 	   			<restitution></restitution>
 	        </cluster>
 	   	</projectile>
-	    <centre>
-	        <x></x>
-	        <y></y>
-	    </centre>
-	    <shape type="">
-	        <offset>
-	            <x></x>
-	            <y></y>
-	        </offset>
-	        <point>
-	            <x></x>
-	            <y></y>
-	        </point>
-	    </shape>
 	</weapon>
 </weapons>

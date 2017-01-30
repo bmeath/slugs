@@ -67,7 +67,7 @@ public class Player extends Entity
 	    RevoluteJointDef revJD = new RevoluteJointDef();
 	    revJD.initialize(bodyList[0], bodyList[1], bodyList[1].getWorldCenter());
 	    revJD.motorSpeed = -PConstants.PI*2;
-	    revJD.maxMotorTorque = 500f;
+	    revJD.maxMotorTorque = 750f;
 	    revJD.enableMotor = true;
 	    motor = (RevoluteJoint) world.createJoint(revJD);
 	}
@@ -90,6 +90,12 @@ public class Player extends Entity
 	
 	protected void update()
 	{
+		// use weapon/tool
+		if (p.checkKey(' '))
+		{
+			
+		}
+		
 		if (p.checkKey(PConstants.LEFT))
 		{
 			motor.setMotorSpeed(5);

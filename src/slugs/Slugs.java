@@ -1,7 +1,6 @@
 package slugs;
 
 import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
 import org.jbox2d.common.Vec2;

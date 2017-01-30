@@ -1,34 +1,35 @@
 package slugs;
 
 import java.awt.Polygon;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.PathIterator;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import org.jbox2d.collision.shapes.ChainShape;
+import org.jbox2d.common.MathUtils;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 
+import processing.core.PApplet;
 import processing.core.PConstants;
 import shiffman.box2d.Box2DProcessing;
 
 public class Terrain
 {
 	Slugs p;
-	//ArrayList<Vec2> screenMap;
-	Vec2[] worldMap;
-	int maxVertices = 2048;
+	int maxVertices = 6000;
 	BodyDef bd;
 	FixtureDef fd;
 	Area screenMap;
 	Polygon screenMapPoly;
 	ArrayList<Body> bodies;
 	Box2DProcessing world;
+	Area crater;
 	
 	/* steepness is a factor to control how severe the hills are
 	 * where 1 is very rough
@@ -40,9 +41,13 @@ public class Terrain
 		this.p = p;
 		bd = new BodyDef();
 		bd.type = BodyType.STATIC;
-		bodies = new ArrayList<Body>();
 		Body b = world.createBody(bd);
+		/* arraylist to hold all the bodys that combine to form the terrain,
+		 * because the terrain sometimes gets split up from destruction
+		 */
+		bodies = new ArrayList<Body>();
 		
+		// generate terrain in pixel coordinates
 		screenMapPoly = new Polygon();
 		float seed = 0;
 		for(int x = 0; x <= p.width; x ++)
@@ -53,23 +58,41 @@ public class Terrain
 		screenMapPoly.addPoint(p.width, p.height);
 		screenMapPoly.addPoint(0, p.height);
 		
-		worldMap = new Vec2[screenMapPoly.npoints];
+		// convert pixel coords to box2d coords
+		Vec2[] worldMap = new Vec2[screenMapPoly.npoints];
 		for(int i = 0; i < worldMap.length; i ++)
 		{
 			worldMap[i] = world.coordPixelsToWorld(screenMapPoly.xpoints[i], screenMapPoly.ypoints[i]);
 		}
-		
-		screenMap = new Area(screenMapPoly);
-		
 		ChainShape shape = new ChainShape();
 		shape.createChain(worldMap, worldMap.length);
 		
+		// define some physical properties the terrain will have
 		fd = new FixtureDef();
 		fd.restitution = 0;
 		fd.friction = 10;
 		fd.shape = shape;
+		
+		
 		b.createFixture(fd);
 		bodies.add(b);
+		
+		// store and modify terrain in Area object
+		screenMap = new Area(screenMapPoly);
+		
+		/* create a crater shape 
+		 * which will be used when the terrain recieves damage
+		 */
+		Path2D.Float craterShape = new Path2D.Float();
+		int numPoints = 32; // number of vertices in the polygon
+		float angle = (2 * PConstants.PI)/numPoints;
+		// begin the path using moveTo
+		craterShape.moveTo(PApplet.sin(numPoints * angle), -PApplet.cos(numPoints * angle));
+		while(numPoints-- >= 0)
+		{
+			craterShape.lineTo(PApplet.sin(numPoints * angle), -PApplet.cos(numPoints * angle));
+		}
+		crater = new Area(craterShape);
 		
 	}
 	
@@ -120,13 +143,19 @@ public class Terrain
 	
 	protected void update()
 	{
-		if (p.mousePressed)
+		if (p.mousePressed && p.lastClick + 1000 < p.millis() )
 		{
-			p.lastClick = p.millis();
-			//screenMap.subtract(new Area(new Ellipse2D.Float(p.mouseX, p.mouseY, 25, 25)));
-			screenMap.subtract(new Area(new Rectangle2D.Float(p.mouseX, p.mouseY, 25, 25)));
+			damage(new Vec2(p.mouseX, p.mouseY), 20);
 			reCreate();
+			p.lastClick = p.millis();
 		}
+	}
+	
+	// make a crater of given diameter at a given location in the terrain
+	public void damage(Vec2 loc, int diameter)
+	{
+		AffineTransform t = new AffineTransform(diameter, 0, 0, diameter, loc.x, loc.y);
+		screenMap.subtract(crater.createTransformedArea(t));
 	}
 	
 	protected void reCreate()
@@ -162,7 +191,11 @@ public class Terrain
 					break;
 				default:
 					points[index] = world.coordPixelsToWorld(point[0],point[1]);
-					index++;
+					// skip vertices that are too close together
+					if (MathUtils.distanceSquared(points[index - 1], points[index]) > 0.000025)
+					{
+						index++;
+					}
 					break;
 			}
 		}
