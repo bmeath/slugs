@@ -15,7 +15,6 @@ public abstract class Entity
 	Body[] bodyList;
 	FixtureDef fd;
 	Box2DProcessing world;
-	Vec2 pos;
 	
 	public Entity(Slugs p, Box2DProcessing world, Vec2 spawnPoint, BodyType bodyType, boolean fixedRotation, 
 			float density, float friction, float restitution, int bodyCount)
@@ -48,7 +47,22 @@ public abstract class Entity
 	{
 		this(p, world, spawnPoint, bodyType, fixedRotation, density, friction, restitution, 1);
 	}
+	
 	abstract protected void update();
+	
+	// get screen location of player
+	public Vec2 getPixelLocation()
+	{
+		/* give location of first body in the list.
+		 */
+		return world.getBodyPixelCoord(bodyList[0]);
+	}
+	
+	// get box2d location of player
+	public Vec2 getWorldLocation()
+	{
+		return world.coordPixelsToWorld(getPixelLocation());
+	}
 	
 	/* does the universal setup and tear down work,
 	 * then lets the subclass decide the rest.
@@ -58,7 +72,7 @@ public abstract class Entity
 		update();
 		for(int i = 0; i < bodyList.length; i++)
 		{
-			pos = world.getBodyPixelCoord(bodyList[i]);
+			Vec2 pos = world.getBodyPixelCoord(bodyList[i]);
 			p.pushMatrix();
 			p.translate(pos.x, pos.y);
 			p.rotate(-bodyList[i].getAngle());

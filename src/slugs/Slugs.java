@@ -2,8 +2,9 @@ package slugs;
 
 import java.awt.geom.Area;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
@@ -22,10 +23,10 @@ public class Slugs extends PApplet
 	Box2DProcessing world;
 	int gameState;
 	Terrain map;
-	ArrayList<WeaponBox> crates;
+	Map<String, InventoryItem> itemList= new HashMap<String, InventoryItem>();
+	ArrayList<ItemBox> crates;
 	Player player1;
 	Area circle;
-	int lastClick = millis();
 	
 	public void settings()
 	{
@@ -39,7 +40,7 @@ public class Slugs extends PApplet
 		world.listenForCollisions();
 		world.setGravity(0f, -20f);
 		map = new Terrain(this, world, 0.5f);
-		crates = new ArrayList<WeaponBox>();
+		crates = new ArrayList<ItemBox>();
 		gameState = 0;
 	}
 	
@@ -76,6 +77,8 @@ public class Slugs extends PApplet
 		if (mousePressed)
 		{
 			player1 = new Player(this, world, map.randomSpawn());
+			RangedWeapon weapon = new RangedWeapon(this, world, 1, 0, 45, 0f, ExplosionTrigger.IMPACT);
+			player1.currentItem = weapon;
 			gameState = 1;
 		}
 	}
@@ -91,7 +94,7 @@ public class Slugs extends PApplet
 			//WeaponBox c = new WeaponBox(this, world, new Vec2(mouseX, mouseY), 0);
 			//crates.add(c);
 		}
-		for (WeaponBox c: crates)
+		for (ItemBox c: crates)
 		{
 			c.display();
 		}
@@ -109,10 +112,10 @@ public class Slugs extends PApplet
 		map.display();
 		if (mousePressed)
 		{
-			WeaponBox c = new WeaponBox(this, world, new Vec2(mouseX, mouseY), 0);
-			crates.add(c);
+			//ItemBox c = new ItemBox(this, world, new Vec2(mouseX, mouseY), 0);
+			//crates.add(c);
 		}
-		for (WeaponBox c: crates)
+		for (ItemBox c: crates)
 		{
 			c.display();
 		}
@@ -158,15 +161,27 @@ public class Slugs extends PApplet
 		/* check if the player is standing on something.
 		 * we don't really care what it is they're standing on.
 		 */
-		if(a instanceof Player)
+		if(a instanceof Player && b instanceof Terrain)
 		{
 			Player player = (Player) a;
 			player.setGrounded(true);
 		}
-		if(b instanceof Player)
+		if(b instanceof Player && a instanceof Terrain)
 		{
 			Player player = (Player) b;
 			player.setGrounded(true);
+		}
+		
+		if(a instanceof Projectile)
+		{
+			Projectile p = (Projectile) a;
+			map.damage(p.getPixelLocation(), p.damageRadius);
+			
+		}
+		
+		if(b instanceof Projectile)
+		{
+			
 		}
 	}
 	

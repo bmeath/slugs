@@ -1,5 +1,7 @@
 package slugs;
 
+import java.util.Map;
+
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -22,6 +24,8 @@ public class Player extends Entity
 	Vec2 jump;
 	int lastJumped;
 	boolean dir; // true if facing right, false otherwise
+	InventoryItem currentItem;
+	Map<String, Integer> inventory;
 	
 	RevoluteJoint motor;
 	private boolean grounded;
@@ -48,6 +52,7 @@ public class Player extends Entity
 		
 		fd.shape = shape;
 		bodyList[0].createFixture(fd);
+		bodyList[0].setUserData(this);
 		
 		// create wheel
 		BodyDef wheelBD = new BodyDef();
@@ -78,6 +83,16 @@ public class Player extends Entity
 		this(p, world, spawnPoint, 1f);
 	}
 	
+	public void giveItem()
+	{
+		
+	}
+	
+	public void removeItem()
+	{
+		
+	}
+	
 	public boolean isGrounded()
 	{
 		return grounded;
@@ -91,9 +106,9 @@ public class Player extends Entity
 	protected void update()
 	{
 		// use weapon/tool
-		if (p.checkKey(' '))
+		if (p.checkKey(' ') || p.checkKey(PConstants.UP) || p.checkKey(PConstants.DOWN))
 		{
-			
+			//currentItem.update();
 		}
 		
 		if (p.checkKey(PConstants.LEFT))

@@ -8,18 +8,19 @@ import shiffman.box2d.Box2DProcessing;
 public class Projectile extends Entity
 {
 	int damage; // maximum damage a player can take from this projectile
-	float radius; // how widespread is the explosion?
-	float force; // how strong is the explosion?
+	float damageRadius; // how widespread is the explosion?
 	Vec2 spawnPoint; // where it emits from
 	boolean affectsTerrain; // can it destroy the terrain?
+	Projectile[] clusters;
 	
-	
-	public Projectile(Slugs p, Box2DProcessing world, Vec2 spawnPoint, BodyType type, boolean fixedRotation, float density, float friction,
-			float restitution)
+	public Projectile(Slugs p, Box2DProcessing world, Vec2 spawnPoint, int maxDamage, float restitution, float initialVelocity, int clusterCount)
 	{
-		super(p, world, spawnPoint, type, fixedRotation, density, friction, restitution, 1);
-		// TODO Auto-generated constructor stub
+		super(p, world, spawnPoint, BodyType.DYNAMIC, false, 1, 1, restitution, 1);
+		clusters = new Projectile[clusterCount];
+		
 	}
+	
+	
 	
 	protected void update()
 	{

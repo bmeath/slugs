@@ -75,6 +75,7 @@ public class Terrain
 		
 		
 		b.createFixture(fd);
+		b.setUserData(this);
 		bodies.add(b);
 		
 		// store and modify terrain in Area object
@@ -143,16 +144,15 @@ public class Terrain
 	
 	protected void update()
 	{
-		if (p.mousePressed && p.lastClick + 1000 < p.millis() )
+		if (p.mousePressed)
 		{
 			damage(new Vec2(p.mouseX, p.mouseY), 20);
 			reCreate();
-			p.lastClick = p.millis();
 		}
 	}
 	
 	// make a crater of given diameter at a given location in the terrain
-	public void damage(Vec2 loc, int diameter)
+	public void damage(Vec2 loc, float diameter)
 	{
 		AffineTransform t = new AffineTransform(diameter, 0, 0, diameter, loc.x, loc.y);
 		screenMap.subtract(crater.createTransformedArea(t));
@@ -187,6 +187,7 @@ public class Terrain
 					shape.createChain(points, index);
 					fd.shape = shape;
 					b.createFixture(fd);
+					b.setUserData(this);
 					bodies.add(b);
 					break;
 				default:

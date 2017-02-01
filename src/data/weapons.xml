@@ -3,14 +3,11 @@
 weapon types:
 	throwable
 	gun
-	melee
+	sword
 	airdrop
-shape types:
-	circle
-	polygon
 projectile types:
 	bullet
-	bomb
+	bomb 
 -->
 <weapons>
 	<weapon type="gun">
@@ -25,20 +22,6 @@ projectile types:
 	        <density></density>
 	    	<friction></friction>
 	   		<restitution></restitution>
-	   		<spawnPoint>
-	            <x></x>
-	            <y></y>
-	        </spawnPoint>
-	        <shape type="polygon">
-	            <offset>
-	                <x></x>
-	           		<y></y>
-	            </offset>
-	        	<point>
-	            	<x></x>
-	           		<y></y>
-	        	</point>
-	    	</shape>
 	    	<cluster amount="">
 	            <velocity></velocity>
 	            <density></density>
