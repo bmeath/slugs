@@ -16,7 +16,7 @@ public abstract class Weapon implements InventoryItem
 	}
 
 	@Override
-	public void use() {
+	public void use(Player user) {
 		// TODO Auto-generated method stub
 
 	}

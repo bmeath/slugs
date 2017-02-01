@@ -1,5 +1,6 @@
 package slugs;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.jbox2d.collision.shapes.CircleShape;
@@ -83,12 +84,26 @@ public class Player extends Entity
 		this(p, world, spawnPoint, 1f);
 	}
 	
-	public void giveItem()
+	// give player exactly one of the item
+	public void giveItem(String name)
 	{
 		
 	}
 	
-	public void removeItem()
+	// give player a given quantity of the item
+	public void giveItem(String name, int quantity)
+	{
+		
+	}
+	
+	// set the players inventory
+	public void setInventory(HashMap<String, Integer> inventory)
+	{
+		this.inventory = new HashMap<String, Integer>(inventory);
+	}
+	
+	// take exactly one of an item from the player
+	public void removeItem(String name)
 	{
 		
 	}

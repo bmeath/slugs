@@ -1,32 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 weapon types:
-	throwable
-	gun
-	sword
+	bomb
+	bullet
+	melee
 	airdrop
 projectile types:
 	bullet
 	bomb 
 -->
 <weapons>
-	<weapon type="gun">
-	    <id>0</id>
+	<weapon type="bomb">
 	    <name>Bazooka</name>
-	    <projectile type="bomb" amount="1">
+	    <projectile amount="1" explode-on-impact="true">
 	        <damage>45</damage>
-	        <explosion player-controlled="false" on-impact="true">
-	            <force></force>
-	            <radius>2</radius>
-	        </explosion>
-	        <density></density>
-	    	<friction></friction>
-	   		<restitution></restitution>
-	    	<cluster amount="">
+	   		<bounciness></bounciness>
+	    	<cluster amount="0">
+	    		<damage>10</damage>
 	            <velocity></velocity>
-	            <density></density>
-	    		<friction></friction>
-	   			<restitution></restitution>
+	   			<bounciness></bounciness>
 	        </cluster>
 	   	</projectile>
 	</weapon>

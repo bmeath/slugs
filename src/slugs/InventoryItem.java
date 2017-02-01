@@ -2,7 +2,7 @@ package slugs;
 
 public interface InventoryItem {
 	
-	void use();
+	void use(Player user);
 	void update();
 	void display();
 }

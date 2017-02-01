@@ -2,7 +2,7 @@ package slugs;
 
 import shiffman.box2d.Box2DProcessing;
 
-public class RangedWeapon extends Weapon
+public class BombWeapon extends Weapon
 {
 	Projectile[] projectiles;
 	Slugs p;
@@ -10,11 +10,10 @@ public class RangedWeapon extends Weapon
 	float restitution;
 	float maxVelocity;
 	int clusterCount;
-	Player owner;
 	float initialVelocity;
 
-	public RangedWeapon(Slugs p, Box2DProcessing world, int projectileCount, 
-			int clusterCount, int maxDamage, float restitution, ExplosionTrigger trigger)
+	public BombWeapon(Slugs p, Box2DProcessing world, int projectileCount, 
+			int clusterCount, float clusterVelocity, int maxDamage, float restitution, float clusterRestitution, ExplosionTrigger trigger, boolean explodeOnImpact, int timeout)
 	{
 		super(p);
 		this.p = p;
@@ -33,11 +32,11 @@ public class RangedWeapon extends Weapon
 		
 	}
 	
-	public void use()
+	public void use(Player user)
 	{
 		for(int i = 0; i < projectiles.length; i++)
 		{
-			projectiles[i] = new Projectile(p, world, owner.getPixelLocation(), maxDamage,  restitution, initialVelocity, clusterCount);
+			projectiles[i] = new Projectile(p, world, user.getPixelLocation(), maxDamage,  restitution, initialVelocity, clusterCount);
 		}
 	}
 }

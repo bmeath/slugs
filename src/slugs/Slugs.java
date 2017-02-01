@@ -77,7 +77,7 @@ public class Slugs extends PApplet
 		if (mousePressed)
 		{
 			player1 = new Player(this, world, map.randomSpawn());
-			RangedWeapon weapon = new RangedWeapon(this, world, 1, 0, 45, 0f, ExplosionTrigger.IMPACT);
+			BombWeapon weapon = new BombWeapon(this, world, 1, 0, 45, 0f, ExplosionTrigger.IMPACT);
 			player1.currentItem = weapon;
 			gameState = 1;
 		}
@@ -129,7 +129,68 @@ public class Slugs extends PApplet
 		XML[] weapons = weaponFile.getChildren("item");
 		for (int i = 0; i < weapons.length; i++)
 		{
+			String type = weapons[i].getString("type");
+			String name = weapons[i].getChild("name").getContent();
+			if (type == "bomb")
+			{
+				XML projectile = weapons[i].getChild("projectile");
+				
+				int projectileCount;
+				int timeout;
+				int damage;
+				int clusterCount;
+				boolean explodeOnImpact;
+				
+				projectileCount = projectile.getInt("amount");
+				if (projectile.getString("explode-on-impact") == "true")
+				{
+					explodeOnImpact = true;
+				}
+				else
+				{
+					explodeOnImpact = false;
+					float restitution = projectile.getChild("bounciness").getFloatContent(0);
+				}
+				
+				if(projectile.hasAttribute("timeout"))
+				{
+					timeout = projectile.getInt("timeout");
+				}
+				else
+				{
+					timeout = 0;
+				}
+				damage = projectile.getChild("damage").getIntContent();
+				
+				XML cluster = weapons[i].getChild("cluster");
+				clusterCount = cluster.getInt("amount");
+				if( clusterCount > 0)
+				{
+					float clusterVelocity = cluster.getChild("velocity").getFloatContent();
+					float clusterDamage = cluster.getChild("damage").getFloatContent();
+					float clusterRestitution = cluster.getChild("bounciness").getFloatContent(0);
+					BombWeapon weapon = new BombWeapon(this, world, projectileCount, );
+				}
+				else
+				{
+					
+				}
+				
+			}
+			if (type == "melee")
+			{
+				
+			}
 			
+			if ( type == "bullet")
+			{
+				
+			}
+			
+			if ( type == "airdrop")
+			{
+				
+			}
 		}
 	}
 	
@@ -161,27 +222,29 @@ public class Slugs extends PApplet
 		/* check if the player is standing on something.
 		 * we don't really care what it is they're standing on.
 		 */
-		if(a instanceof Player && b instanceof Terrain)
+		if (a instanceof Player && b instanceof Terrain)
 		{
 			Player player = (Player) a;
 			player.setGrounded(true);
 		}
-		if(b instanceof Player && a instanceof Terrain)
+		if (b instanceof Player && a instanceof Terrain)
 		{
 			Player player = (Player) b;
 			player.setGrounded(true);
 		}
 		
-		if(a instanceof Projectile)
+		if (a instanceof Projectile)
 		{
 			Projectile p = (Projectile) a;
 			map.damage(p.getPixelLocation(), p.damageRadius);
-			
+			// todo: damage any players within range
 		}
 		
-		if(b instanceof Projectile)
+		if (b instanceof Projectile)
 		{
-			
+			Projectile p = (Projectile) b;
+			map.damage(p.getPixelLocation(), p.damageRadius);
+			// todo: damage any players within range
 		}
 	}
 	
