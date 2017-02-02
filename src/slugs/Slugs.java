@@ -23,10 +23,15 @@ public class Slugs extends PApplet
 	Box2DProcessing world;
 	int gameState;
 	Terrain map;
-	Map<String, InventoryItem> itemList= new HashMap<String, InventoryItem>();
-	ArrayList<ItemBox> crates;
+	
+	// hashmap of inventory item instances
+	HashMap<String, InventoryItem> itemList = new HashMap<String, InventoryItem>();
+	
+	// hashmap of quantities of each item a player has
+	HashMap<String, Integer> inventory = new HashMap<String, Integer>();
+	
 	Player player1;
-	Area circle;
+	
 	
 	public void settings()
 	{
@@ -40,8 +45,8 @@ public class Slugs extends PApplet
 		world.listenForCollisions();
 		world.setGravity(0f, -20f);
 		map = new Terrain(this, world, 0.5f);
-		crates = new ArrayList<ItemBox>();
 		gameState = 0;
+		loadWeapons("weapons.xml");
 	}
 	
 	public void draw()
@@ -68,17 +73,13 @@ public class Slugs extends PApplet
 	{
 		background(0);
 		
-		// load all weapons and tools
-		//loadWeapons("weapons.xml");
-		
 		textAlign(CENTER);
 		text("SLUGS", width/2, height/3);
 		text("Click to begin", width/2, height/2);
 		if (mousePressed)
 		{
-			player1 = new Player(this, world, map.randomSpawn());
-			BombWeapon weapon = new BombWeapon(this, world, 1, 0, 45, 0f, ExplosionTrigger.IMPACT);
-			player1.currentItem = weapon;
+			player1 = new Player(this, world, map.randomSpawn(), inventory);
+			player1.giveItem("Bazooka");
 			gameState = 1;
 		}
 	}
@@ -88,16 +89,6 @@ public class Slugs extends PApplet
 		
 		background(255);
 		map.display();
-		
-		if (mousePressed)
-		{
-			//WeaponBox c = new WeaponBox(this, world, new Vec2(mouseX, mouseY), 0);
-			//crates.add(c);
-		}
-		for (ItemBox c: crates)
-		{
-			c.display();
-		}
 		player1.display();
 		world.step();
 	}
@@ -110,15 +101,6 @@ public class Slugs extends PApplet
 	{
 		background(255);
 		map.display();
-		if (mousePressed)
-		{
-			//ItemBox c = new ItemBox(this, world, new Vec2(mouseX, mouseY), 0);
-			//crates.add(c);
-		}
-		for (ItemBox c: crates)
-		{
-			c.display();
-		}
 		world.step();
 	}
 	
@@ -126,30 +108,38 @@ public class Slugs extends PApplet
 	public void loadWeapons(String path) 
 	{
 		XML weaponFile = loadXML(path);
-		XML[] weapons = weaponFile.getChildren("item");
+		XML[] weapons = weaponFile.getChildren("weapon");
 		for (int i = 0; i < weapons.length; i++)
 		{
 			String type = weapons[i].getString("type");
 			String name = weapons[i].getChild("name").getContent();
-			if (type == "bomb")
+			if (type.equals("bomb"))
 			{
+				
+				BombWeapon weapon;
+				
 				XML projectile = weapons[i].getChild("projectile");
 				
 				int projectileCount;
-				int timeout;
 				int damage;
+				float restitution;
 				int clusterCount;
+				int clusterDamage;
+				float clusterVelocity;
+				float clusterRestitution;
 				boolean explodeOnImpact;
+				int timeout;
 				
 				projectileCount = projectile.getInt("amount");
 				if (projectile.getString("explode-on-impact") == "true")
 				{
 					explodeOnImpact = true;
+					restitution = 0;
 				}
 				else
 				{
 					explodeOnImpact = false;
-					float restitution = projectile.getChild("bounciness").getFloatContent(0);
+					restitution = projectile.getChild("bounciness").getFloatContent(0);
 				}
 				
 				if(projectile.hasAttribute("timeout"))
@@ -162,32 +152,35 @@ public class Slugs extends PApplet
 				}
 				damage = projectile.getChild("damage").getIntContent();
 				
-				XML cluster = weapons[i].getChild("cluster");
+				XML cluster = projectile.getChild("cluster");
 				clusterCount = cluster.getInt("amount");
 				if( clusterCount > 0)
 				{
-					float clusterVelocity = cluster.getChild("velocity").getFloatContent();
-					float clusterDamage = cluster.getChild("damage").getFloatContent();
-					float clusterRestitution = cluster.getChild("bounciness").getFloatContent(0);
-					BombWeapon weapon = new BombWeapon(this, world, projectileCount, );
+
+					clusterVelocity = cluster.getChild("velocity").getFloatContent();
+					clusterDamage = cluster.getChild("damage").getIntContent();
+					clusterRestitution = cluster.getChild("bounciness").getFloatContent(0);
+					weapon = new BombWeapon(this, world, projectileCount, damage, restitution,
+							clusterCount, clusterDamage, clusterVelocity, clusterRestitution, 
+							explodeOnImpact, timeout);
 				}
 				else
 				{
-					
+					weapon = new BombWeapon(this, world, projectileCount, damage, restitution, explodeOnImpact, timeout);
 				}
-				
+				itemList.put(name, weapon);
 			}
-			if (type == "melee")
+			if (type.equals("melee"))
 			{
 				
 			}
 			
-			if ( type == "bullet")
+			if (type.equals("bullet"))
 			{
 				
 			}
 			
-			if ( type == "airdrop")
+			if (type.equals("airdrop"))
 			{
 				
 			}

@@ -106,7 +106,9 @@ public class Terrain
 	public void display()
 	{
 		update();
-		p.stroke(0);
+		p.stroke(100, 170, 50);
+		p.strokeWeight(10);
+		p.fill(170, 115, 50);
 		for (PathIterator i = screenMap.getPathIterator(null); !i.isDone(); i.next())
 		{
 			float[] point = new float[6];

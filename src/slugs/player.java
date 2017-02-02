@@ -1,7 +1,6 @@
 package slugs;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
@@ -25,14 +24,15 @@ public class Player extends Entity
 	Vec2 jump;
 	int lastJumped;
 	boolean dir; // true if facing right, false otherwise
+	boolean showInventory;
 	InventoryItem currentItem;
-	Map<String, Integer> inventory;
+	HashMap<String, Integer> inventory;
 	
 	RevoluteJoint motor;
 	private boolean grounded;
 	
 	
-	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, float scaleFactor)
+	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory, float scaleFactor)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 1f, 0f, 2);
 		left = new Vec2(-250 * scaleFactor, 0);
@@ -41,6 +41,8 @@ public class Player extends Entity
 		highJump = new Vec2(0, 1250 * scaleFactor);
 		dir = true;
 		lastJumped = p.millis();
+		
+		colour = p.color(125, 255, 125);
 		
 		PolygonShape shape = new PolygonShape();
 		// define the shape
@@ -76,24 +78,33 @@ public class Player extends Entity
 	    revJD.maxMotorTorque = 750f;
 	    revJD.enableMotor = true;
 	    motor = (RevoluteJoint) world.createJoint(revJD);
+	    
+	    this.inventory = new HashMap<String, Integer>(inventory);
 	}
 	
 	// create player with default size
-	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint)
+	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory)
 	{
-		this(p, world, spawnPoint, 1f);
+		this(p, world, spawnPoint, inventory, 1f);
 	}
 	
 	// give player exactly one of the item
 	public void giveItem(String name)
 	{
-		
+		giveItem(name, 1);
 	}
 	
 	// give player a given quantity of the item
 	public void giveItem(String name, int quantity)
 	{
-		
+		if(inventory.containsKey(name))
+		{
+			inventory.replace(name, inventory.get(name) + quantity);
+		}
+		else
+		{
+			inventory.put(name, quantity);
+		}
 	}
 	
 	// set the players inventory
@@ -105,7 +116,22 @@ public class Player extends Entity
 	// take exactly one of an item from the player
 	public void removeItem(String name)
 	{
-		
+		removeItem(name, 1);	
+	}
+	
+	// take a given amount of an item from the player
+	public void removeItem(String name, int quantity)
+	{
+		int newQuantity = inventory.get(name) - quantity;
+		if(newQuantity < 0)
+		{
+			System.out.println("Warning: taking " + quantity + " of " + name + " from a player with only " + inventory.get(name) + "of that item");
+			inventory.replace(name, 0);
+		}
+		else
+		{
+			inventory.replace(name, newQuantity);
+		}
 	}
 	
 	public boolean isGrounded()
@@ -121,9 +147,14 @@ public class Player extends Entity
 	protected void update()
 	{
 		// use weapon/tool
-		if (p.checkKey(' ') || p.checkKey(PConstants.UP) || p.checkKey(PConstants.DOWN))
+		if (p.checkKey(' '))
 		{
-			//currentItem.update();
+			currentItem.use();
+		}
+		
+		if (p.mousePressed && (p.mouseButton == PConstants.RIGHT))
+		{
+			showInventory ^= true;
 		}
 		
 		if (p.checkKey(PConstants.LEFT))
@@ -167,6 +198,15 @@ public class Player extends Entity
 					grounded = false;
 				}
 			}
+		}
+		
+		if (showInventory)
+		{
+			p.fill(0);
+			p.stroke(225);
+			p.rectMode(PConstants.CORNER);
+			
+			p.rect(p.width - 100, p.height - 200 , 100, 200);
 		}
 	}
 

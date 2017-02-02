@@ -11,9 +11,15 @@ public class MeleeWeapon extends Weapon
 		// TODO Auto-generated constructor stub
 	}
 
-	public void update() {
+	public void update()
+	{
 		// TODO Auto-generated method stub
 
+	}
+	
+	public void use()
+	{
+		
 	}
 
 }

@@ -15,6 +15,7 @@ public abstract class Entity
 	Body[] bodyList;
 	FixtureDef fd;
 	Box2DProcessing world;
+	int colour;
 	
 	public Entity(Slugs p, Box2DProcessing world, Vec2 spawnPoint, BodyType bodyType, boolean fixedRotation, 
 			float density, float friction, float restitution, int bodyCount)
@@ -22,6 +23,8 @@ public abstract class Entity
 		bodyList = new Body[bodyCount];
 		this.p = p;
 		this.world = world;
+		
+		this.colour = p.color(255, 255, 255);
 		
 		// define the physical properties
 		bd = new BodyDef();
@@ -100,6 +103,9 @@ public abstract class Entity
 	// where the actual drawing code is placed.
 	protected void render(Body b)
 	{
+		p.fill(colour);
+		p.noStroke();
+		
 		for (Fixture f = b.getFixtureList(); f != null; f = f.getNext())
 		{
 			Object o = f.getShape();

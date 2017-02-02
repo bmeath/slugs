@@ -12,7 +12,6 @@ public class ItemBox extends Entity
 {
 	PolygonShape shape;
 	String itemName;
-	int colour;
 	
 	public ItemBox(Slugs p, Box2DProcessing world, Vec2 spawnPoint, String itemName, Map<String, InventoryItem> items) 
 	{
