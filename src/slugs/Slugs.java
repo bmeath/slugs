@@ -1,9 +1,7 @@
 package slugs;
 
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.jbox2d.dynamics.contacts.Contact;
 
@@ -86,8 +84,7 @@ public class Slugs extends PApplet
 	
 	public void gameScreen()
 	{
-		
-		background(255);
+		background(185, 225, 255);
 		map.display();
 		player1.display();
 		world.step();
@@ -204,6 +201,14 @@ public class Slugs extends PApplet
 	    return keys[k] || keys[Character.toUpperCase(k)];
 	  }
 	  return false;
+	}
+	
+	public void mouseClicked()
+	{
+		if (mouseButton == RIGHT)
+		{
+			player1.toggleInventory();
+		}
 	}
 	
 	public void beginContact(Contact c)

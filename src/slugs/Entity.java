@@ -72,7 +72,6 @@ public abstract class Entity
 	 */
 	public void display()
 	{
-		update();
 		for(int i = 0; i < bodyList.length; i++)
 		{
 			Vec2 pos = world.getBodyPixelCoord(bodyList[i]);
@@ -85,6 +84,7 @@ public abstract class Entity
 			
 			p.popMatrix();
 		}
+		update();
 	}
 	
 	/* wrapper method to apply a force to the centre of the entity's body */

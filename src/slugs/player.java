@@ -11,7 +11,7 @@ import org.jbox2d.dynamics.joints.RevoluteJoint;
 import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
 import processing.core.PConstants;
-
+import processing.core.PImage;
 import shiffman.box2d.Box2DProcessing;
 
 public class Player extends Entity
@@ -27,7 +27,8 @@ public class Player extends Entity
 	boolean showInventory;
 	InventoryItem currentItem;
 	HashMap<String, Integer> inventory;
-	
+	private final Vec2 inventoryDimensions = new Vec2(150, 250);
+	PImage leftSlug, rightSlug;
 	RevoluteJoint motor;
 	private boolean grounded;
 	
@@ -43,6 +44,8 @@ public class Player extends Entity
 		lastJumped = p.millis();
 		
 		colour = p.color(125, 255, 125);
+		leftSlug = p.loadImage("leftslug.png");
+		rightSlug = p.loadImage("rightslug.png");
 		
 		PolygonShape shape = new PolygonShape();
 		// define the shape
@@ -144,17 +147,23 @@ public class Player extends Entity
 		this.grounded = isGrounded;
 	}
 	
+	public void toggleInventory()
+	{
+		showInventory ^= true;
+	}
+	
 	protected void update()
 	{
+		p.pushMatrix();
+		p.imageMode(PConstants.CENTER);
+		Vec2 loc = getPixelLocation();
+		p.image(dir ? rightSlug : leftSlug, loc.x, loc.y, 24, 24);
+		p.popMatrix();
+		
 		// use weapon/tool
 		if (p.checkKey(' '))
 		{
 			currentItem.use();
-		}
-		
-		if (p.mousePressed && (p.mouseButton == PConstants.RIGHT))
-		{
-			showInventory ^= true;
 		}
 		
 		if (p.checkKey(PConstants.LEFT))
@@ -204,9 +213,10 @@ public class Player extends Entity
 		{
 			p.fill(0);
 			p.stroke(225);
+			p.strokeWeight(1);
 			p.rectMode(PConstants.CORNER);
 			
-			p.rect(p.width - 100, p.height - 200 , 100, 200);
+			p.rect(p.width - inventoryDimensions.x, p.height - inventoryDimensions.y , inventoryDimensions.x, inventoryDimensions.y);
 		}
 	}
 
