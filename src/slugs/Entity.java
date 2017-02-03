@@ -94,7 +94,7 @@ public abstract class Entity
 		bodyList[0].applyForce(force, bodyList[0].getWorldCenter());
 	}
 	
-	/* applies to a body at given index i */
+	/* applies to body number i in the list*/
 	public void applyForce(Vec2 force, int i)
 	{
 		bodyList[i].applyForce(force, bodyList[i].getWorldCenter());

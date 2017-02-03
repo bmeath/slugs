@@ -14,16 +14,8 @@ public abstract class Weapon extends InventoryItem
 		this.maxDamage = maxDamage;
 	}
 	
-	public void display() 
-	{
-		// TODO Auto-generated method stub
-
-	}
-
-	public void use() 
-	{
-		// TODO Auto-generated method stub
-
-	}
+	public abstract void display();
+	protected abstract void update();
+	public abstract void use();
 
 }

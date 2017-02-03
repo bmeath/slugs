@@ -2,6 +2,7 @@ package slugs;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyType;
 
 import shiffman.box2d.Box2DProcessing;
@@ -29,8 +30,8 @@ public class Projectile extends Entity
 		shape = new PolygonShape();
 		
 		// create main body
-		float w = world.scalarPixelsToWorld(4);
-		float h = world.scalarPixelsToWorld(10);
+		float w = world.scalarPixelsToWorld(3);
+		float h = world.scalarPixelsToWorld(8);
 		shape.setAsBox(w, h);
 		
 		fd.shape = shape;
@@ -43,12 +44,19 @@ public class Projectile extends Entity
 	
 	public float getDamageRadius()
 	{
-		return damage * 0.5f;
+		return damage * 0.75f;
 	}
 	
 	protected void update()
 	{
-		System.out.println(getPixelLocation().toString());
+	}
+	
+	public void delete()
+	{
+		for(Body b: bodyList)
+		{
+			world.destroyBody(b);
+		}
 	}
 
 }

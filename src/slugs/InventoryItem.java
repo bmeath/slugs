@@ -4,9 +4,9 @@ public abstract class InventoryItem{
 	
 	Player owner;
 	
-	abstract void use();
-	abstract void update();
-	abstract void display();
+	public abstract void use();
+	protected abstract void update();
+	public abstract void display();
 	
 	public void setOwner(Player p)
 	{

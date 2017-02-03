@@ -30,6 +30,7 @@ public class Terrain
 	ArrayList<Body> bodies;
 	Box2DProcessing world;
 	Area crater;
+	private boolean old;
 	
 	/* steepness is a factor to control how severe the hills are
 	 * where 1 is very rough
@@ -39,6 +40,7 @@ public class Terrain
 	{
 		this.world = world;
 		this.p = p;
+		old = false;
 		bd = new BodyDef();
 		bd.type = BodyType.STATIC;
 		Body b = world.createBody(bd);
@@ -105,7 +107,10 @@ public class Terrain
 
 	public void display()
 	{
-		update();
+		if(old)
+		{
+			update();
+		}
 		p.stroke(100, 170, 50);
 		p.strokeWeight(5);
 		p.fill(170, 115, 50);
@@ -144,23 +149,15 @@ public class Terrain
 		return randomSpawn(40);
 	}
 	
-	protected void update()
-	{
-		if (p.mousePressed)
-		{
-			damage(new Vec2(p.mouseX, p.mouseY), 20);
-			reCreate();
-		}
-	}
-	
 	// make a crater of given diameter at a given location in the terrain
 	public void damage(Vec2 loc, float diameter)
 	{
 		AffineTransform t = new AffineTransform(diameter, 0, 0, diameter, loc.x, loc.y);
 		screenMap.subtract(crater.createTransformedArea(t));
+		old = true;
 	}
 	
-	protected void reCreate()
+	protected void update()
 	{
 		for(Body b: bodies)
 		{

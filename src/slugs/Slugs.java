@@ -21,14 +21,13 @@ public class Slugs extends PApplet
 	int gameState;
 	Terrain map;
 	
+	HashMap<String, Player> players = new HashMap<String, Player>();
+	
 	// hashmap of inventory item instances
 	HashMap<String, InventoryItem> itemList = new HashMap<String, InventoryItem>();
 	
 	// hashmap of quantities of each item a player has
 	HashMap<String, Integer> inventory = new HashMap<String, Integer>();
-	
-	Player player1;
-	
 	
 	public void settings()
 	{
@@ -75,10 +74,10 @@ public class Slugs extends PApplet
 		text("Click to begin", width/2, height/2);
 		if (mousePressed)
 		{
-			player1 = new Player(this, world, map.randomSpawn(), inventory, itemList);
-			player1.giveItem("Bazooka");
-			player1.selectItem("Bazooka");
-			player1.currentItem.setOwner(player1);
+			players.put("Brendan", new Player(this, world, map.randomSpawn(), inventory, itemList));
+			players.get("Brendan").giveItem("Bazooka");
+			players.get("Brendan").selectItem("Bazooka");
+			players.get("Brendan").currentItem.setOwner(players.get("Brendan"));
 			gameState = 1;
 		}
 	}
@@ -87,7 +86,10 @@ public class Slugs extends PApplet
 	{
 		background(185, 225, 255);
 		map.display();
-		player1.display();
+		for(Player p: players.values())
+		{
+			p.display();
+		}
 		world.step();
 	}
 	
@@ -186,29 +188,29 @@ public class Slugs extends PApplet
 	}
 	
 	public void keyPressed()
-	{ 
-	  keys[keyCode] = true;
+	{
+		keys[keyCode] = true;
 	}
 	 
 	public void keyReleased()
 	{
-	  keys[keyCode] = false; 
+		keys[keyCode] = false; 
 	}
 	
 	public boolean checkKey(int k)
 	{
-	  if (keys.length >= k) 
-	  {
-	    return keys[k] || keys[Character.toUpperCase(k)];
-	  }
-	  return false;
+		if (keys.length >= k)
+		{
+			return keys[k] || keys[Character.toUpperCase(k)];
+		}
+		return false;
 	}
 	
 	public void mouseClicked()
 	{
 		if (mouseButton == RIGHT)
 		{
-			player1.toggleInventory();
+			players.get("Brendan").toggleInventory();
 		}
 	}
 	
@@ -234,23 +236,22 @@ public class Slugs extends PApplet
 		
 		if (a instanceof Projectile)
 		{
-			System.out.println("projectile hit something");	
 			Projectile p = (Projectile) a;
 			map.damage(p.getPixelLocation(), p.getDamageRadius());
+			p.delete();
+			
 			// todo: damage any players within range
 		}
 		
 		if (b instanceof Projectile)
 		{
-			System.out.println("projectile hit something");
 			Projectile p = (Projectile) b;
-			System.out.println(p.getPixelLocation());
-			System.out.println(p.getDamageRadius());
 			map.damage(p.getPixelLocation(), p.getDamageRadius());
-			// todo: damage any players within range
+			p.delete();
+				// todo: damage any players within range
 		}
 	}
-	
+		
 	public void endContact(Contact c)
 	{
 

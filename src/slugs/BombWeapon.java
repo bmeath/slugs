@@ -17,9 +17,10 @@ public class BombWeapon extends Weapon
 	float aimAngle;
 	Vec2 projectileForce;
 	int projectileCount;
+	float power;
 
-	public BombWeapon(Slugs p, Box2DProcessing world, int projectileCount, int maxDamage, float restitution,
-			int clusterCount, int clusterDamage, float clusterVelocity, float clusterRestitution, boolean explodeOnImpact, int timeout)
+	public BombWeapon(Slugs p, Box2DProcessing world, int projectileCount, int maxDamage, float restitution, int clusterCount, 
+			int clusterDamage, float clusterVelocity, float clusterRestitution, boolean explodeOnImpact, int timeout)
 	{
 		super(p, maxDamage);
 		this.p = p;
@@ -29,6 +30,7 @@ public class BombWeapon extends Weapon
 		projectiles = new Projectile[projectileCount];
 		aimAngle = 90;
 		projectileForce = new Vec2();
+		power = 0;
 	}
 	
 	public BombWeapon(Slugs p, Box2DProcessing world, int projectileCount, int maxDamage, float restitution, boolean explodeOnImpact, int timeout)
@@ -36,32 +38,53 @@ public class BombWeapon extends Weapon
 		this(p, world, projectileCount, maxDamage, restitution, 0, 0, 0, 0, explodeOnImpact, timeout);
 	}
 	
-	public void update()
+	public void display()
+	{
+		update();
+		for(Projectile p: projectiles)
+		{
+			if(p != null)
+			{
+				p.display();
+			}
+		}
+		Vec2 lineStart = owner.getPixelLocation();
+		Vec2 lineEnd = new Vec2(lineStart.x + 40 * PApplet.cos(owner.dir ? PConstants.PI - aimAngle : aimAngle), lineStart.y - 40 * PApplet.sin(owner.dir ? PConstants.PI - aimAngle : aimAngle));
+		p.stroke(255, 0, 0);
+		p.strokeWeight(1);
+		p.line(lineStart.x, lineStart.y, lineEnd.x, lineEnd.y);
+	}
+	
+	protected void update()
 	{
 		if (p.checkKey(PConstants.UP))
 		{
-			aimAngle += 0.25;
+			aimAngle -= 0.025;
 		}
 		
 		if (p.checkKey(PConstants.DOWN))
 		{
-			aimAngle -= 0.25;
+			aimAngle += 0.025;
 		}
 		
-		projectileForce.x = PApplet.cos(PApplet.radians(aimAngle));
-		projectileForce.y = PApplet.sin(PApplet.radians(aimAngle));
-		projectileForce.mulLocal(1500);
+		projectileForce.x = PApplet.cos(owner.dir ? PConstants.PI - aimAngle : aimAngle);
+		projectileForce.y = PApplet.sin(owner.dir ? PConstants.PI - aimAngle : aimAngle);
+		
+		if((power > 0 && p.keys[' '] == false) || power == 5000)
+		{
+			projectileForce.mulLocal(power);
+			Vec2 loc = owner.getPixelLocation();
+			loc.x += 10 * ((owner.dir) ? 1 : -1);
+			projectiles[--projectileCount] = new Projectile(p, world, loc, maxDamage, restitution, clusterCount, projectileForce);
+			power = 0;
+		}
 	}
 	
 	public void use()
 	{
-		System.out.println("use");
 		if(projectileCount > 0)
 		{
-			Vec2 loc = owner.getPixelLocation();
-			loc.x += 8 * ((owner.dir) ? 1 : -1);
-			projectiles[projectileCount - 1] = new Projectile(p, world, loc, maxDamage, restitution, clusterCount, projectileForce);
-			projectileCount--;
+			power += 40;
 		}
 	}
 }

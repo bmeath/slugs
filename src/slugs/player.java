@@ -20,10 +20,11 @@ public class Player extends Entity
 	
 	Vec2 left;
 	Vec2 right;
+	Vec2 farLeft;
+	Vec2 farRight;
 	Vec2 highJump;
 	Vec2 jump;
 	int lastJumped;
-	int lastUsedItem;
 	boolean dir; // true if facing right, false otherwise
 	boolean showInventory;
 	InventoryItem currentItem;
@@ -33,17 +34,19 @@ public class Player extends Entity
 	PImage leftSlug, rightSlug;
 	RevoluteJoint motor;
 	private boolean grounded;
+	int health;
 	
 	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory, HashMap<String, InventoryItem> itemList, float scaleFactor)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 1f, 0f, 2);
 		left = new Vec2(-250 * scaleFactor, 0);
 		right = new Vec2(250 * scaleFactor, 0);
+		farLeft = new Vec2(-500 * scaleFactor, 0);
+		farRight = new Vec2(500 * scaleFactor, 0);
 		jump = new Vec2(0, 750 * scaleFactor);
 		highJump = new Vec2(0, 1250 * scaleFactor);
 		dir = true;
 		lastJumped = p.millis();
-		lastUsedItem = p.millis();
 		
 		colour = p.color(125, 255, 125);
 		leftSlug = p.loadImage("leftslug.png");
@@ -173,7 +176,7 @@ public class Player extends Entity
 	{
 		if(currentItem != null)
 		{
-			currentItem.update();
+			currentItem.display();
 		}
 		
 		p.pushMatrix();
@@ -185,13 +188,7 @@ public class Player extends Entity
 		// use weapon/utility
 		if (p.checkKey(' '))
 		{
-			if(p.millis() > lastUsedItem + 3000)
-			{
-				lastUsedItem = p.millis();
-				System.out.println("using item");
-				currentItem.use();
-				
-			}
+			currentItem.use();
 		}
 		
 		if (p.checkKey(PConstants.LEFT))
@@ -216,7 +213,7 @@ public class Player extends Entity
 			{
 				if(p.millis() > lastJumped + 1000)
 				{
-					applyForce(jump.add(dir ? right : left));
+					applyForce(jump.add(dir ? farRight : farLeft));
 					lastJumped = p.millis();
 					grounded = false;
 				}
