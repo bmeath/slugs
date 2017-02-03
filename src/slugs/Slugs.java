@@ -77,7 +77,6 @@ public class Slugs extends PApplet
 			players.put("Brendan", new Player(this, world, map.randomSpawn(), inventory, itemList));
 			players.get("Brendan").giveItem("Bazooka");
 			players.get("Brendan").selectItem("Bazooka");
-			players.get("Brendan").currentItem.setOwner(players.get("Brendan"));
 			gameState = 1;
 		}
 	}

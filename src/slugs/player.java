@@ -145,7 +145,8 @@ public class Player extends Entity
 	
 	public void selectItem(String name)
 	{
-		currentItem = itemList.get(name);
+		currentItem = (InventoryItem) itemList.get(name).clone();
+		currentItem.setOwner(this);
 	}
 	
 	public boolean isGrounded()

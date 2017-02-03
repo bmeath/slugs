@@ -1,6 +1,7 @@
 package slugs;
 
-public abstract class InventoryItem{
+public abstract class InventoryItem implements Cloneable
+{
 	
 	Player owner;
 	
@@ -11,5 +12,18 @@ public abstract class InventoryItem{
 	public void setOwner(Player p)
 	{
 		this.owner = p;
+	}
+	
+	public Object clone()
+	{
+		try 
+		{
+			return super.clone();
+		} 
+		catch (CloneNotSupportedException e) 
+		{
+			e.printStackTrace();
+		}
+		return this;
 	}
 }
