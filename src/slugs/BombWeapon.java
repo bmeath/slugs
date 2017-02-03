@@ -14,7 +14,6 @@ public class BombWeapon extends Weapon
 	float restitution;
 	float maxVelocity;
 	int clusterCount;
-	float initialVelocity;
 	float aimAngle;
 	Vec2 projectileForce;
 	int projectileCount;
@@ -22,55 +21,46 @@ public class BombWeapon extends Weapon
 	public BombWeapon(Slugs p, Box2DProcessing world, int projectileCount, int maxDamage, float restitution,
 			int clusterCount, int clusterDamage, float clusterVelocity, float clusterRestitution, boolean explodeOnImpact, int timeout)
 	{
-		super(p);
+		super(p, maxDamage);
 		this.p = p;
 		this.world = world;
 		this.clusterCount = clusterCount;
 		this.projectileCount = projectileCount;
 		projectiles = new Projectile[projectileCount];
+		aimAngle = 90;
+		projectileForce = new Vec2();
 	}
 	
 	public BombWeapon(Slugs p, Box2DProcessing world, int projectileCount, int maxDamage, float restitution, boolean explodeOnImpact, int timeout)
 	{
-		super(p);
-		this.p = p;
-		this.world = world;
-		this.clusterCount = 0;
-		this.projectileCount = projectileCount;
-		projectiles = new Projectile[projectileCount];
-	}
-	
-	public void display()
-	{
-		
+		this(p, world, projectileCount, maxDamage, restitution, 0, 0, 0, 0, explodeOnImpact, timeout);
 	}
 	
 	public void update()
 	{
 		if (p.checkKey(PConstants.UP))
 		{
-			aimAngle++;
+			aimAngle += 0.25;
 		}
 		
 		if (p.checkKey(PConstants.DOWN))
 		{
-			aimAngle--;
+			aimAngle -= 0.25;
 		}
 		
-		projectileForce.x = PApplet.cos(aimAngle);
-		projectileForce.y = PApplet.sin(aimAngle);
-		projectileForce.mulLocal(50);
-		
+		projectileForce.x = PApplet.cos(PApplet.radians(aimAngle));
+		projectileForce.y = PApplet.sin(PApplet.radians(aimAngle));
+		projectileForce.mulLocal(1500);
 	}
 	
-	public void use(Player user)
+	public void use()
 	{
+		System.out.println("use");
 		if(projectileCount > 0)
 		{
-			Vec2 loc = user.getPixelLocation();
-			loc.x += 8 * ((user.dir) ? 1 : -1);
-			
-			projectiles[projectileCount - 1] = new Projectile(p, world, loc, maxDamage, restitution, initialVelocity, clusterCount, projectileForce);
+			Vec2 loc = owner.getPixelLocation();
+			loc.x += 8 * ((owner.dir) ? 1 : -1);
+			projectiles[projectileCount - 1] = new Projectile(p, world, loc, maxDamage, restitution, clusterCount, projectileForce);
 			projectileCount--;
 		}
 	}

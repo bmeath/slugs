@@ -107,7 +107,7 @@ public class Terrain
 	{
 		update();
 		p.stroke(100, 170, 50);
-		p.strokeWeight(10);
+		p.strokeWeight(5);
 		p.fill(170, 115, 50);
 		for (PathIterator i = screenMap.getPathIterator(null); !i.isDone(); i.next())
 		{

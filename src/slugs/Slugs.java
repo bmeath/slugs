@@ -1,6 +1,5 @@
 package slugs;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jbox2d.dynamics.contacts.Contact;
@@ -76,8 +75,10 @@ public class Slugs extends PApplet
 		text("Click to begin", width/2, height/2);
 		if (mousePressed)
 		{
-			player1 = new Player(this, world, map.randomSpawn(), inventory);
+			player1 = new Player(this, world, map.randomSpawn(), inventory, itemList);
 			player1.giveItem("Bazooka");
+			player1.selectItem("Bazooka");
+			player1.currentItem.setOwner(player1);
 			gameState = 1;
 		}
 	}
@@ -233,15 +234,19 @@ public class Slugs extends PApplet
 		
 		if (a instanceof Projectile)
 		{
+			System.out.println("projectile hit something");	
 			Projectile p = (Projectile) a;
-			map.damage(p.getPixelLocation(), p.damageRadius);
+			map.damage(p.getPixelLocation(), p.getDamageRadius());
 			// todo: damage any players within range
 		}
 		
 		if (b instanceof Projectile)
 		{
+			System.out.println("projectile hit something");
 			Projectile p = (Projectile) b;
-			map.damage(p.getPixelLocation(), p.damageRadius);
+			System.out.println(p.getPixelLocation());
+			System.out.println(p.getDamageRadius());
+			map.damage(p.getPixelLocation(), p.getDamageRadius());
 			// todo: damage any players within range
 		}
 	}

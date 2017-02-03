@@ -7,7 +7,7 @@ public class MeleeWeapon extends Weapon
 
 	public MeleeWeapon(Slugs p, Box2DProcessing world, int maxDamage)
 	{
-		super(p);
+		super(p, maxDamage);
 		// TODO Auto-generated constructor stub
 	}
 

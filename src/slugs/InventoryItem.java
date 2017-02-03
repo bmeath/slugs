@@ -1,8 +1,15 @@
 package slugs;
 
-public interface InventoryItem {
+public abstract class InventoryItem{
 	
-	void use();
-	void update();
-	void display();
+	Player owner;
+	
+	abstract void use();
+	abstract void update();
+	abstract void display();
+	
+	public void setOwner(Player p)
+	{
+		this.owner = p;
+	}
 }

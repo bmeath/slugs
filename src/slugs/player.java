@@ -23,17 +23,18 @@ public class Player extends Entity
 	Vec2 highJump;
 	Vec2 jump;
 	int lastJumped;
+	int lastUsedItem;
 	boolean dir; // true if facing right, false otherwise
 	boolean showInventory;
 	InventoryItem currentItem;
 	HashMap<String, Integer> inventory;
+	HashMap<String, InventoryItem> itemList;
 	private final Vec2 inventoryDimensions = new Vec2(150, 250);
 	PImage leftSlug, rightSlug;
 	RevoluteJoint motor;
 	private boolean grounded;
 	
-	
-	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory, float scaleFactor)
+	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory, HashMap<String, InventoryItem> itemList, float scaleFactor)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 1f, 0f, 2);
 		left = new Vec2(-250 * scaleFactor, 0);
@@ -42,6 +43,7 @@ public class Player extends Entity
 		highJump = new Vec2(0, 1250 * scaleFactor);
 		dir = true;
 		lastJumped = p.millis();
+		lastUsedItem = p.millis();
 		
 		colour = p.color(125, 255, 125);
 		leftSlug = p.loadImage("leftslug.png");
@@ -83,12 +85,13 @@ public class Player extends Entity
 	    motor = (RevoluteJoint) world.createJoint(revJD);
 	    
 	    this.inventory = new HashMap<String, Integer>(inventory);
+	    this.itemList = itemList;
 	}
 	
 	// create player with default size
-	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory)
+	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory, HashMap<String, InventoryItem> itemList)
 	{
-		this(p, world, spawnPoint, inventory, 1f);
+		this(p, world, spawnPoint, inventory, itemList, 1f);
 	}
 	
 	// give player exactly one of the item
@@ -137,6 +140,11 @@ public class Player extends Entity
 		}
 	}
 	
+	public void selectItem(String name)
+	{
+		currentItem = itemList.get(name);
+	}
+	
 	public boolean isGrounded()
 	{
 		return grounded;
@@ -152,18 +160,38 @@ public class Player extends Entity
 		showInventory ^= true;
 	}
 	
+	public void showInventory()
+	{
+		p.fill(0);
+		p.stroke(225);
+		p.strokeWeight(1);
+		p.rectMode(PConstants.CORNER);
+		p.rect(p.width - inventoryDimensions.x, p.height - inventoryDimensions.y , inventoryDimensions.x, inventoryDimensions.y);
+	}
+	
 	protected void update()
 	{
+		if(currentItem != null)
+		{
+			currentItem.update();
+		}
+		
 		p.pushMatrix();
 		p.imageMode(PConstants.CENTER);
 		Vec2 loc = getPixelLocation();
 		p.image(dir ? rightSlug : leftSlug, loc.x, loc.y, 24, 24);
 		p.popMatrix();
 		
-		// use weapon/tool
+		// use weapon/utility
 		if (p.checkKey(' '))
 		{
-			currentItem.use();
+			if(p.millis() > lastUsedItem + 3000)
+			{
+				lastUsedItem = p.millis();
+				System.out.println("using item");
+				currentItem.use();
+				
+			}
 		}
 		
 		if (p.checkKey(PConstants.LEFT))

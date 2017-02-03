@@ -9,15 +9,19 @@ import shiffman.box2d.Box2DProcessing;
 public class Projectile extends Entity
 {
 	int damage; // maximum damage a player can take from this projectile
-	float damageRadius; // how widespread is the explosion?
 	Vec2 spawnPoint; // where it emits from
 	boolean affectsTerrain; // can it destroy the terrain?
 	Projectile[] clusters;
 	Vec2 angle;
 	
-	public Projectile(Slugs p, Box2DProcessing world, Vec2 spawnPoint, int maxDamage, float restitution, float initialVelocity, int clusterCount, Vec2 force)
+	public Projectile(Slugs p, Box2DProcessing world, Vec2 spawnPoint, int maxDamage, float restitution, int clusterCount, Vec2 force)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, false, 1, 1, restitution, 1);
+		
+		this.colour = p.color(255, 0, 0);
+		
+		this.damage = maxDamage;
+		
 		clusters = new Projectile[clusterCount];
 		
 		PolygonShape shape = new PolygonShape();
@@ -34,13 +38,17 @@ public class Projectile extends Entity
 		bodyList[0].setUserData(this);
 		
 		bodyList[0].applyForceToCenter(force);
+		
 	}
 	
-	
+	public float getDamageRadius()
+	{
+		return damage * 0.5f;
+	}
 	
 	protected void update()
 	{
-		
+		System.out.println(getPixelLocation().toString());
 	}
 
 }

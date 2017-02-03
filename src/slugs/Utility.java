@@ -1,6 +1,6 @@
 package slugs;
 
-public abstract class Utility implements InventoryItem
+public abstract class Utility extends InventoryItem
 {
 
 	public Utility(Slugs p, String name, int quantity)
