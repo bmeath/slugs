@@ -2,6 +2,7 @@ package slugs;
 
 import java.util.HashMap;
 
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
@@ -235,24 +236,37 @@ public class Slugs extends PApplet
 		
 		if (a instanceof Projectile)
 		{
-			Projectile p = (Projectile) a;
-			map.damage(p.getPixelLocation(), p.getDamageRadius());
-			p.delete();
-			
-			// todo: damage any players within range
+			handleProjectileContact(a);
 		}
 		
 		if (b instanceof Projectile)
 		{
-			Projectile p = (Projectile) b;
-			map.damage(p.getPixelLocation(), p.getDamageRadius());
-			p.delete();
-				// todo: damage any players within range
+			handleProjectileContact(b);
 		}
 	}
 		
 	public void endContact(Contact c)
 	{
 
+	}
+	
+	public void handleProjectileContact(Object o)
+	{
+		Projectile proj = (Projectile) o;
+		
+		Vec2 loc = proj.getPixelLocation();
+		float radius = proj.getDamageRadius();
+		map.damage(loc, radius);
+		for(Player player: players.values())
+		{
+			Vec2 playerLoc = player.getPixelLocation();
+			float dist = dist(loc.x, loc.y, playerLoc.x, playerLoc.y);
+			if(dist < radius)
+			{
+				// damage dealt is proportional to proximity of player to explosion
+				player.hurt((int) map(dist, 0, radius, proj.damage, 0));
+			}
+		}
+		proj.delete();
 	}
 }

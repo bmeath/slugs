@@ -36,7 +36,8 @@ public class Player extends Entity
 	private boolean grounded;
 	int health;
 	
-	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory, HashMap<String, InventoryItem> itemList, float scaleFactor)
+	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory, 
+			HashMap<String, InventoryItem> itemList, int health, float scaleFactor)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 1f, 0f, 2);
 		left = new Vec2(-250 * scaleFactor, 0);
@@ -89,12 +90,13 @@ public class Player extends Entity
 	    
 	    this.inventory = new HashMap<String, Integer>(inventory);
 	    this.itemList = itemList;
+	    this.health = health;
 	}
 	
 	// create player with default size
 	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory, HashMap<String, InventoryItem> itemList)
 	{
-		this(p, world, spawnPoint, inventory, itemList, 1f);
+		this(p, world, spawnPoint, inventory, itemList, 100, 1f);
 	}
 	
 	// give player exactly one of the item
@@ -184,6 +186,9 @@ public class Player extends Entity
 		p.imageMode(PConstants.CENTER);
 		Vec2 loc = getPixelLocation();
 		p.image(dir ? rightSlug : leftSlug, loc.x, loc.y, 24, 24);
+		p.textAlign(PConstants.CENTER, PConstants.CENTER);
+		p.fill(0);
+		p.text(health, loc.x, loc.y - 20);
 		p.popMatrix();
 		
 		// use weapon/utility
@@ -243,6 +248,14 @@ public class Player extends Entity
 			p.rectMode(PConstants.CORNER);
 			
 			p.rect(p.width - inventoryDimensions.x, p.height - inventoryDimensions.y , inventoryDimensions.x, inventoryDimensions.y);
+		}
+	}
+
+	public void hurt(int damage) {
+		health -= damage;
+		if(health < 0)
+		{
+			health = 0;
 		}
 	}
 
