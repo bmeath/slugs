@@ -28,7 +28,7 @@ public class BombWeapon extends Weapon
 		this.clusterCount = clusterCount;
 		this.projectileCount = projectileCount;
 		projectiles = new Projectile[projectileCount];
-		aimAngle = 90;
+		aimAngle = PConstants.PI;
 		projectileForce = new Vec2();
 		power = 0;
 	}
@@ -59,14 +59,25 @@ public class BombWeapon extends Weapon
 	{
 		if (p.checkKey(PConstants.UP))
 		{
-			aimAngle -= 0.025;
+			// prevent aiming behind view of player
+			if(aimAngle > PConstants.PI / 2)
+			{
+				aimAngle -= 0.025;
+			}
 		}
 		
 		if (p.checkKey(PConstants.DOWN))
 		{
-			aimAngle += 0.025;
+			// prevent aiming behind view of player
+			if(aimAngle < (3 * PConstants.PI) / 2)
+			{
+				aimAngle += 0.025;
+			}
 		}
 		
+		System.out.println(aimAngle);
+		
+		// flip angle horizontally if player is facing to the right
 		projectileForce.x = PApplet.cos(owner.dir ? PConstants.PI - aimAngle : aimAngle);
 		projectileForce.y = PApplet.sin(owner.dir ? PConstants.PI - aimAngle : aimAngle);
 		
