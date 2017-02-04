@@ -35,6 +35,7 @@ public class Player extends Entity
 	RevoluteJoint motor;
 	private boolean grounded;
 	int health;
+	float fallY;
 	
 	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory, 
 			HashMap<String, InventoryItem> itemList, int health, float scaleFactor)
@@ -91,6 +92,7 @@ public class Player extends Entity
 	    this.inventory = new HashMap<String, Integer>(inventory);
 	    this.itemList = itemList;
 	    this.health = health;
+	    this.fallY = getPixelLocation().y;
 	}
 	
 	// create player with default size
@@ -219,6 +221,7 @@ public class Player extends Entity
 			{
 				if(p.millis() > lastJumped + 1000)
 				{
+					fallY = getPixelLocation().y;
 					applyForce(jump.add(dir ? farRight : farLeft));
 					lastJumped = p.millis();
 					grounded = false;
@@ -233,6 +236,7 @@ public class Player extends Entity
 			{
 				if(p.millis() > lastJumped + 1000)
 				{
+					fallY = getPixelLocation().y;
 					applyForce(highJump.add(dir ? left : right));
 					lastJumped = p.millis();
 					grounded = false;
@@ -251,12 +255,18 @@ public class Player extends Entity
 		}
 	}
 
-	public void hurt(int damage) {
+	public void hurt(int damage) 
+	{
 		health -= damage;
 		if(health < 0)
 		{
 			health = 0;
 		}
+	}
+	
+	public float getFallDistance()
+	{
+		return fallY - getPixelLocation().y;
 	}
 
 }

@@ -75,8 +75,6 @@ public class BombWeapon extends Weapon
 			}
 		}
 		
-		System.out.println(aimAngle);
-		
 		// flip angle horizontally if player is facing to the right
 		projectileForce.x = PApplet.cos(owner.dir ? PConstants.PI - aimAngle : aimAngle);
 		projectileForce.y = PApplet.sin(owner.dir ? PConstants.PI - aimAngle : aimAngle);

@@ -226,12 +226,27 @@ public class Slugs extends PApplet
 		if (a instanceof Player && b instanceof Terrain)
 		{
 			Player player = (Player) a;
+			
+			// check if player should take fall damage
+			if(!player.isGrounded() && player.getFallDistance() < -90)
+			{
+				player.hurt(5);
+			}
 			player.setGrounded(true);
+			System.out.println(player.getFallDistance());
+			
 		}
 		if (b instanceof Player && a instanceof Terrain)
 		{
 			Player player = (Player) b;
+			
+			// check if player should take fall damage
+			if(!player.isGrounded() && player.getFallDistance() < -90)
+			{
+				player.hurt(5);
+			}
 			player.setGrounded(true);
+			System.out.println(player.getFallDistance());
 		}
 		
 		if (a instanceof Projectile)
