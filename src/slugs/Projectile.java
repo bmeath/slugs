@@ -41,13 +41,13 @@ public class Projectile extends Entity
 		shape = new PolygonShape();
 		
 		// create main body
-		float w = world.scalarPixelsToWorld(3);
-		float h = world.scalarPixelsToWorld(8);
+		float w = world.scalarPixelsToWorld(1);
+		float h = world.scalarPixelsToWorld(7);
 		shape.setAsBox(w, h);
 		
 		fd.shape = shape;
 		bodyList.get(0).createFixture(fd);
-		if(explodeOnImpact)
+		if (explodeOnImpact)
 		{
 			bodyList.get(0).setUserData(this);
 		}

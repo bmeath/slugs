@@ -24,10 +24,10 @@ public class Slugs extends PApplet
 	HashMap<String, Player> players = new HashMap<String, Player>();
 	
 	// hashmap of inventory item instances
-	HashMap<String, InventoryItem> itemList = new HashMap<String, InventoryItem>();
+	HashMap<String, InventoryItem> itemStore = new HashMap<String, InventoryItem>();
 	
 	// hashmap of quantities of each item a player has
-	HashMap<String, Integer> inventory = new HashMap<String, Integer>();
+	HashMap<String, Integer> itemQuantities = new HashMap<String, Integer>();
 	
 	public void settings()
 	{
@@ -74,8 +74,7 @@ public class Slugs extends PApplet
 		text("Click to begin", width/2, height/2);
 		if (mousePressed)
 		{
-			players.put("Brendan", new Player(this, world, map.randomSpawn(), inventory, itemList));
-			players.get("Brendan").selectItem("Grenade");
+			players.put("Brendan", new Player("Brendan", this, world, map.randomSpawn(), itemQuantities, itemStore));
 			gameState = 1;
 		}
 	}
@@ -109,7 +108,7 @@ public class Slugs extends PApplet
 		XML[] weapons = weaponFile.getChildren("weapon");
 		for (int i = 0; i < weapons.length; i++)
 		{
-			int defaultAmount = weapons[i].getInt("defaultAmount");
+			int defaultAmount = weapons[i].getInt("default-amount");
 			String type = weapons[i].getString("type");
 			String name = weapons[i].getChild("name").getContent();
 			if (type.equals("bomb"))
@@ -130,7 +129,7 @@ public class Slugs extends PApplet
 				int timeout;
 				
 				projectileCount = projectile.getInt("amount");
-				if (projectile.getString("explode-on-impact") == "true")
+				if (projectile.getString("explode-on-impact").equals("true"))
 				{
 					explodeOnImpact = true;
 					restitution = 0;
@@ -167,8 +166,8 @@ public class Slugs extends PApplet
 				{
 					weapon = new BombWeapon(this, world, players, map, projectileCount, damage, restitution, explodeOnImpact, timeout);
 				}
-				itemList.put(name, weapon);
-				inventory.put(name, defaultAmount);
+				itemStore.put(name, weapon);
+				itemQuantities.put(name, defaultAmount);
 			}
 			if (type.equals("melee"))
 			{
@@ -208,10 +207,7 @@ public class Slugs extends PApplet
 	
 	public void mouseClicked()
 	{
-		if (mouseButton == RIGHT)
-		{
-			players.get("Brendan").toggleInventory();
-		}
+		players.get("Brendan").mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
 	public void beginContact(Contact c)

@@ -10,7 +10,7 @@ projectile types:
 	bomb 
 -->
 <weapons>
-	<weapon type="bomb" default-amount="99">
+	<weapon type="bomb" default-amount="20">
 	    <name>Bazooka</name>
 	    <projectile amount="1" explode-on-impact="true">
 	        <damage>45</damage>
@@ -22,7 +22,7 @@ projectile types:
 	        </cluster>
 	   	</projectile>
 	</weapon>
-	<weapon type="bomb" default-amount="99">
+	<weapon type="bomb" default-amount="20">
 	    <name>Grenade</name>
 	    <projectile amount="1" explode-on-impact="false" timeout="2">
 	        <damage>45</damage>
