@@ -85,7 +85,7 @@ public class Player extends Entity
 	    RevoluteJointDef revJD = new RevoluteJointDef();
 	    revJD.initialize(bodyList.get(0), bodyList.get(1), bodyList.get(1).getWorldCenter());
 	    revJD.motorSpeed = -PConstants.PI*2;
-	    revJD.maxMotorTorque = 750f;
+	    revJD.maxMotorTorque = 1000f;
 	    revJD.enableMotor = true;
 	    motor = (RevoluteJoint) world.createJoint(revJD);
 	    

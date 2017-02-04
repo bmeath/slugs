@@ -2,7 +2,6 @@ package slugs;
 
 import java.util.HashMap;
 
-import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
@@ -76,8 +75,7 @@ public class Slugs extends PApplet
 		if (mousePressed)
 		{
 			players.put("Brendan", new Player(this, world, map.randomSpawn(), inventory, itemList));
-			players.get("Brendan").giveItem("Bazooka");
-			players.get("Brendan").selectItem("Bazooka");
+			players.get("Brendan").selectItem("Grenade");
 			gameState = 1;
 		}
 	}
@@ -111,6 +109,7 @@ public class Slugs extends PApplet
 		XML[] weapons = weaponFile.getChildren("weapon");
 		for (int i = 0; i < weapons.length; i++)
 		{
+			int defaultAmount = weapons[i].getInt("defaultAmount");
 			String type = weapons[i].getString("type");
 			String name = weapons[i].getChild("name").getContent();
 			if (type.equals("bomb"))
@@ -144,7 +143,7 @@ public class Slugs extends PApplet
 				
 				if(projectile.hasAttribute("timeout"))
 				{
-					timeout = projectile.getInt("timeout");
+					timeout = projectile.getInt("timeout") * 1000;
 				}
 				else
 				{
@@ -160,15 +159,16 @@ public class Slugs extends PApplet
 					clusterVelocity = cluster.getChild("velocity").getFloatContent();
 					clusterDamage = cluster.getChild("damage").getIntContent();
 					clusterRestitution = cluster.getChild("bounciness").getFloatContent(0);
-					weapon = new BombWeapon(this, world, projectileCount, damage, restitution,
+					weapon = new BombWeapon(this, world, players, map, projectileCount, damage, restitution,
 							clusterCount, clusterDamage, clusterVelocity, clusterRestitution, 
 							explodeOnImpact, timeout);
 				}
 				else
 				{
-					weapon = new BombWeapon(this, world, projectileCount, damage, restitution, explodeOnImpact, timeout);
+					weapon = new BombWeapon(this, world, players, map, projectileCount, damage, restitution, explodeOnImpact, timeout);
 				}
 				itemList.put(name, weapon);
+				inventory.put(name, defaultAmount);
 			}
 			if (type.equals("melee"))
 			{
@@ -249,39 +249,19 @@ public class Slugs extends PApplet
 		
 		if (a instanceof Projectile)
 		{
-			handleProjectileContact(a);
+			Projectile proj = (Projectile) a;
+			proj.handleExplosion();
 		}
 		
 		if (b instanceof Projectile)
 		{
-			handleProjectileContact(b);
+			Projectile proj = (Projectile) b;
+			proj.handleExplosion();
 		}
 	}
 		
 	public void endContact(Contact c)
 	{
 
-	}
-	
-	public void handleProjectileContact(Object o)
-	{
-		Projectile proj = (Projectile) o;
-		if (!proj.bodyList.isEmpty())
-		{
-			Vec2 loc = proj.getPixelLocation();
-			float radius = proj.getDamageRadius();
-			map.damage(loc, radius);
-			for(Player player: players.values())
-			{
-				Vec2 playerLoc = player.getPixelLocation();
-				float dist = dist(loc.x, loc.y, playerLoc.x, playerLoc.y);
-				if(dist < radius)
-				{
-					// damage dealt is proportional to proximity of player to explosion
-					player.hurt((int) map(dist, 10, radius, proj.damage, 5));
-				}
-			}
-			proj.hit = true;
-		}
 	}
 }

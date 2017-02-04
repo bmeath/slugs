@@ -10,11 +10,23 @@ projectile types:
 	bomb 
 -->
 <weapons>
-	<weapon type="bomb">
+	<weapon type="bomb" default-amount="99">
 	    <name>Bazooka</name>
-	    <projectile amount="10000" explode-on-impact="true">
+	    <projectile amount="1" explode-on-impact="true">
 	        <damage>45</damage>
 	   		<bounciness></bounciness>
+	    	<cluster amount="0">
+	    		<damage>10</damage>
+	            <velocity></velocity>
+	   			<bounciness></bounciness>
+	        </cluster>
+	   	</projectile>
+	</weapon>
+	<weapon type="bomb" default-amount="99">
+	    <name>Grenade</name>
+	    <projectile amount="1" explode-on-impact="false" timeout="2">
+	        <damage>45</damage>
+	   		<bounciness>0.5</bounciness>
 	    	<cluster amount="0">
 	    		<damage>10</damage>
 	            <velocity></velocity>

@@ -1,6 +1,7 @@
 package slugs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -21,24 +22,33 @@ public class BombWeapon extends Weapon
 	Vec2 projectileForce;
 	int projectileCount;
 	float power;
+	boolean explodeOnImpact;
+	int timeout;
+	HashMap<String, Player> players;
+	Terrain map;
 
-	public BombWeapon(Slugs p, Box2DProcessing world, int projectileCount, int maxDamage, float restitution, int clusterCount, 
-			int clusterDamage, float clusterVelocity, float clusterRestitution, boolean explodeOnImpact, int timeout)
+	public BombWeapon(Slugs p, Box2DProcessing world, HashMap<String, Player> players, Terrain map, int projectileCount, 
+			int maxDamage, float restitution, int clusterCount, int clusterDamage, float clusterVelocity, 
+			float clusterRestitution, boolean explodeOnImpact, int timeout)
 	{
 		super(p, maxDamage);
 		this.p = p;
 		this.world = world;
+		this.players = players;
+		this.map = map;
 		this.clusterCount = clusterCount;
 		this.projectileCount = projectileCount;
 		projectiles = new ArrayList<Projectile>();
 		aimAngle = PConstants.PI;
 		projectileForce = new Vec2();
 		power = 0;
+		this.explodeOnImpact = explodeOnImpact;
+		this.timeout = timeout;
 	}
 	
-	public BombWeapon(Slugs p, Box2DProcessing world, int projectileCount, int maxDamage, float restitution, boolean explodeOnImpact, int timeout)
+	public BombWeapon(Slugs p, Box2DProcessing world, HashMap<String, Player> players, Terrain map, int projectileCount, int maxDamage, float restitution, boolean explodeOnImpact, int timeout)
 	{
-		this(p, world, projectileCount, maxDamage, restitution, 0, 0, 0, 0, explodeOnImpact, timeout);
+		this(p, world, players, map, projectileCount, maxDamage, restitution, 0, 0, 0, 0, explodeOnImpact, timeout);
 	}
 	
 	public void display()
@@ -91,8 +101,9 @@ public class BombWeapon extends Weapon
 		{
 			projectileForce.mulLocal(power);
 			Vec2 loc = owner.getPixelLocation();
-			loc.x += 10 * ((owner.dir) ? 1 : -1);
-			projectiles.add(new Projectile(p, world, this, loc, maxDamage, restitution, clusterCount, projectileForce));
+			loc.x += 15 * PApplet.cos(owner.dir ? PConstants.PI - aimAngle : aimAngle);
+			loc.y -= 20 * PApplet.sin(owner.dir ? PConstants.PI - aimAngle : aimAngle);
+			projectiles.add(new Projectile(p, world, players, map, this, loc, maxDamage, restitution, explodeOnImpact, timeout, clusterCount, projectileForce));
 			projectileCount--;
 			power = 0;
 		}
@@ -102,7 +113,7 @@ public class BombWeapon extends Weapon
 	{
 		if(projectileCount > 0)
 		{
-			power += 40;
+			power += 50;
 		}
 	}
 	
