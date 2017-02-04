@@ -233,7 +233,6 @@ public class Slugs extends PApplet
 				player.hurt(5);
 			}
 			player.setGrounded(true);
-			System.out.println(player.getFallDistance());
 			
 		}
 		if (b instanceof Player && a instanceof Terrain)
@@ -246,7 +245,6 @@ public class Slugs extends PApplet
 				player.hurt(5);
 			}
 			player.setGrounded(true);
-			System.out.println(player.getFallDistance());
 		}
 		
 		if (a instanceof Projectile)
@@ -268,20 +266,22 @@ public class Slugs extends PApplet
 	public void handleProjectileContact(Object o)
 	{
 		Projectile proj = (Projectile) o;
-		
-		Vec2 loc = proj.getPixelLocation();
-		float radius = proj.getDamageRadius();
-		map.damage(loc, radius);
-		for(Player player: players.values())
+		if (!proj.bodyList.isEmpty())
 		{
-			Vec2 playerLoc = player.getPixelLocation();
-			float dist = dist(loc.x, loc.y, playerLoc.x, playerLoc.y);
-			if(dist < radius)
+			Vec2 loc = proj.getPixelLocation();
+			float radius = proj.getDamageRadius();
+			map.damage(loc, radius);
+			for(Player player: players.values())
 			{
-				// damage dealt is proportional to proximity of player to explosion
-				player.hurt((int) map(dist, 0, radius, proj.damage, 0));
+				Vec2 playerLoc = player.getPixelLocation();
+				float dist = dist(loc.x, loc.y, playerLoc.x, playerLoc.y);
+				if(dist < radius)
+				{
+					// damage dealt is proportional to proximity of player to explosion
+					player.hurt((int) map(dist, 10, radius, proj.damage, 5));
+				}
 			}
+			proj.hit = true;
 		}
-		proj.delete();
 	}
 }

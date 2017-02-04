@@ -15,7 +15,7 @@ public class ItemBox extends Entity
 	
 	public ItemBox(Slugs p, Box2DProcessing world, Vec2 spawnPoint, String itemName, Map<String, InventoryItem> items) 
 	{
-		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 0.3f, 0.5f, 1);
+		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 0.3f, 0.5f);
 		if(items.get(itemName) instanceof Weapon)
 		{
 			// weapon crates have colour of light wood
@@ -37,7 +37,7 @@ public class ItemBox extends Entity
 		fd.shape = shape;
 		
 		// affix shape to body
-		bodyList[0].createFixture(fd);
+		bodyList.get(0).createFixture(fd);
 	}
 	
 	protected void update()

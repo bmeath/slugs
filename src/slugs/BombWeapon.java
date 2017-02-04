@@ -1,6 +1,9 @@
 package slugs;
 
+import java.util.ArrayList;
+
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
@@ -8,7 +11,7 @@ import shiffman.box2d.Box2DProcessing;
 
 public class BombWeapon extends Weapon
 {
-	Projectile[] projectiles;
+	ArrayList<Projectile> projectiles;
 	Slugs p;
 	Box2DProcessing world;
 	float restitution;
@@ -27,7 +30,7 @@ public class BombWeapon extends Weapon
 		this.world = world;
 		this.clusterCount = clusterCount;
 		this.projectileCount = projectileCount;
-		projectiles = new Projectile[projectileCount];
+		projectiles = new ArrayList<Projectile>();
 		aimAngle = PConstants.PI;
 		projectileForce = new Vec2();
 		power = 0;
@@ -41,12 +44,9 @@ public class BombWeapon extends Weapon
 	public void display()
 	{
 		update();
-		for(Projectile p: projectiles)
+		for(int i = 0; i < projectiles.size(); i++)
 		{
-			if(p != null)
-			{
-				p.display();
-			}
+			projectiles.get(i).display();
 		}
 		Vec2 lineStart = owner.getPixelLocation();
 		Vec2 lineEnd = new Vec2(lineStart.x + 40 * PApplet.cos(owner.dir ? PConstants.PI - aimAngle : aimAngle), lineStart.y - 40 * PApplet.sin(owner.dir ? PConstants.PI - aimAngle : aimAngle));
@@ -57,6 +57,14 @@ public class BombWeapon extends Weapon
 	
 	protected void update()
 	{
+		for(int i = 0; i < projectiles.size(); i++)
+		{
+			if (projectiles.get(i).hit)
+			{
+				destroyProjectile(projectiles.get(i));
+			}
+		}
+		
 		if (p.checkKey(PConstants.UP))
 		{
 			// prevent aiming behind view of player
@@ -84,7 +92,8 @@ public class BombWeapon extends Weapon
 			projectileForce.mulLocal(power);
 			Vec2 loc = owner.getPixelLocation();
 			loc.x += 10 * ((owner.dir) ? 1 : -1);
-			projectiles[--projectileCount] = new Projectile(p, world, loc, maxDamage, restitution, clusterCount, projectileForce);
+			projectiles.add(new Projectile(p, world, this, loc, maxDamage, restitution, clusterCount, projectileForce));
+			projectileCount--;
 			power = 0;
 		}
 	}
@@ -95,5 +104,15 @@ public class BombWeapon extends Weapon
 		{
 			power += 40;
 		}
+	}
+	
+	public void destroyProjectile(Projectile proj)
+	{
+		for(Body b: proj.bodyList)
+		{
+			world.destroyBody(b);
+		}
+		proj.bodyList.clear();
+		projectiles.remove(proj);
 	}
 }

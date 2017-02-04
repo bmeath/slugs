@@ -40,7 +40,7 @@ public class Player extends Entity
 	public Player(Slugs p, Box2DProcessing world, Vec2 spawnPoint, HashMap<String, Integer> inventory, 
 			HashMap<String, InventoryItem> itemList, int health, float scaleFactor)
 	{
-		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 1f, 0f, 2);
+		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 1f, 0f);
 		left = new Vec2(-250 * scaleFactor, 0);
 		right = new Vec2(250 * scaleFactor, 0);
 		farLeft = new Vec2(-500 * scaleFactor, 0);
@@ -64,8 +64,8 @@ public class Player extends Entity
 		shape.setAsBox(w, h);
 		
 		fd.shape = shape;
-		bodyList[0].createFixture(fd);
-		bodyList[0].setUserData(this);
+		bodyList.get(0).createFixture(fd);
+		bodyList.get(0).setUserData(this);
 		
 		// create wheel
 		BodyDef wheelBD = new BodyDef();
@@ -74,16 +74,16 @@ public class Player extends Entity
 		Vec2 wheelPos = world.coordPixelsToWorld(spawnPoint);
 		wheelBD.position.set(new Vec2(wheelPos.x, wheelPos.y - h));
 		
-		bodyList[1] = world.createBody(wheelBD);
+		bodyList.add(world.createBody(wheelBD));
 		
 		CircleShape wheelShape = new CircleShape();
 	    wheelShape.m_radius = w;
 	    fd.shape = wheelShape;
-	    bodyList[1].createFixture(fd);
-	    bodyList[1].setUserData(this);
+	    bodyList.get(1).createFixture(fd);
+	    bodyList.get(1).setUserData(this);
 	    
 	    RevoluteJointDef revJD = new RevoluteJointDef();
-	    revJD.initialize(bodyList[0], bodyList[1], bodyList[1].getWorldCenter());
+	    revJD.initialize(bodyList.get(0), bodyList.get(1), bodyList.get(1).getWorldCenter());
 	    revJD.motorSpeed = -PConstants.PI*2;
 	    revJD.maxMotorTorque = 750f;
 	    revJD.enableMotor = true;

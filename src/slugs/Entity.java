@@ -1,5 +1,7 @@
 package slugs;
 
+import java.util.ArrayList;
+
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -12,15 +14,15 @@ public abstract class Entity
 {
 	Slugs p;
 	BodyDef bd;
-	Body[] bodyList;
+	ArrayList<Body> bodyList;
 	FixtureDef fd;
 	Box2DProcessing world;
 	int colour;
 	
 	public Entity(Slugs p, Box2DProcessing world, Vec2 spawnPoint, BodyType bodyType, boolean fixedRotation, 
-			float density, float friction, float restitution, int bodyCount)
+			float density, float friction, float restitution)
 	{
-		bodyList = new Body[bodyCount];
+		bodyList = new ArrayList<Body>();
 		this.p = p;
 		this.world = world;
 		
@@ -33,7 +35,7 @@ public abstract class Entity
 		bd.position.set(world.coordPixelsToWorld(spawnPoint));
 		
 		// create body
-		bodyList[0] = world.createBody(bd);
+		bodyList.add(world.createBody(bd));
 		
 		/* declare new fixture definition,
 		 * and define some physical properties
@@ -44,13 +46,6 @@ public abstract class Entity
 		fd.density = density;
 	}
 	
-	/* if bodyCount is not specified, assume there will only be one body */
-	public Entity(Slugs p, Box2DProcessing world, Vec2 spawnPoint, BodyType bodyType, boolean fixedRotation, 
-			float density, float friction, float restitution)
-	{
-		this(p, world, spawnPoint, bodyType, fixedRotation, density, friction, restitution, 1);
-	}
-	
 	abstract protected void update();
 	
 	// get screen location of player
@@ -58,7 +53,7 @@ public abstract class Entity
 	{
 		/* give location of first body in the list.
 		 */
-		return world.getBodyPixelCoord(bodyList[0]);
+		return world.getBodyPixelCoord(bodyList.get(0));
 	}
 	
 	// get box2d location of player
@@ -72,15 +67,15 @@ public abstract class Entity
 	 */
 	public void display()
 	{
-		for(int i = 0; i < bodyList.length; i++)
+		for(int i = 0; i < bodyList.size(); i++)
 		{
-			Vec2 pos = world.getBodyPixelCoord(bodyList[i]);
+			Vec2 pos = world.getBodyPixelCoord(bodyList.get(i));
 			p.pushMatrix();
 			p.translate(pos.x, pos.y);
-			p.rotate(-bodyList[i].getAngle());
+			p.rotate(-bodyList.get(i).getAngle());
 			
 			// draw to screen as per definition by subclass
-			render(bodyList[i]);
+			render(bodyList.get(i));
 			
 			p.popMatrix();
 		}
@@ -90,14 +85,14 @@ public abstract class Entity
 	/* wrapper method to apply a force to the centre of the entity's body */
 	public void applyForce(Vec2 force)
 	{
-		// implicitly choose the first body in the array
-		bodyList[0].applyForce(force, bodyList[0].getWorldCenter());
+		// implicitly choose the first body in the list
+		bodyList.get(0).applyForce(force, bodyList.get(0).getWorldCenter());
 	}
 	
 	/* applies to body number i in the list*/
 	public void applyForce(Vec2 force, int i)
 	{
-		bodyList[i].applyForce(force, bodyList[i].getWorldCenter());
+		bodyList.get(i).applyForce(force, bodyList.get(i).getWorldCenter());
 	}
 	
 	// where the actual drawing code is placed.
