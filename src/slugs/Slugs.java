@@ -246,13 +246,13 @@ public class Slugs extends PApplet
 		if (a instanceof Projectile)
 		{
 			Projectile proj = (Projectile) a;
-			proj.handleExplosion();
+			proj.explode();
 		}
 		
 		if (b instanceof Projectile)
 		{
 			Projectile proj = (Projectile) b;
-			proj.handleExplosion();
+			proj.explode();
 		}
 	}
 		

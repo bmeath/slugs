@@ -69,6 +69,10 @@ public class BombWeapon extends Weapon
 	{
 		for(int i = 0; i < projectiles.size(); i++)
 		{
+			if(map.contains(projectiles.get(i).getPixelLocation()))
+			{
+				
+			}
 			if (projectiles.get(i).hit)
 			{
 				destroyProjectile(projectiles.get(i));

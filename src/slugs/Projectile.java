@@ -66,7 +66,7 @@ public class Projectile extends Entity
 		return damage * 0.75f;
 	}
 	
-	public void handleExplosion()
+	public void explode()
 	{
 		Vec2 loc = getPixelLocation();
 		float radius = getDamageRadius();
@@ -86,7 +86,11 @@ public class Projectile extends Entity
 	
 	protected void update()
 	{
-		
+		// check if projectile was shot inside the chainshape by aiming into the ground
+		if (map.contains(getPixelLocation()))
+		{
+			explode();
+		}
 		if(timeout > 0)
 		{
 			Vec2 loc = getPixelLocation();
@@ -95,7 +99,7 @@ public class Projectile extends Entity
 			p.text(((timeout - t) / 1000) + 1, loc.x, loc.y - 20);
 			if(t >= timeout)
 			{
-				handleExplosion();
+				explode();
 			}
 		}
 	}

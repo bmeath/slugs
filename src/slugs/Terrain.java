@@ -157,6 +157,12 @@ public class Terrain
 		old = true;
 	}
 	
+	// called to check if an entity is inside the ground
+	public boolean contains(Vec2 location)
+	{
+		return screenMap.contains(location.x, location.y);
+	}
+	
 	protected void update()
 	{
 		for(Body b: bodies)
@@ -191,7 +197,7 @@ public class Terrain
 					break;
 				default:
 					points[index] = world.coordPixelsToWorld(point[0],point[1]);
-					// skip vertices that are too close together
+					// skip vertices that are so close together that jbox2d would throw an exception
 					if (MathUtils.distanceSquared(points[index - 1], points[index]) > 0.000025)
 					{
 						index++;
@@ -199,5 +205,6 @@ public class Terrain
 					break;
 			}
 		}
+		old = false;
 	}
 }
