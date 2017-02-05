@@ -101,7 +101,7 @@ public class BombWeapon extends Weapon
 		projectileForce.x = PApplet.cos(owner.dir ? PConstants.PI - aimAngle : aimAngle);
 		projectileForce.y = PApplet.sin(owner.dir ? PConstants.PI - aimAngle : aimAngle);
 		
-		if((power > 0 && p.keys[' '] == false) || power == 2000)
+		if((power > 0 && p.keys[' '] == false) || power == 12000)
 		{
 			projectileForce.mulLocal(power);
 			Vec2 loc = owner.getPixelLocation();
@@ -117,7 +117,7 @@ public class BombWeapon extends Weapon
 	{
 		if(projectileCount > 0)
 		{
-			power += 10;
+			power += 100;
 		}
 	}
 	

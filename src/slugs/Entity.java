@@ -82,7 +82,7 @@ public abstract class Entity
 		update();
 	}
 	
-	/* wrapper method to apply a force to the centre of the entity's body */
+	/* wrapper method to apply a force to an entity's body */
 	public void applyForce(Vec2 force)
 	{
 		// implicitly choose the first body in the list

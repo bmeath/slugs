@@ -178,12 +178,12 @@ public class Player extends Entity
 			HashMap<String, InventoryItem> itemStore, int health, float scaleFactor)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 1f, 0f);
-		left = new Vec2(-250 * scaleFactor, 0);
-		right = new Vec2(250 * scaleFactor, 0);
-		farLeft = new Vec2(-500 * scaleFactor, 0);
-		farRight = new Vec2(500 * scaleFactor, 0);
-		jump = new Vec2(0, 750 * scaleFactor);
-		highJump = new Vec2(0, 1250 * scaleFactor);
+		left = new Vec2(-400 * scaleFactor, 0);
+		right = new Vec2(400 * scaleFactor, 0);
+		farLeft = new Vec2(-800 * scaleFactor, 0);
+		farRight = new Vec2(800 * scaleFactor, 0);
+		jump = new Vec2(0, 1000 * scaleFactor);
+		highJump = new Vec2(0, 1500 * scaleFactor);
 		dir = true;
 		lastLanded = p.millis();
 		jumpCooldown = 750;

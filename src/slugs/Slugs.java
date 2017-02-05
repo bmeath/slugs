@@ -136,6 +136,7 @@ public class Slugs extends PApplet
 			return show;
 		}
 	}
+	
 	public static void main(String[] args)
 	{
 		PApplet.main("slugs.Slugs");
@@ -165,8 +166,7 @@ public class Slugs extends PApplet
 		world = new Box2DProcessing(this);
 		world.createWorld();
 		world.listenForCollisions();
-		world.setGravity(0f, -20f);
-		
+		world.setGravity(0f, -30f);
 		map = new Terrain(this, world, 0.5f);
 		players = new HashMap<String, Player>();
 		
@@ -194,9 +194,6 @@ public class Slugs extends PApplet
 			case 2:
 				endScreen();
 				break;
-			case 3:
-				testScreen();
-				break;
 		}
 	}
 	
@@ -209,7 +206,8 @@ public class Slugs extends PApplet
 		
 		if (mousePressed)
 		{
-			players.put("Brendan", new Player("Brendan", this, world, map.randomSpawn(), itemQuantities, itemStore));
+			players.put("Brendan", new Player("Player 1", this, world, map.randomSpawn(), itemQuantities, itemStore));
+			players.put("Player 2", new Player("Player 2", this, world, map.randomSpawn(), itemQuantities, itemStore));
 			gameState = 1;
 		}
 	}
@@ -226,18 +224,31 @@ public class Slugs extends PApplet
 		{
 			world.step();
 		}
+		showHealth();
 		pauseMenu.display();
 	}
 
 	public void endScreen()
 	{
+		
 	}
 	
-	public void testScreen()
+	// show health bars on bottom of screen for each player
+	public void showHealth()
 	{
-		background(255);
-		map.display();
-		world.step();
+		float x = width/2 - 100;
+		float y = height - (players.size() * 20);
+		for (Player p: players.values())
+		{
+			fill(255);
+			textAlign(CENTER, RIGHT);
+			text(p.name, x - 50, y);
+			noFill();
+			strokeWeight(3);
+			stroke(0, 200, 0);
+			line(x, y, x + p.health, y);
+			y += 20;	
+		}
 	}
 	
 	/* create weapons from XML data */

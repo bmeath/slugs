@@ -26,7 +26,7 @@ public class Projectile extends Entity
 	
 	public Projectile(Slugs p, Box2DProcessing world, HashMap<String, Player> players, Terrain map, BombWeapon source, Vec2 spawnPoint, int maxDamage, float restitution, boolean explodeOnImpact, int timeout, int clusterCount, Vec2 force)
 	{
-		super(p, world, spawnPoint, BodyType.DYNAMIC, false, 1, 1, restitution);
+		super(p, world, spawnPoint, BodyType.DYNAMIC, false, 10, 1, restitution);
 		this.players = players;
 		this.map = map;
 		
@@ -53,8 +53,9 @@ public class Projectile extends Entity
 		}
 		
 		timeStart = p.millis();
-		
-		bodyList.get(0).applyForceToCenter(force);
+		Vec2 head = getPixelLocation();
+		head.y += h/2;
+		bodyList.get(0).applyForce(force, world.coordPixelsToWorld(head));
 		
 		this.source = source;
 		hit = false;
@@ -79,8 +80,14 @@ public class Projectile extends Entity
 			{
 				// damage dealt is proportional to proximity of player to explosion
 				player.hurt((int) PApplet.map(dist, 10, radius, damage, 5));
+				
+				// apply force to player
+				Vec2 force= new Vec2(playerLoc.x - loc.x, playerLoc.y - loc.y);
+				force.normalize();
+				player.applyForce(force.mul(5000), 1);
 			}
 		}
+		
 		hit = true;
 	}
 	
