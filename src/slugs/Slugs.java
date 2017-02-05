@@ -19,6 +19,7 @@ public class Slugs extends PApplet
 	boolean[] keys = new boolean[1000];
 	Box2DProcessing world;
 	int gameState;
+	boolean paused;
 	Terrain map;
 	
 	HashMap<String, Player> players = new HashMap<String, Player>();
@@ -42,6 +43,7 @@ public class Slugs extends PApplet
 		world.setGravity(0f, -20f);
 		map = new Terrain(this, world, 0.5f);
 		gameState = 0;
+		paused = false;
 		loadWeapons("weapons.xml");
 	}
 	
@@ -87,7 +89,14 @@ public class Slugs extends PApplet
 		{
 			p.display();
 		}
-		world.step();
+		if (!paused)
+		{
+			world.step();
+		}
+		else
+		{
+			
+		}
 	}
 	
 	public void endScreen()
@@ -193,11 +202,19 @@ public class Slugs extends PApplet
 	 
 	public void keyReleased()
 	{
-		keys[keyCode] = false; 
+		if (keyCode == SHIFT)
+		{
+			paused ^= true;
+		}
+		keys[keyCode] = false;
 	}
 	
 	public boolean checkKey(int k)
-	{
+	{		
+		if (paused)
+		{
+			return false;
+		}
 		if (keys.length >= k)
 		{
 			return keys[k] || keys[Character.toUpperCase(k)];
@@ -231,6 +248,7 @@ public class Slugs extends PApplet
 			player.setGrounded();
 			
 		}
+		
 		if (b instanceof Player && a instanceof Terrain)
 		{
 			Player player = (Player) b;
@@ -245,19 +263,19 @@ public class Slugs extends PApplet
 		
 		if (a instanceof Projectile)
 		{
-			Projectile proj = (Projectile) a;
-			proj.explode();
+			Projectile p= (Projectile) a;
+			p.explode();
 		}
 		
 		if (b instanceof Projectile)
 		{
-			Projectile proj = (Projectile) b;
-			proj.explode();
+			Projectile p = (Projectile) b;
+			p.explode();
 		}
 	}
 		
 	public void endContact(Contact c)
 	{
-
+		
 	}
 }

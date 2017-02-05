@@ -27,6 +27,7 @@ public class Player extends Entity
 	Vec2 highJump;
 	Vec2 jump;
 	int lastLanded;
+	int jumpCooldown;
 	boolean dir; // true if facing right, false otherwise
 	boolean showInventory;
 	InventoryItem currentItem;
@@ -171,6 +172,7 @@ public class Player extends Entity
 		highJump = new Vec2(0, 1250 * scaleFactor);
 		dir = true;
 		lastLanded = p.millis();
+		jumpCooldown = 750;
 		
 		colour = p.color(125, 255, 125);
 		leftSlug = p.loadImage("leftslug.png");
@@ -212,7 +214,6 @@ public class Player extends Entity
 	    motor = (RevoluteJoint) world.createJoint(revJD);
 	    
 	    this.inventory = new HashMap<String, Integer>(inventory);
-	    System.out.println(inventory.toString());
 	    this.itemStore = itemStore;
 	    this.health = health;
 	    this.fallY = getPixelLocation().y;
@@ -291,7 +292,7 @@ public class Player extends Entity
 		{
 			lastLanded = p.millis();
 		}
-		this.grounded = true;
+		grounded = true;
 	}
 	
 	protected void update()
@@ -338,7 +339,7 @@ public class Player extends Entity
 		{
 			if(grounded == true)
 			{
-				if(p.millis() > lastLanded + 1000)
+				if(p.millis() > lastLanded + jumpCooldown)
 				{
 					fallY = getPixelLocation().y;
 					applyForce(jump.add(dir ? farRight : farLeft));
@@ -352,7 +353,7 @@ public class Player extends Entity
 		{
 			if(grounded == true)
 			{
-				if(p.millis() > lastLanded + 1000)
+				if(p.millis() > lastLanded + jumpCooldown)
 				{
 					fallY = getPixelLocation().y;
 					applyForce(highJump.add(dir ? left : right));
@@ -393,6 +394,11 @@ public class Player extends Entity
 
 	public void stop() {
 		motor.setMotorSpeed(0);
+	}
+
+	public void unGround()
+	{
+		grounded = false;
 	}
 
 }
