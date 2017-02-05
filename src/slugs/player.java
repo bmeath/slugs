@@ -47,6 +47,8 @@ public class Player extends Entity
 		// memorise the width, as dimensions will be altered during open/close animation
 		private float widthMem;
 		private boolean show;
+		private final int rows = 4;
+		private final int cols = 8;
 		HashMap<Rectangle, String> itemButtons = new HashMap<Rectangle, String>();
 		
 		
@@ -55,8 +57,8 @@ public class Player extends Entity
 			dimensions = new Vec2(150, 250);
 			widthMem = dimensions.x;
 			show = false;
-			int dx = (int) (dimensions.x / 4);
-			int dy = (int) (dimensions.y / 8);
+			int dx = (int) (dimensions.x / rows);
+			int dy = (int) (dimensions.y / cols);
 			Iterator<String> i = inventory.keySet().iterator();
 			for (int y = (int) ( p.height - dimensions.y) ; y < p.height; y += dy)
 			{
@@ -72,6 +74,9 @@ public class Player extends Entity
 					}
 				}
 			}
+			
+			// so menu doesn't appear sliding away at start of game
+			dimensions.x = 0;
 			
 			// select the first item in the inventory by default
 			for (String s: inventory.keySet())
@@ -119,22 +124,28 @@ public class Player extends Entity
 			{	
 				for (Rectangle r: itemButtons.keySet())
 				{
-					if(p.mouseX > r.x && p.mouseX < r.x + r.width && p.mouseY > r.y && p.mouseY < r.y + r.height)
+					if (p.mouseX > r.x && p.mouseX < r.x + r.width && p.mouseY > r.y && p.mouseY < r.y + r.height)
 					{
 						p.strokeWeight(2);
 						p.stroke(127, 176, 255);
-						p.rect(r.x, r.y, r.width, r.height);
 						p.textAlign(PConstants.LEFT, PConstants.CENTER);
 						p.fill(255);
 						p.text(itemButtons.get(r), p.width - dimensions.x, p.height - dimensions.y - 15);
-						p.noFill();
-						p.strokeWeight(1);
-						p.stroke(127);
 					}
 					else
 					{
-						p.rect(r.x, r.y, r.width, r.height);
+						p.strokeWeight(1);
+						p.stroke(127);
 					}
+					
+					if (!itemButtons.get(r).equals("")) // if there is an item associated with that button
+					{
+						p.textAlign(PConstants.RIGHT, PConstants.TOP);
+						p.fill(255);
+						p.text(inventory.get(itemButtons.get(r)), r.x + r.width, r.y + r.height/2);
+					}
+					p.noFill();
+					p.rect(r.x, r.y, r.width, r.height);
 				}
 			}
 			
@@ -153,7 +164,10 @@ public class Player extends Entity
 					if(r.contains(p.mouseX, p.mouseY))
 					{
 						toggle();
-						selectItem(itemButtons.get(r));
+						if (!itemButtons.get(r).equals(""))
+						{
+							selectItem(itemButtons.get(r));
+						}
 					}
 				}
 			}

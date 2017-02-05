@@ -1,7 +1,9 @@
 package slugs;
 
+import java.awt.Rectangle;
 import java.util.HashMap;
 
+import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
@@ -11,6 +13,129 @@ import shiffman.box2d.*;
 
 public class Slugs extends PApplet
 {
+	class PauseMenu
+	{
+		private final String[] menuActions = {"Resume", "Quit"};
+		private Vec2 dimensions;
+		private Vec2 location;
+		// memorise the width, as dimensions will be altered during open/close animation
+		private float widthMem;
+		private float heightMem;
+		private boolean show;
+		HashMap<Rectangle, String> menuButtons = new HashMap<Rectangle, String>();
+		
+		
+		public PauseMenu(int w, int h)
+		{
+			dimensions = new Vec2(w, h);
+			location = new Vec2(width/2, height/2);
+			widthMem = dimensions.x;
+			heightMem = dimensions.y;
+			show = false;
+			int dy = (int) (dimensions.y / menuActions.length);
+			int i = 0;
+			for (int y = (int) (location.y - dimensions.y/2) ; y < location.y + dimensions.y/2; y += dy)
+			{
+				menuButtons.put(new Rectangle((int) (location.x - dimensions.x/2), y, (int) dimensions.x, dy), menuActions[i++]);
+			}
+			
+			// so menu doesn't appear shrinking away start of game
+			dimensions.x = 0;
+			dimensions.y = 0;
+		}
+		
+		void display()
+		{
+			fill(0);
+			if (show)
+			{
+				if (dimensions.x < widthMem)
+				{
+					dimensions.x += 30;
+					dimensions.y += 30 * heightMem/widthMem;
+				}				
+			}
+			else
+			{
+				if (dimensions.x > 0)
+				{
+					dimensions.x -= 30;
+					dimensions.y -= 30 * heightMem/widthMem;
+				}
+				
+				if (dimensions.x < 0)
+				{
+					dimensions.x = 0;
+					dimensions.y = 0;
+				}
+			}
+			rectMode(CENTER);
+			stroke(255);
+			strokeWeight(2);
+			noStroke();
+			// black background
+			rect(location.x, location.y, dimensions.x, dimensions.y);
+			
+			stroke(255);
+			strokeWeight(2);
+			if(dimensions.x >= widthMem)
+			{	
+				// do this if menu dimensions get incremented beyond full size
+				dimensions.x = widthMem;
+				dimensions.y = heightMem;
+				
+				rectMode(CORNER);
+				for (Rectangle r: menuButtons.keySet())
+				{
+					if(mouseX > r.x && mouseX < r.x + r.width && mouseY > r.y && mouseY < r.y + r.height)
+					{
+						fill(127, 176, 255);
+					}
+					else
+					{
+						
+						noFill();
+					}
+					rect(r.x, r.y, r.width, r.height);
+					textAlign(CENTER, CENTER);
+					fill(255);
+					text(menuButtons.get(r), r.x + r.width/2, r.y + r.height/2);
+				}
+			}
+		}
+		
+		private void toggle()
+		{
+			show ^= true;
+		}
+
+		public void click() 
+		{
+			if (show)
+			{
+				for (Rectangle r: menuButtons.keySet())
+				{
+					if(r.contains(mouseX, mouseY))
+					{
+						switch (menuButtons.get(r))
+						{
+							case "Quit":
+								setup();
+								break;
+							default:
+								toggle();
+								break;
+						}
+					}
+				}
+			}
+		}
+
+		public boolean isShown() 
+		{
+			return show;
+		}
+	}
 	public static void main(String[] args)
 	{
 		PApplet.main("slugs.Slugs");
@@ -19,16 +144,16 @@ public class Slugs extends PApplet
 	boolean[] keys = new boolean[1000];
 	Box2DProcessing world;
 	int gameState;
-	boolean paused;
-	Terrain map;
+	public Terrain map;
+	PauseMenu pauseMenu;
 	
-	HashMap<String, Player> players = new HashMap<String, Player>();
+	HashMap<String, Player> players;
 	
 	// hashmap of inventory item instances
-	HashMap<String, InventoryItem> itemStore = new HashMap<String, InventoryItem>();
+	HashMap<String, InventoryItem> itemStore;
 	
 	// hashmap of quantities of each item a player has
-	HashMap<String, Integer> itemQuantities = new HashMap<String, Integer>();
+	HashMap<String, Integer> itemQuantities;
 	
 	public void settings()
 	{
@@ -41,10 +166,18 @@ public class Slugs extends PApplet
 		world.createWorld();
 		world.listenForCollisions();
 		world.setGravity(0f, -20f);
+		
 		map = new Terrain(this, world, 0.5f);
-		gameState = 0;
-		paused = false;
+		players = new HashMap<String, Player>();
+		
+		pauseMenu = new PauseMenu(250, 150);
+		itemQuantities = new HashMap<String, Integer>();
+		itemStore = new HashMap<String, InventoryItem>();
 		loadWeapons("weapons.xml");
+		
+		
+		
+		gameState = 0;
 	}
 	
 	public void draw()
@@ -70,10 +203,10 @@ public class Slugs extends PApplet
 	public void initScreen()
 	{
 		background(0);
-		
 		textAlign(CENTER);
 		text("SLUGS", width/2, height/3);
 		text("Click to begin", width/2, height/2);
+		
 		if (mousePressed)
 		{
 			players.put("Brendan", new Player("Brendan", this, world, map.randomSpawn(), itemQuantities, itemStore));
@@ -89,16 +222,13 @@ public class Slugs extends PApplet
 		{
 			p.display();
 		}
-		if (!paused)
+		if (!pauseMenu.isShown())
 		{
 			world.step();
 		}
-		else
-		{
-			
-		}
+		pauseMenu.display();
 	}
-	
+
 	public void endScreen()
 	{
 	}
@@ -204,14 +334,14 @@ public class Slugs extends PApplet
 	{
 		if (keyCode == SHIFT)
 		{
-			paused ^= true;
+			pauseMenu.toggle();
 		}
 		keys[keyCode] = false;
 	}
 	
 	public boolean checkKey(int k)
 	{		
-		if (paused)
+		if (pauseMenu.isShown())
 		{
 			return false;
 		}
@@ -224,7 +354,20 @@ public class Slugs extends PApplet
 	
 	public void mouseClicked()
 	{
-		players.get("Brendan").mouseClicked(mouseX, mouseY, mouseButton);
+		if (gameState == 1)
+		{
+			if (!pauseMenu.isShown())
+			{
+				players.get("Brendan").mouseClicked(mouseX, mouseY, mouseButton);
+			}
+			else
+			{
+				if (mouseButton == LEFT)
+				{
+					pauseMenu.click();
+				}
+			}
+		}
 	}
 	
 	public void beginContact(Contact c)

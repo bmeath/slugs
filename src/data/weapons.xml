@@ -24,7 +24,7 @@ projectile types:
 	</weapon>
 	<weapon type="bomb" default-amount="20">
 	    <name>Grenade</name>
-	    <projectile amount="1" explode-on-impact="false" timeout="2">
+	    <projectile amount="1" explode-on-impact="false" timeout="3">
 	        <damage>45</damage>
 	   		<bounciness>0.5</bounciness>
 	    	<cluster amount="0">
