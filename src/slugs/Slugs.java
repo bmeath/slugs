@@ -1,9 +1,7 @@
 package slugs;
 
-import java.awt.Rectangle;
 import java.util.HashMap;
 
-import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
@@ -13,130 +11,6 @@ import shiffman.box2d.*;
 
 public class Slugs extends PApplet
 {
-	class PauseMenu
-	{
-		private final String[] menuActions = {"Resume", "Quit"};
-		private Vec2 dimensions;
-		private Vec2 location;
-		// memorise the width, as dimensions will be altered during open/close animation
-		private float widthMem;
-		private float heightMem;
-		private boolean show;
-		HashMap<Rectangle, String> menuButtons = new HashMap<Rectangle, String>();
-		
-		
-		public PauseMenu(int w, int h)
-		{
-			dimensions = new Vec2(w, h);
-			location = new Vec2(width/2, height/2);
-			widthMem = dimensions.x;
-			heightMem = dimensions.y;
-			show = false;
-			int dy = (int) (dimensions.y / menuActions.length);
-			int i = 0;
-			for (int y = (int) (location.y - dimensions.y/2) ; y < location.y + dimensions.y/2; y += dy)
-			{
-				menuButtons.put(new Rectangle((int) (location.x - dimensions.x/2), y, (int) dimensions.x, dy), menuActions[i++]);
-			}
-			
-			// so menu doesn't appear shrinking away start of game
-			dimensions.x = 0;
-			dimensions.y = 0;
-		}
-		
-		void display()
-		{
-			fill(0);
-			if (show)
-			{
-				if (dimensions.x < widthMem)
-				{
-					dimensions.x += 30;
-					dimensions.y += 30 * heightMem/widthMem;
-				}				
-			}
-			else
-			{
-				if (dimensions.x > 0)
-				{
-					dimensions.x -= 30;
-					dimensions.y -= 30 * heightMem/widthMem;
-				}
-				
-				if (dimensions.x < 0)
-				{
-					dimensions.x = 0;
-					dimensions.y = 0;
-				}
-			}
-			rectMode(CENTER);
-			stroke(255);
-			strokeWeight(2);
-			noStroke();
-			// black background
-			rect(location.x, location.y, dimensions.x, dimensions.y);
-			
-			stroke(255);
-			strokeWeight(2);
-			if(dimensions.x >= widthMem)
-			{	
-				// do this if menu dimensions get incremented beyond full size
-				dimensions.x = widthMem;
-				dimensions.y = heightMem;
-				
-				rectMode(CORNER);
-				for (Rectangle r: menuButtons.keySet())
-				{
-					if(mouseX > r.x && mouseX < r.x + r.width && mouseY > r.y && mouseY < r.y + r.height)
-					{
-						fill(127, 176, 255);
-					}
-					else
-					{
-						
-						noFill();
-					}
-					rect(r.x, r.y, r.width, r.height);
-					textAlign(CENTER, CENTER);
-					fill(255);
-					text(menuButtons.get(r), r.x + r.width/2, r.y + r.height/2);
-				}
-			}
-		}
-		
-		private void toggle()
-		{
-			show ^= true;
-		}
-
-		public void click() 
-		{
-			if (show)
-			{
-				for (Rectangle r: menuButtons.keySet())
-				{
-					if(r.contains(mouseX, mouseY))
-					{
-						switch (menuButtons.get(r))
-						{
-							case "Quit":
-								setup();
-								break;
-							default:
-								toggle();
-								break;
-						}
-					}
-				}
-			}
-		}
-
-		public boolean isShown() 
-		{
-			return show;
-		}
-	}
-	
 	public static void main(String[] args)
 	{
 		PApplet.main("slugs.Slugs");
@@ -146,7 +20,7 @@ public class Slugs extends PApplet
 	Box2DProcessing world;
 	int gameState;
 	public Terrain map;
-	PauseMenu pauseMenu;
+	GameManager gm;
 	
 	HashMap<String, Player> players;
 	
@@ -169,13 +43,11 @@ public class Slugs extends PApplet
 		world.setGravity(0f, -30f);
 		map = new Terrain(this, world, 0.5f);
 		players = new HashMap<String, Player>();
+		gm = new GameManager(this, players, 45);
 		
-		pauseMenu = new PauseMenu(250, 150);
 		itemQuantities = new HashMap<String, Integer>();
 		itemStore = new HashMap<String, InventoryItem>();
 		loadWeapons("weapons.xml");
-		
-		
 		
 		gameState = 0;
 	}
@@ -220,35 +92,16 @@ public class Slugs extends PApplet
 		{
 			p.display();
 		}
-		if (!pauseMenu.isShown())
+		if (!gm.paused())
 		{
 			world.step();
 		}
-		showHealth();
-		pauseMenu.display();
+		gm.display();
 	}
 
 	public void endScreen()
 	{
 		
-	}
-	
-	// show health bars on bottom of screen for each player
-	public void showHealth()
-	{
-		float x = width/2 - 100;
-		float y = height - (players.size() * 20);
-		for (Player p: players.values())
-		{
-			fill(255);
-			textAlign(CENTER, RIGHT);
-			text(p.name, x - 50, y);
-			noFill();
-			strokeWeight(3);
-			stroke(0, 200, 0);
-			line(x, y, x + p.health, y);
-			y += 20;	
-		}
 	}
 	
 	/* create weapons from XML data */
@@ -345,14 +198,14 @@ public class Slugs extends PApplet
 	{
 		if (keyCode == SHIFT)
 		{
-			pauseMenu.toggle();
+			gm.pause();
 		}
 		keys[keyCode] = false;
 	}
 	
 	public boolean checkKey(int k)
 	{		
-		if (pauseMenu.isShown())
+		if (gm.paused())
 		{
 			return false;
 		}
@@ -367,7 +220,7 @@ public class Slugs extends PApplet
 	{
 		if (gameState == 1)
 		{
-			if (!pauseMenu.isShown())
+			if (!gm.paused())
 			{
 				players.get("Brendan").mouseClicked(mouseX, mouseY, mouseButton);
 			}
@@ -375,7 +228,7 @@ public class Slugs extends PApplet
 			{
 				if (mouseButton == LEFT)
 				{
-					pauseMenu.click();
+					gm.pauseMenu.click();
 				}
 			}
 		}
