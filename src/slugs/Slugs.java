@@ -228,7 +228,7 @@ public class Slugs extends PApplet
 			{
 				player.hurt(5);
 			}
-			player.setGrounded(true);
+			player.setGrounded();
 			
 		}
 		if (b instanceof Player && a instanceof Terrain)
@@ -240,7 +240,7 @@ public class Slugs extends PApplet
 			{
 				player.hurt(5);
 			}
-			player.setGrounded(true);
+			player.setGrounded();
 		}
 		
 		if (a instanceof Projectile)

@@ -26,7 +26,7 @@ public class Player extends Entity
 	Vec2 farRight;
 	Vec2 highJump;
 	Vec2 jump;
-	int lastJumped;
+	int lastLanded;
 	boolean dir; // true if facing right, false otherwise
 	boolean showInventory;
 	InventoryItem currentItem;
@@ -170,7 +170,7 @@ public class Player extends Entity
 		jump = new Vec2(0, 750 * scaleFactor);
 		highJump = new Vec2(0, 1250 * scaleFactor);
 		dir = true;
-		lastJumped = p.millis();
+		lastLanded = p.millis();
 		
 		colour = p.color(125, 255, 125);
 		leftSlug = p.loadImage("leftslug.png");
@@ -254,7 +254,7 @@ public class Player extends Entity
 		}
 	}
 	
-	// set the players inventory
+	// replace the players inventory with a copy of the argument
 	public void setInventory(HashMap<String, Integer> inventory)
 	{
 		this.inventory = new HashMap<String, Integer>(inventory);
@@ -285,9 +285,13 @@ public class Player extends Entity
 		return grounded;
 	}
 	
-	public void setGrounded(boolean isGrounded)
+	public void setGrounded()
 	{
-		this.grounded = isGrounded;
+		if (!grounded)
+		{
+			lastLanded = p.millis();
+		}
+		this.grounded = true;
 	}
 	
 	protected void update()
@@ -334,11 +338,10 @@ public class Player extends Entity
 		{
 			if(grounded == true)
 			{
-				if(p.millis() > lastJumped + 1000)
+				if(p.millis() > lastLanded + 1000)
 				{
 					fallY = getPixelLocation().y;
 					applyForce(jump.add(dir ? farRight : farLeft));
-					lastJumped = p.millis();
 					grounded = false;
 				}
 			}
@@ -349,11 +352,10 @@ public class Player extends Entity
 		{
 			if(grounded == true)
 			{
-				if(p.millis() > lastJumped + 1000)
+				if(p.millis() > lastLanded + 1000)
 				{
 					fallY = getPixelLocation().y;
 					applyForce(highJump.add(dir ? left : right));
-					lastJumped = p.millis();
 					grounded = false;
 				}
 			}
