@@ -28,6 +28,7 @@ public class Terrain
 	Area screenMap;
 	Polygon screenMapPoly;
 	ArrayList<Body> bodies;
+	Body boundary;
 	Box2DProcessing world;
 	Area crater;
 	private boolean old;
@@ -44,6 +45,7 @@ public class Terrain
 		bd = new BodyDef();
 		bd.type = BodyType.STATIC;
 		Body b = world.createBody(bd);
+		boundary = world.createBody(bd);
 		/* arraylist to hold all the bodys that combine to form the terrain,
 		 * because the terrain sometimes gets split up from destruction
 		 */
@@ -79,6 +81,18 @@ public class Terrain
 		b.createFixture(fd);
 		b.setUserData(this);
 		bodies.add(b);
+		
+		// indestructible boundary to keep everything on screen
+		Vec2[] boundaryPoints = new Vec2[4];
+		boundaryPoints[0] = world.coordPixelsToWorld(new Vec2(-1,-1));
+		boundaryPoints[1] = world.coordPixelsToWorld(new Vec2(-1, p.height + 1));
+		boundaryPoints[2] = world.coordPixelsToWorld(new Vec2(p.width + 1, p.height + 1));
+		boundaryPoints[3] = world.coordPixelsToWorld(new Vec2(p.width + 1, -1));
+		shape = new ChainShape();
+		shape.createChain(boundaryPoints, boundaryPoints.length);
+		fd.shape = shape;
+		boundary.createFixture(fd);
+		boundary.setUserData(this);
 		
 		// store and modify terrain in Area object
 		screenMap = new Area(screenMapPoly);

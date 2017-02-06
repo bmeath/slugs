@@ -120,13 +120,15 @@ public class Player extends Entity
 			{	
 				for (Rectangle r: itemButtons.keySet())
 				{
+					p.textSize(12);
 					if (p.mouseX > r.x && p.mouseX < r.x + r.width && p.mouseY > r.y && p.mouseY < r.y + r.height)
 					{
 						p.strokeWeight(2);
 						p.stroke(127, 176, 255);
 						p.textAlign(PConstants.LEFT, PConstants.CENTER);
 						p.fill(255);
-						p.text(itemButtons.get(r), p.width - dimensions.x, p.height - dimensions.y - 15);
+						// item name
+						p.text(itemButtons.get(r), p.width - dimensions.x + 5, p.height - dimensions.y - 12);
 					}
 					else
 					{
@@ -138,6 +140,7 @@ public class Player extends Entity
 					{
 						p.textAlign(PConstants.RIGHT, PConstants.TOP);
 						p.fill(255);
+						
 						p.text(inventory.get(itemButtons.get(r)), r.x + r.width, r.y + r.height/2);
 					}
 					p.noFill();
@@ -361,7 +364,10 @@ public class Player extends Entity
 	
 	public void useItem() 
 	{
-		currentItem.use();
+		if (currentItem != null)
+		{
+			currentItem.use();
+		}
 	}
 
 	public void goLeft() 

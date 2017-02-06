@@ -82,7 +82,7 @@ public class Projectile extends Entity
 				// apply force to player
 				Vec2 force= new Vec2(playerLoc.x - loc.x, playerLoc.y - loc.y);
 				force.normalize();
-				player.applyForce(force.mul(5000), 1);
+				player.applyForce(force.mul(10000), 1);
 			}
 		}
 		
@@ -91,11 +91,6 @@ public class Projectile extends Entity
 	
 	protected void update()
 	{
-		// check if projectile was shot inside the chainshape by aiming into the ground
-		if (map.contains(getPixelLocation()))
-		{
-			explode();
-		}
 		if(timeout > 0)
 		{
 			Vec2 loc = getPixelLocation();

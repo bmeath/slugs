@@ -88,6 +88,12 @@ public class BombWeapon extends Weapon
 			Vec2 loc = owner.getPixelLocation();
 			loc.x += 15 * PApplet.cos(owner.dir ? PConstants.PI - aimAngle : aimAngle);
 			loc.y -= 20 * PApplet.sin(owner.dir ? PConstants.PI - aimAngle : aimAngle);
+			
+			// check if projectile was shot inside the ground or outside the screen
+			if (map.contains(loc) || loc.x < 0 || loc.y < 0 ||loc.x > p.width || loc.y > p.height)
+			{
+				loc = owner.getPixelLocation();
+			}
 			projectiles.add(new Projectile(p, world, players, map, this, loc, maxDamage, restitution, explodeOnImpact, timeout, clusterCount, projectileForce));
 			projectileCount--;
 			power = 0;
