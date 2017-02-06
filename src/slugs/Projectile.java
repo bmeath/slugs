@@ -1,7 +1,5 @@
 package slugs;
 
-import java.util.HashMap;
-
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
@@ -21,10 +19,10 @@ public class Projectile extends Entity
 	boolean hit;
 	int timeStart;
 	int timeout;
-	HashMap<String, Player> players;
+	Player[] players;
 	Terrain map;
 	
-	public Projectile(Slugs p, Box2DProcessing world, HashMap<String, Player> players, Terrain map, BombWeapon source, Vec2 spawnPoint, int maxDamage, float restitution, boolean explodeOnImpact, int timeout, int clusterCount, Vec2 force)
+	public Projectile(Slugs p, Box2DProcessing world, Player[] players, Terrain map, BombWeapon source, Vec2 spawnPoint, int maxDamage, float restitution, boolean explodeOnImpact, int timeout, int clusterCount, Vec2 force)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, false, 10, 1, restitution);
 		this.players = players;
@@ -72,7 +70,7 @@ public class Projectile extends Entity
 		Vec2 loc = getPixelLocation();
 		float radius = getDamageRadius();
 		map.damage(loc, radius);
-		for(Player player: players.values())
+		for(Player player: players)
 		{
 			Vec2 playerLoc = player.getPixelLocation();
 			float dist = PApplet.dist(loc.x, loc.y, playerLoc.x, playerLoc.y);

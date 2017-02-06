@@ -1,7 +1,6 @@
 package slugs;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -24,10 +23,10 @@ public class BombWeapon extends Weapon
 	float power;
 	boolean explodeOnImpact;
 	int timeout;
-	HashMap<String, Player> players;
+	Player[] players;
 	Terrain map;
 
-	public BombWeapon(Slugs p, Box2DProcessing world, HashMap<String, Player> players, Terrain map, int projectileCount, 
+	public BombWeapon(Slugs p, Box2DProcessing world, Player[] players, Terrain map, int projectileCount, 
 			int maxDamage, float restitution, int clusterCount, int clusterDamage, float clusterVelocity, 
 			float clusterRestitution, boolean explodeOnImpact, int timeout)
 	{
@@ -46,7 +45,7 @@ public class BombWeapon extends Weapon
 		this.timeout = timeout;
 	}
 	
-	public BombWeapon(Slugs p, Box2DProcessing world, HashMap<String, Player> players, Terrain map, int projectileCount, int maxDamage, float restitution, boolean explodeOnImpact, int timeout)
+	public BombWeapon(Slugs p, Box2DProcessing world, Player[] players, Terrain map, int projectileCount, int maxDamage, float restitution, boolean explodeOnImpact, int timeout)
 	{
 		this(p, world, players, map, projectileCount, maxDamage, restitution, 0, 0, 0, 0, explodeOnImpact, timeout);
 	}

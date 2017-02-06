@@ -86,7 +86,7 @@ public class Player extends Entity
 			}
 		}
 		
-		private void toggle()
+		public void toggle()
 		{
 			show ^= true;
 		}
@@ -222,7 +222,7 @@ public class Player extends Entity
 	    
 	    RevoluteJointDef revJD = new RevoluteJointDef();
 	    revJD.initialize(bodyList.get(0), bodyList.get(1), bodyList.get(1).getWorldCenter());
-	    revJD.motorSpeed = -PConstants.PI*2;
+	    revJD.motorSpeed = 0;
 	    revJD.maxMotorTorque = 1000f;
 	    revJD.enableMotor = true;
 	    motor = (RevoluteJoint) world.createJoint(revJD);
@@ -327,55 +327,6 @@ public class Player extends Entity
 		
 		p.popMatrix();
 		
-		// use weapon/utility
-		if (p.checkKey(' '))
-		{
-			currentItem.use();
-		}
-		
-		if (p.checkKey(PConstants.LEFT))
-		{
-			motor.setMotorSpeed(5);
-			dir = false;
-		}
-		else if (p.checkKey(PConstants.RIGHT))
-		{
-			motor.setMotorSpeed(-5);
-			dir = true;
-		}
-		else
-		{
-			stop();
-		}
-		
-		//forward jump
-		if (p.checkKey(PConstants.ENTER))
-		{
-			if(grounded == true)
-			{
-				if(p.millis() > lastLanded + jumpCooldown)
-				{
-					fallY = getPixelLocation().y;
-					applyForce(jump.add(dir ? farRight : farLeft));
-					grounded = false;
-				}
-			}
-		}
-		
-		// backward jump (like backflip in Worms)
-		if (p.checkKey(PConstants.BACKSPACE))
-		{
-			if(grounded == true)
-			{
-				if(p.millis() > lastLanded + jumpCooldown)
-				{
-					fallY = getPixelLocation().y;
-					applyForce(highJump.add(dir ? left : right));
-					grounded = false;
-				}
-			}
-		}
-		
 		itemMenu.display();
 	}
 
@@ -393,26 +344,52 @@ public class Player extends Entity
 		return fallY - getPixelLocation().y;
 	}
 
-	public void mouseClicked(int mouseX, int mouseY, int mouseButton) 
+	public void stop() 
 	{
-		if (mouseButton == PConstants.LEFT)
-		{
-			itemMenu.click();
-		}
-		
-		if (mouseButton == PConstants.RIGHT)
-		{
-			itemMenu.toggle();
-		}
-	}
-
-	public void stop() {
 		motor.setMotorSpeed(0);
 	}
-
-	public void unGround()
+	
+	public void useItem() 
 	{
-		grounded = false;
+		currentItem.use();
+	}
+
+	public void goLeft() 
+	{
+		motor.setMotorSpeed(5);
+		dir = false;
+	}
+
+	public void goRight()
+	{
+		motor.setMotorSpeed(-5);
+		dir = true;
+	}
+
+	public void jumpForward()
+	{
+		if(grounded == true)
+		{
+			if(p.millis() > lastLanded + jumpCooldown)
+			{
+				fallY = getPixelLocation().y;
+				applyForce(jump.add(dir ? farRight : farLeft));
+				grounded = false;
+			}
+		}
+	}
+
+	public void jumpBack() 
+	{
+		if(grounded == true)
+		{
+			if(p.millis() > lastLanded + jumpCooldown)
+			{
+				fallY = getPixelLocation().y;
+				applyForce(highJump.add(dir ? left : right));
+				grounded = false;
+			}
+		}
 	}
 
 }

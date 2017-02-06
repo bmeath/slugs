@@ -22,7 +22,7 @@ public class Slugs extends PApplet
 	public Terrain map;
 	GameManager gm;
 	
-	HashMap<String, Player> players;
+	Player[] players;
 	
 	// hashmap of inventory item instances
 	HashMap<String, InventoryItem> itemStore;
@@ -42,7 +42,7 @@ public class Slugs extends PApplet
 		world.listenForCollisions();
 		world.setGravity(0f, -30f);
 		map = new Terrain(this, world, 0.5f);
-		players = new HashMap<String, Player>();
+		players = new Player[2];
 		gm = new GameManager(this, players, 45);
 		
 		itemQuantities = new HashMap<String, Integer>();
@@ -78,8 +78,8 @@ public class Slugs extends PApplet
 		
 		if (mousePressed)
 		{
-			players.put("Brendan", new Player("Player 1", this, world, map.randomSpawn(), itemQuantities, itemStore));
-			players.put("Player 2", new Player("Player 2", this, world, map.randomSpawn(), itemQuantities, itemStore));
+			players[0] = new Player("Player 1", this, world, map.randomSpawn(), itemQuantities, itemStore);
+			players[1] = new Player("Player 2", this, world, map.randomSpawn(), itemQuantities, itemStore);
 			gameState = 1;
 		}
 	}
@@ -88,7 +88,7 @@ public class Slugs extends PApplet
 	{
 		background(185, 225, 255);
 		map.display();
-		for(Player p: players.values())
+		for(Player p: players)
 		{
 			p.display();
 		}
@@ -96,7 +96,7 @@ public class Slugs extends PApplet
 		{
 			world.step();
 		}
-		gm.display();
+		gm.step();
 	}
 
 	public void endScreen()
@@ -218,20 +218,7 @@ public class Slugs extends PApplet
 	
 	public void mouseClicked()
 	{
-		if (gameState == 1)
-		{
-			if (!gm.paused())
-			{
-				players.get("Brendan").mouseClicked(mouseX, mouseY, mouseButton);
-			}
-			else
-			{
-				if (mouseButton == LEFT)
-				{
-					gm.pauseMenu.click();
-				}
-			}
-		}
+		gm.mouseClicked(mouseX, mouseY, mouseButton);
 	}
 	
 	public void beginContact(Contact c)
