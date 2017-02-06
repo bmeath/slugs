@@ -43,7 +43,6 @@ public class Slugs extends PApplet
 		world.setGravity(0f, -30f);
 		map = new Terrain(this, world, 0.5f);
 		players = new Player[2];
-		gm = new GameManager(this, players, 45);
 		
 		itemQuantities = new HashMap<String, Integer>();
 		itemStore = new HashMap<String, InventoryItem>();
@@ -80,6 +79,7 @@ public class Slugs extends PApplet
 		{
 			players[0] = new Player("Player 1", this, world, map.randomSpawn(), itemQuantities, itemStore);
 			players[1] = new Player("Player 2", this, world, map.randomSpawn(), itemQuantities, itemStore);
+			gm = new GameManager(this, players, 45);
 			gameState = 1;
 		}
 	}

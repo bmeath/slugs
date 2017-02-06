@@ -78,24 +78,6 @@ public class BombWeapon extends Weapon
 			}
 		}
 		
-		if (p.checkKey(PConstants.UP))
-		{
-			// prevent aiming behind view of player
-			if(aimAngle > PConstants.PI / 2)
-			{
-				aimAngle -= 0.025;
-			}
-		}
-		
-		if (p.checkKey(PConstants.DOWN))
-		{
-			// prevent aiming behind view of player
-			if(aimAngle < (3 * PConstants.PI) / 2)
-			{
-				aimAngle += 0.025;
-			}
-		}
-		
 		// flip angle horizontally if player is facing to the right
 		projectileForce.x = PApplet.cos(owner.dir ? PConstants.PI - aimAngle : aimAngle);
 		projectileForce.y = PApplet.sin(owner.dir ? PConstants.PI - aimAngle : aimAngle);
@@ -128,5 +110,27 @@ public class BombWeapon extends Weapon
 		}
 		proj.bodyList.clear();
 		projectiles.remove(proj);
+		if (projectiles.isEmpty())
+		{
+			used = true;
+		}
+	}
+	
+	public void pressUp()
+	{
+		// prevent aiming behind view of player
+		if(aimAngle > PConstants.PI / 2)
+		{
+			aimAngle -= 0.025;
+		}
+	}
+	
+	public void pressDown()
+	{
+		// prevent aiming behind view of player
+		if(aimAngle < (3 * PConstants.PI) / 2)
+		{
+			aimAngle += 0.025;
+		}
 	}
 }

@@ -12,9 +12,10 @@ public class GameManager
 	Slugs p;
 	PauseMenu pauseMenu;
 	Player[] players;
-	int turnTime;
-	int turnStart;
-	int current;
+	private int turnTime;
+	private int turnStart;
+	private int current;
+	private int healthMem;
 	
 	class PauseMenu
 	{
@@ -26,6 +27,7 @@ public class GameManager
 		private float heightMem;
 		private boolean show;
 		HashMap<Rectangle, String> menuButtons = new HashMap<Rectangle, String>();
+		
 		
 		
 		public PauseMenu(int w, int h)
@@ -147,7 +149,8 @@ public class GameManager
 		this.players = players;
 		turnStart = p.millis();
 		this.turnTime = turnLength;
-		current = 0;
+		current = -1;
+		nextTurn();
 	}
 	
 	public void step()
@@ -155,8 +158,10 @@ public class GameManager
 		pauseMenu.display();
 		showHealth();
 		updatePlayer();
-		if (timer() == 0)
+		if (timer() == 0 || players[current].usedItem() || players[current].health != healthMem)
 		{
+			players[current].stop();
+			players[current].currentItem = null;
 			nextTurn();
 		}
 	}
@@ -200,7 +205,10 @@ public class GameManager
 	
 	private void nextTurn()
 	{
-		// TODO:
+		
+		current = (current + 1) % players.length;
+		healthMem = players[current].health;
+		turnStart = p.millis();
 	}
 	
 	public boolean paused() 
@@ -243,6 +251,16 @@ public class GameManager
 		if (p.checkKey(PConstants.BACKSPACE))
 		{
 			players[current].jumpBack();
+		}
+		
+		if (p.checkKey(PConstants.UP))
+		{
+			players[current].pressUp();
+		}
+		
+		if (p.checkKey(PConstants.DOWN))
+		{
+			players[current].pressDown();
 		}
 	}
 

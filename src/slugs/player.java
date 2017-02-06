@@ -40,6 +40,7 @@ public class Player extends Entity
 	int health;
 	float fallY;
 	ItemMenu itemMenu;
+	String currentItemName;
 	
 	class ItemMenu
 	{
@@ -78,12 +79,7 @@ public class Player extends Entity
 			// so menu doesn't appear sliding away at start of game
 			dimensions.x = 0;
 			
-			// select the first item in the inventory by default
-			for (String s: inventory.keySet())
-			{
-				selectItem(s);
-				break;
-			}
+			
 		}
 		
 		public void toggle()
@@ -246,8 +242,22 @@ public class Player extends Entity
 	// select the item for use
 	public void selectItem(String name)
 	{
-		currentItem = (InventoryItem) itemStore.get(name).clone();
-		currentItem.setOwner(this);
+		if (inventory.get(name) > 0)
+		{
+			currentItem = (InventoryItem) itemStore.get(name).clone();
+			currentItem.setOwner(this);
+			currentItemName = name;
+		}
+	}
+	
+	// select the first item in the inventory by default
+	public void selectFirstItem()
+	{
+		for (String s: inventory.keySet())
+		{
+			selectItem(s);
+			break;
+		}
 	}
 	
 	// give player exactly one of the item
@@ -293,7 +303,7 @@ public class Player extends Entity
 		{
 			inventory.replace(name, newQuantity);
 		}
-	}	
+	}
 	
 	public boolean isGrounded()
 	{
@@ -392,4 +402,30 @@ public class Player extends Entity
 		}
 	}
 
+	public boolean usedItem() 
+	{
+		if (currentItem != null)
+		{
+			if (currentItem.used)
+			{
+				removeItem(currentItemName);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void pressUp() {
+		if (currentItem != null)
+		{
+			currentItem.pressUp();
+		}
+	}
+
+	public void pressDown() {
+		if (currentItem != null)
+		{
+			currentItem.pressDown();
+		}
+	}
 }

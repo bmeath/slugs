@@ -11,4 +11,7 @@ public abstract class Utility extends InventoryItem
 	public abstract void display();
 	public abstract void use();
 	protected abstract void update();
+	
+	public abstract void pressUp();
+	public abstract void pressDown();
 }

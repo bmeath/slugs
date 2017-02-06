@@ -25,5 +25,15 @@ public class MeleeWeapon extends Weapon
 	{
 		
 	}
+	
+	public void pressUp()
+	{
+		
+	}
+	
+	public void pressDown()
+	{
+		
+	}
 
 }
