@@ -17,6 +17,7 @@ import org.jbox2d.dynamics.FixtureDef;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+
 import shiffman.box2d.Box2DProcessing;
 
 public class Terrain
@@ -84,10 +85,10 @@ public class Terrain
 		
 		// indestructible boundary to keep everything on screen
 		Vec2[] boundaryPoints = new Vec2[4];
-		boundaryPoints[0] = world.coordPixelsToWorld(new Vec2(-1,-1));
-		boundaryPoints[1] = world.coordPixelsToWorld(new Vec2(-1, p.height + 1));
-		boundaryPoints[2] = world.coordPixelsToWorld(new Vec2(p.width + 1, p.height + 1));
-		boundaryPoints[3] = world.coordPixelsToWorld(new Vec2(p.width + 1, -1));
+		boundaryPoints[0] = world.coordPixelsToWorld(new Vec2(0, 0));
+		boundaryPoints[1] = world.coordPixelsToWorld(new Vec2(0, p.height));
+		boundaryPoints[2] = world.coordPixelsToWorld(new Vec2(p.width, p.height));
+		boundaryPoints[3] = world.coordPixelsToWorld(new Vec2(p.width, 0));
 		shape = new ChainShape();
 		shape.createChain(boundaryPoints, boundaryPoints.length);
 		fd.shape = shape;

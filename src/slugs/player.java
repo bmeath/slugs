@@ -12,6 +12,7 @@ import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.joints.RevoluteJoint;
 import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
+import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PImage;
 import shiffman.box2d.Box2DProcessing;
@@ -38,9 +39,14 @@ public class Player extends Entity
 	RevoluteJoint motor;
 	private boolean grounded;
 	int health;
+	private final int maxHealth = 250;
 	float fallY;
 	ItemMenu itemMenu;
 	String currentItemName;
+	
+	// used when showing how much damage the slug took
+	int showDamageTaken;
+	int damageTaken;
 	
 	class ItemMenu
 	{
@@ -50,7 +56,9 @@ public class Player extends Entity
 		private boolean show;
 		private final int rows = 4;
 		private final int cols = 8;
+		
 		HashMap<Rectangle, String> itemButtons = new HashMap<Rectangle, String>();
+		
 		
 		
 		public ItemMenu()
@@ -123,7 +131,7 @@ public class Player extends Entity
 					p.textSize(12);
 					if (p.mouseX > r.x && p.mouseX < r.x + r.width && p.mouseY > r.y && p.mouseY < r.y + r.height)
 					{
-						p.strokeWeight(2);
+						p.strokeWeight(3);
 						p.stroke(127, 176, 255);
 						p.textAlign(PConstants.LEFT, PConstants.CENTER);
 						p.fill(255);
@@ -233,6 +241,11 @@ public class Player extends Entity
 	    
 	    itemMenu = new ItemMenu();
 	    this.name = name;
+	    
+	    /* set to large negative number at start,
+	     * otherwise a zero damage text will appear above players head
+	     */
+	    showDamageTaken = - 2001;
 	}
 	
 	// create player with default size
@@ -333,10 +346,22 @@ public class Player extends Entity
 		p.imageMode(PConstants.CENTER);
 		Vec2 loc = getPixelLocation();
 		p.image(dir ? rightSlug : leftSlug, loc.x, loc.y, 24, 24);
+		
+		// name and health above head
 		p.textAlign(PConstants.CENTER, PConstants.CENTER);
 		p.fill(0);
+		p.textSize(12);
 		p.text(name, loc.x, loc.y - 23);
 		p.text(health, loc.x, loc.y - 35);
+		
+		if (showDamageTaken + 2000 > p.millis())
+		{
+			p.fill(255, 0, 0);
+			p.textSize(16);
+			int h = (int) PApplet.map(p.millis() - showDamageTaken, 0, 3000, 20, 75);
+			p.text(damageTaken, loc.x, loc.y - h);
+		}
+		
 		
 		p.popMatrix();
 		
@@ -349,6 +374,17 @@ public class Player extends Entity
 		if(health < 0)
 		{
 			health = 0;
+		}
+		// store damage taken for displaying it above head
+		damageTaken = damage;
+	}
+	
+	public void heal(int health)
+	{
+		this.health += health;
+		if(this.health > maxHealth)
+		{
+			this.health = maxHealth;
 		}
 	}
 	

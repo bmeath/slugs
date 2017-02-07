@@ -6,6 +6,7 @@ import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
 import processing.data.XML;
+import processing.sound.*;
 
 import shiffman.box2d.*;
 
@@ -30,6 +31,8 @@ public class Slugs extends PApplet
 	// hashmap of quantities of each item a player has
 	HashMap<String, Integer> itemQuantities;
 	
+	public SoundFile explosion; // source: https://www.freesound.org/people/Nbs%20Dark/sounds/94185/
+	
 	public void settings()
 	{
 		size(1280, 720);
@@ -37,6 +40,7 @@ public class Slugs extends PApplet
 	
 	public void setup()
 	{
+		explosion = new SoundFile(Slugs.this, "explosion.wav");
 		world = new Box2DProcessing(this);
 		world.createWorld();
 		world.listenForCollisions();
@@ -72,6 +76,8 @@ public class Slugs extends PApplet
 	{
 		background(0);
 		textAlign(CENTER);
+		textSize(18);
+		fill(255);
 		text("SLUGS", width/2, height/3);
 		text("Click to begin", width/2, height/2);
 		
@@ -86,7 +92,7 @@ public class Slugs extends PApplet
 	
 	public void gameScreen()
 	{
-		background(185, 225, 255);
+		background(140, 200, 255);
 		map.display();
 		for(Player p: players)
 		{

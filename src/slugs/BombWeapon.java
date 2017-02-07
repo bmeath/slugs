@@ -23,6 +23,7 @@ public class BombWeapon extends Weapon
 	float power;
 	boolean explodeOnImpact;
 	int timeout;
+	private final int maxPower= 15000;
 	Player[] players;
 	Terrain map;
 
@@ -82,7 +83,7 @@ public class BombWeapon extends Weapon
 		projectileForce.x = PApplet.cos(owner.dir ? PConstants.PI - aimAngle : aimAngle);
 		projectileForce.y = PApplet.sin(owner.dir ? PConstants.PI - aimAngle : aimAngle);
 		
-		if((power > 0 && p.keys[' '] == false) || power == 12000)
+		if((power > 0 && p.keys[' '] == false) || power == maxPower)
 		{
 			projectileForce.mulLocal(power);
 			Vec2 loc = owner.getPixelLocation();
@@ -108,7 +109,16 @@ public class BombWeapon extends Weapon
 	{
 		if(projectileCount > 0)
 		{
-			power += 100;
+			power += 200;
+			int colour = p.color(PApplet.map(power, 0, 15000, 0, 255), PApplet.map(power, 0, 15000, 255, 0), 0);
+			float len = PApplet.map(power, 0, 15000, 20, 50);
+			len *= owner.dir ? 1 : -1;
+			Vec2 loc = owner.getPixelLocation();
+			loc.y -= 40;
+			p.fill(colour);
+			p.noStroke();
+			p.triangle(loc.x, loc.y, loc.x + len, loc.y, loc.x + len, loc.y - len/2 * (owner.dir ? 1 : -1));
+			
 		}
 	}
 	

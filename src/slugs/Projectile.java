@@ -1,11 +1,13 @@
 package slugs;
 
-import org.jbox2d.collision.shapes.PolygonShape;
+import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.sound.*;
+
 import shiffman.box2d.Box2DProcessing;
 
 public class Projectile extends Entity
@@ -22,26 +24,26 @@ public class Projectile extends Entity
 	Player[] players;
 	Terrain map;
 	
+	
 	public Projectile(Slugs p, Box2DProcessing world, Player[] players, Terrain map, BombWeapon source, Vec2 spawnPoint, int maxDamage, float restitution, boolean explodeOnImpact, int timeout, int clusterCount, Vec2 force)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, false, 10, 1, restitution);
+		
 		this.players = players;
 		this.map = map;
 		
-		this.colour = p.color(255, 0, 0);
+		this.colour = p.color(0, 0, 0);
 		
 		this.damage = maxDamage;
 		
 		clusters = new Projectile[clusterCount];
 		
-		PolygonShape shape = new PolygonShape();
+		CircleShape shape = new CircleShape();
 		// define the shape
-		shape = new PolygonShape();
+		shape = new CircleShape();
 		
-		// create main body
-		float w = world.scalarPixelsToWorld(1);
-		float h = world.scalarPixelsToWorld(7);
-		shape.setAsBox(w, h);
+		float radius = world.scalarPixelsToWorld(4);
+		shape.setRadius(radius);
 		
 		fd.shape = shape;
 		bodyList.get(0).createFixture(fd);
@@ -51,9 +53,7 @@ public class Projectile extends Entity
 		}
 		
 		timeStart = p.millis();
-		Vec2 head = getPixelLocation();
-		head.y += h/2;
-		bodyList.get(0).applyForce(force, world.coordPixelsToWorld(head));
+		bodyList.get(0).applyForceToCenter(force);
 		
 		this.source = source;
 		hit = false;
@@ -67,6 +67,7 @@ public class Projectile extends Entity
 	
 	public void explode()
 	{
+		p.explosion.play();
 		this.hit = true;
 		Vec2 loc = getPixelLocation();
 		float radius = getDamageRadius();
@@ -94,6 +95,7 @@ public class Projectile extends Entity
 		{
 			Vec2 loc = getPixelLocation();
 			int t = p.millis() - timeStart;
+			p.textSize(12);
 			p.textAlign(PConstants.CENTER, PConstants.CENTER);
 			p.text(((timeout - t) / 1000) + 1, loc.x, loc.y - 20);
 			if(t >= timeout)

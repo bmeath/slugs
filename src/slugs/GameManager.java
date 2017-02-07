@@ -16,6 +16,9 @@ public class GameManager
 	private int turnStart;
 	private int current;
 	private int healthMem;
+	Vec2 timerPos;
+	private int turnEndDelay = 0;
+	
 	
 	class PauseMenu
 	{
@@ -90,19 +93,24 @@ public class GameManager
 				dimensions.y = heightMem;
 				
 				p.rectMode(PConstants.CORNER);
+				p.textSize(12);
+				p.textAlign(PConstants.CENTER, PConstants.CENTER);
+				
 				for (Rectangle r: menuButtons.keySet())
 				{
 					if(p.mouseX > r.x && p.mouseX < r.x + r.width && p.mouseY > r.y && p.mouseY < r.y + r.height)
 					{
-						p.fill(127, 176, 255);
+						p.stroke(127, 176, 255);
+						p.strokeWeight(3);
 					}
 					else
 					{
-						
-						p.noFill();
-					}
-					p.rect(r.x, r.y, r.width, r.height);
-					p.textAlign(PConstants.CENTER, PConstants.CENTER);
+						p.stroke(255);
+						p.strokeWeight(1);
+					}	
+					
+					p.noFill();
+					p.rect(r.x, r.y, r.width -1, r.height -1);			
 					p.fill(255);
 					p.text(menuButtons.get(r), r.x + r.width/2, r.y + r.height/2);
 				}
@@ -148,6 +156,7 @@ public class GameManager
 		pauseMenu = new PauseMenu(250, 150);
 		this.players = players;
 		turnStart = p.millis();
+		this.timerPos = new Vec2(45, p.height - 35);
 		this.turnTime = turnLength;
 		current = -1;
 		nextTurn();
@@ -156,38 +165,53 @@ public class GameManager
 	public void step()
 	{
 		pauseMenu.display();
-		showHealth();
+		showPlayerStats();
 		updatePlayer();
+		
 		if (timer() == 0 || players[current].usedItem() || players[current].health != healthMem)
 		{
-			players[current].stop();
-			players[current].currentItem = null;
-			if (players.length == 1)
+			if (p.millis() < turnEndDelay + 5000)
 			{
-				p.gameState = 2;
+				players[current].stop();
+				players[current].currentItem = null;
+				turnEndDelay = p.millis();
 			}
 			else
 			{
-				nextTurn();
+				if (players.length <= 1)
+				{
+					
+					p.gameState = 2;
+				}
+				else
+				{
+					nextTurn();
+				}
 			}
 		}
 	}
 	
-	// show health bars on bottom of screen for each player
-	private void showHealth()
+	private void showPlayerStats()
 	{
 		float x = p.width/2 - 100;
-		float y = p.height - (players.length * 20);
+		float y = p.height - (players.length * 30);
 		for (Player player: players)
 		{
+			// heath bar
+			p.fill(0);
+			p.stroke(255);
+			p.strokeWeight(1);
+			p.rectMode(PConstants.CENTER);
+			p.rect(p.width/2, y, 325, 25);
 			p.fill(255);
-			p.textAlign(PConstants.CENTER, PConstants.RIGHT);
-			p.text(player.name, x - 50, y);
+			p.textSize(12);
+			p.textAlign(PConstants.BOTTOM, PConstants.RIGHT);
+			p.text(player.name, x - 50, y + 5);
 			p.noFill();
-			p.strokeWeight(3);
+			p.strokeWeight(4);
 			p.stroke(0, 200, 0);
 			p.line(x, y, x + player.health, y);
-			y += 20;	
+			y += 30;	
 		}
 	}
 	
@@ -202,11 +226,11 @@ public class GameManager
 		p.fill(0);
 		p.stroke(255);
 		p.rectMode(PConstants.CENTER);
-		p.rect(50, p.height - 50, 60, 40);
+		p.rect(timerPos.x, timerPos.y, 60, 40);
 		p.fill(255, 0, 0);
-		p.textSize(20);
+		p.textSize(28);
 		p.textAlign(PConstants.CENTER, PConstants.CENTER);
-		p.text(t, 50, p.height - 50);
+		p.text(t, timerPos.x, timerPos.y - 5);
 		return t;
 	}
 	
@@ -301,7 +325,15 @@ public class GameManager
 	}
 
 	public String getResult() {
-		// TODO Auto-generated method stub
-		return "";
+		String msg= "";
+		if (players.length == 1)
+		{
+			msg = players[0].name + " wins!";
+		}
+		else
+		{
+			msg = "Its a draw!";
+		}
+		return msg;
 	}
 }
