@@ -372,13 +372,13 @@ public class Player extends Entity
 
 	public void goLeft() 
 	{
-		motor.setMotorSpeed(5);
+		motor.setMotorSpeed(6);
 		dir = false;
 	}
 
 	public void goRight()
 	{
-		motor.setMotorSpeed(-5);
+		motor.setMotorSpeed(-6);
 		dir = true;
 	}
 

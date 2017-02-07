@@ -162,7 +162,14 @@ public class GameManager
 		{
 			players[current].stop();
 			players[current].currentItem = null;
-			nextTurn();
+			if (players.length == 1)
+			{
+				p.gameState = 2;
+			}
+			else
+			{
+				nextTurn();
+			}
 		}
 	}
 	
@@ -205,7 +212,13 @@ public class GameManager
 	
 	private void nextTurn()
 	{
-		
+		for (Player p: players)
+		{
+			if (p.health == 0)
+			{
+				
+			}
+		}
 		current = (current + 1) % players.length;
 		healthMem = players[current].health;
 		turnStart = p.millis();
@@ -285,5 +298,10 @@ public class GameManager
 				pauseMenu.click();
 			}
 		}
+	}
+
+	public String getResult() {
+		// TODO Auto-generated method stub
+		return "";
 	}
 }

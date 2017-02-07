@@ -67,6 +67,7 @@ public class Projectile extends Entity
 	
 	public void explode()
 	{
+		this.hit = true;
 		Vec2 loc = getPixelLocation();
 		float radius = getDamageRadius();
 		map.damage(loc, radius);
@@ -85,8 +86,6 @@ public class Projectile extends Entity
 				player.applyForce(force.mul(10000), 1);
 			}
 		}
-		
-		hit = true;
 	}
 	
 	protected void update()

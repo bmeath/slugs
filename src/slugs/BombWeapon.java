@@ -70,7 +70,7 @@ public class BombWeapon extends Weapon
 		{
 			if(map.contains(projectiles.get(i).getPixelLocation()))
 			{
-				
+				projectiles.get(i).explode();
 			}
 			if (projectiles.get(i).hit)
 			{
@@ -92,8 +92,12 @@ public class BombWeapon extends Weapon
 			// check if projectile was shot inside the ground or outside the screen
 			if (map.contains(loc) || loc.x < 0 || loc.y < 0 ||loc.x > p.width || loc.y > p.height)
 			{
-				loc = owner.getPixelLocation();
+				if (!explodeOnImpact)
+				{
+					loc = owner.getPixelLocation().clone();
+				}
 			}
+			
 			projectiles.add(new Projectile(p, world, players, map, this, loc, maxDamage, restitution, explodeOnImpact, timeout, clusterCount, projectileForce));
 			projectileCount--;
 			power = 0;

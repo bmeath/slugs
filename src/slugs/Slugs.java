@@ -101,7 +101,15 @@ public class Slugs extends PApplet
 
 	public void endScreen()
 	{
-		
+		textAlign(CENTER, CENTER);
+		textSize(30);
+		fill(255);
+		text(gm.getResult(), width/2, height/2);
+		text("Click screen to exit", width/2, (int) (0.75 * height));
+		if (mousePressed)
+		{
+			setup();
+		}
 	}
 	
 	/* create weapons from XML data */
