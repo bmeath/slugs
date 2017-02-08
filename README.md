@@ -10,7 +10,13 @@ Date of submission: 08/02/2016
 * Box2DProcessing
 
 ### Description  
-This a turn-based strategy game.
+This a turn-based strategy game.  
+I wrote this as a Java package with Processing imported,
+rather than through the Processing Editor,  
+so I could better understand Java.  
+I used jbox2d (the Java port of Box2D) to handle all physics.  
+I used the helper library Box2DProcessing to bridge the gap between Processing and jbox2d.  
+
 
 ### How to play
 * RIGHT: go right
