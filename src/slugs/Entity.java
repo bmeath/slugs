@@ -99,7 +99,8 @@ public abstract class Entity
 	protected void render(Body b)
 	{
 		p.fill(colour);
-		p.noStroke();
+		p.stroke(0);
+		p.strokeWeight(1);
 		
 		for (Fixture f = b.getFixtureList(); f != null; f = f.getNext())
 		{

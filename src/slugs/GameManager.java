@@ -167,27 +167,27 @@ public class GameManager
 		pauseMenu.display();
 		showPlayerStats();
 		
-		if (timer() == 0 || players.get(current).usedItem() || players.get(current).health != healthMem)
+		if (timer() == 0 || players.get(current).usedItem() || players.get(current).health < healthMem)
 		{
 			players.get(current).stop();
 			players.get(current).currentItem = null;
-				for (int i = 0; i < players.size(); i++)
+			for (int i = 0; i < players.size(); i++)
+			{
+				if (players.get(i).health == 0)
 				{
-					if (players.get(i).health == 0)
-					{
-						players.remove(i);
-					}
+					players.remove(i);
 				}
+			}
+			
+			if (players.size() <= 1)
+			{
 				
-				if (players.size() <= 1)
-				{
-					
-					p.gameState = 2;
-				}
-				else
-				{
-					nextTurn();
-				}
+				p.gameState = 2;
+			}
+			else
+			{
+				nextTurn();
+			}
 		}
 		else
 		{

@@ -52,8 +52,8 @@ public class ItemBox extends Entity
 		p.stroke(0);
 		p.strokeWeight(1);
 		p.noFill();
-		p.line(centre.x - 7, centre.y - 7, centre.x + 7, centre.y + 7);
-		p.line(centre.x - 7, centre.y + 7, centre.x + 7, centre.y - 7);
+		p.line(centre.x - 9, centre.y - 9, centre.x + 9, centre.y + 9);
+		p.line(centre.x - 9, centre.y + 9, centre.x + 9, centre.y - 9);
 	}
 
 }

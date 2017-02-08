@@ -107,7 +107,7 @@ public class Slugs extends PApplet
 		}
 		
 		// occasionally drop a health crate
-		if (random(1) < 0.0005)
+		if (random(1) < 0.00025)
 		{
 			healthCrates.add(new HealthCrate(this, world, map.randomSpawn()));
 		}
@@ -130,7 +130,7 @@ public class Slugs extends PApplet
 		}
 		
 		// occasionally drop a health crate
-		if (random(1) < 0.007)
+		if (random(1) < 0.00025)
 		{
 			itemCrates.add(new ItemBox(this, world, map.randomSpawn(), "Bazooka", itemStore));
 		}
