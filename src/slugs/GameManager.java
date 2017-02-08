@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
 
 import processing.core.PConstants;
 
@@ -175,6 +176,11 @@ public class GameManager
 			{
 				if (players.get(i).health == 0)
 				{
+					for(Body body: players.get(i).bodyList)
+					{
+						p.world.destroyBody(body);
+					}
+					players.get(i).bodyList.clear();
 					players.remove(i);
 				}
 			}

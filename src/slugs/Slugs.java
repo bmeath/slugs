@@ -92,6 +92,8 @@ public class Slugs extends PApplet
 		{
 			players.add(new Player("Player 1", this, world, map.randomSpawn(), itemQuantities, itemStore));
 			players.add(new Player("Player 2", this, world, map.randomSpawn(), itemQuantities, itemStore));
+			players.add(new Player("Player 3", this, world, map.randomSpawn(), itemQuantities, itemStore));
+			players.add(new Player("Player 4", this, world, map.randomSpawn(), itemQuantities, itemStore));
 			gm = new GameManager(this, players, 45);
 			gameState = 1;
 		}
@@ -101,6 +103,7 @@ public class Slugs extends PApplet
 	{
 		background(140, 200, 255);
 		map.display();
+		gm.step();
 		for (Player p: players)
 		{
 			p.display();
@@ -156,7 +159,6 @@ public class Slugs extends PApplet
 		{
 			world.step();
 		}
-		gm.step();
 	}
 
 	public void endScreen()
@@ -350,7 +352,10 @@ public class Slugs extends PApplet
 		{
 			Player p = (Player) a;
 			HealthCrate h = (HealthCrate) b;
-			p.heal(h.health);
+			if (!h.used)
+			{
+				p.heal(h.health);
+			}
 			h.used = true;
 		}
 		
@@ -358,7 +363,10 @@ public class Slugs extends PApplet
 		{
 			Player p = (Player) b;
 			HealthCrate h = (HealthCrate) a;
-			p.heal(h.health);
+			if (!h.used)
+			{
+				p.heal(h.health);
+			}
 			h.used = true;
 		}
 		
@@ -366,7 +374,10 @@ public class Slugs extends PApplet
 		{
 			Player p = (Player) a;
 			ItemBox i = (ItemBox) b;
-			p.giveItem(i.itemName);
+			if (!i.used)
+			{
+				p.giveItem(i.itemName);
+			}
 			i.used = true;
 		}
 		
@@ -374,7 +385,10 @@ public class Slugs extends PApplet
 		{
 			Player p = (Player) b;
 			ItemBox i = (ItemBox) a;
-			p.giveItem(i.itemName);
+			if (!i.used)
+			{
+				p.giveItem(i.itemName);
+			}
 			i.used = true;
 		}
 	}

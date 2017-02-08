@@ -9,7 +9,7 @@ projectile types:
 	bomb
 -->
 <weapons>
-	<weapon type="bomb" default-amount="20">
+	<weapon type="bomb" default-amount="10">
 	    <name>Bazooka</name>
 	    <image>rocket.png</image>
 	    <projectile amount="1" explode-on-impact="true">
@@ -23,7 +23,7 @@ projectile types:
 	        </cluster>
 	   	</projectile>
 	</weapon>
-	<weapon type="bomb" default-amount="20">
+	<weapon type="bomb" default-amount="10">
 	    <name>Grenade</name>
 	    <image>grenade.png</image>
 	    <projectile amount="1" explode-on-impact="false" timeout="3">
@@ -37,13 +37,13 @@ projectile types:
 	        </cluster>
 	   	</projectile>
 	</weapon>
-	<weapon type="bomb" default-amount="20">
+	<weapon type="bomb" default-amount="2">
 	    <name>Dynamite</name>
 	    <image>dynamite.png</image>
-	    <projectile amount="1" explode-on-impact="false" timeout="3">
+	    <projectile amount="1" explode-on-impact="false" timeout="5">
 	    	<rotates>false</rotates>
-	        <damage>60</damage>
-	   		<bounciness>0</bounciness>
+	        <damage>75</damage>
+	   		<bounciness>1</bounciness>
 	    	<cluster amount="0">
 	    		<damage>0</damage>
 	            <velocity></velocity>
