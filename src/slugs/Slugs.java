@@ -3,6 +3,7 @@ package slugs;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
@@ -25,6 +26,7 @@ public class Slugs extends PApplet
 	GameManager gm;
 	
 	ArrayList<Player> players;
+	ArrayList<HealthCrate> healthCrates;
 	
 	// hashmap of inventory item instances
 	HashMap<String, InventoryItem> itemStore;
@@ -52,6 +54,8 @@ public class Slugs extends PApplet
 		itemQuantities = new HashMap<String, Integer>();
 		itemStore = new HashMap<String, InventoryItem>();
 		loadWeapons("weapons.xml");
+		
+		healthCrates = new ArrayList<HealthCrate>();
 		
 		gameState = 0;
 	}
@@ -95,9 +99,19 @@ public class Slugs extends PApplet
 	{
 		background(140, 200, 255);
 		map.display();
-		for(Player p: players)
+		for (Player p: players)
 		{
 			p.display();
+		}
+		
+		// occasionally drop a health crate
+		if (random(1) < 0.005)
+		{
+			healthCrates.add(new HealthCrate(this, world, map.randomSpawn()));
+		}
+		for (HealthCrate h: healthCrates)
+		{
+			h.display();
 		}
 		if (!gm.paused())
 		{
@@ -280,6 +294,33 @@ public class Slugs extends PApplet
 		{
 			Projectile p = (Projectile) b;
 			p.explode();
+			
+		}
+		
+		if (a instanceof Player && b instanceof HealthCrate)
+		{
+			Player p = (Player) a;
+			HealthCrate h = (HealthCrate) b;
+			p.heal(h.health);
+			for(Body body: h.bodyList)
+			{
+				world.destroyBody(body);
+			}
+			h.bodyList.clear();
+			healthCrates.remove(h);
+		}
+		
+		if (b instanceof Player && a instanceof HealthCrate)
+		{
+			Player p = (Player) b;
+			HealthCrate h = (HealthCrate) a;
+			p.heal(h.health);
+			for(Body body: h.bodyList)
+			{
+				world.destroyBody(body);
+			}
+			h.bodyList.clear();
+			healthCrates.remove(h);
 		}
 	}
 		

@@ -45,8 +45,8 @@ public class Player extends Entity
 	String currentItemName;
 	
 	// used when showing how much damage the slug took
-	int showDamageTaken;
-	int damageTaken;
+	int showHealthChange;
+	int healthChange;
 	
 	class ItemMenu
 	{
@@ -376,8 +376,8 @@ public class Player extends Entity
 			health = 0;
 		}
 		// store damage taken for displaying it above head
-		damageTaken = damage;
-		showDamageTaken = p.millis();
+		healthChange = damage;
+		showHealthChange = p.millis();
 	}
 	
 	public void heal(int health)
