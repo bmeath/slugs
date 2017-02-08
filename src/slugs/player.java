@@ -78,7 +78,8 @@ public class Player extends Entity
 				{
 					if (i.hasNext())
 					{
-						itemButtons.put(new Rectangle(x, y, dx, dy), i.next());
+						String iName = i.next();
+						itemButtons.put(new Rectangle(x, y, dx, dy), iName);
 					}
 					else
 					{
@@ -132,6 +133,7 @@ public class Player extends Entity
 				for (Rectangle r: itemButtons.keySet())
 				{
 					p.textSize(12);
+					String iName = itemButtons.get(r);
 					if (p.mouseX > r.x && p.mouseX < r.x + r.width && p.mouseY > r.y && p.mouseY < r.y + r.height)
 					{
 						p.strokeWeight(3);
@@ -139,7 +141,7 @@ public class Player extends Entity
 						p.textAlign(PConstants.LEFT, PConstants.CENTER);
 						p.fill(255);
 						// item name
-						p.text(itemButtons.get(r), p.width - dimensions.x + 5, p.height - dimensions.y - 12);
+						p.text(iName, p.width - dimensions.x + 5, p.height - dimensions.y - 12);
 					}
 					else
 					{
@@ -149,10 +151,12 @@ public class Player extends Entity
 					
 					if (!itemButtons.get(r).equals("")) // if there is an item associated with that button
 					{
+						p.imageMode(PConstants.CORNER);
+						p.image(itemStore.get(iName).img, r.x, r.y, 20, 20);
+						
 						p.textAlign(PConstants.RIGHT, PConstants.TOP);
 						p.fill(255);
-						
-						p.text(inventory.get(itemButtons.get(r)), r.x + r.width, r.y + r.height/2);
+						p.text(inventory.get(iName), r.x + r.width, r.y + r.height/2);
 					}
 					p.noFill();
 					p.rect(r.x, r.y, r.width, r.height);

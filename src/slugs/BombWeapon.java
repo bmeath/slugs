@@ -28,7 +28,6 @@ public class BombWeapon extends Weapon
 	ArrayList<Player> players;
 	Terrain map;
 	boolean fixedRotation;
-	PImage img;
 
 	public BombWeapon(Slugs p, Box2DProcessing world, ArrayList<Player> players, Terrain map, int projectileCount, 
 			int maxDamage, float restitution, int clusterCount, int clusterDamage, float clusterVelocity, 
@@ -48,8 +47,8 @@ public class BombWeapon extends Weapon
 		this.explodeOnImpact = explodeOnImpact;
 		this.timeout = timeout;
 		this.fixedRotation = fixedRotation;
-		this.img = new PImage();
-		this.img = p.loadImage(imgPath);
+		img = new PImage();
+		img = p.loadImage(imgPath);
 	}
 	
 	public BombWeapon(Slugs p, Box2DProcessing world, ArrayList<Player> players, Terrain map, int projectileCount, 

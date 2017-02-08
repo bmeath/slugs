@@ -1,10 +1,13 @@
 package slugs;
 
+import processing.core.PImage;
+
 public abstract class InventoryItem implements Cloneable
 {
 	
 	Player owner;
 	boolean used;
+	public PImage img;
 	
 	public abstract void use();
 	protected abstract void update();
