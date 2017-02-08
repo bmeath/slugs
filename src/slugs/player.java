@@ -48,6 +48,9 @@ public class Player extends Entity
 	int showHealthChange;
 	int healthChange;
 	
+	int showNewItem;
+	String newItem;
+	
 	class ItemMenu
 	{
 		private Vec2 dimensions;
@@ -245,7 +248,8 @@ public class Player extends Entity
 	    /* set to large negative number at start,
 	     * otherwise a zero change in health text will appear above players head
 	     */
-	    showHealthChange = - 2001;
+	    showHealthChange = -2001;
+	    showNewItem = -3001;
 	}
 	
 	// create player with default size
@@ -293,6 +297,8 @@ public class Player extends Entity
 		{
 			inventory.put(name, quantity);
 		}
+		newItem = name;
+		showNewItem = p.millis();
 	}
 	
 	// replace the players inventory with a copy of the argument
@@ -369,6 +375,19 @@ public class Player extends Entity
 			p.textSize(16);
 			int h = (int) PApplet.map(p.millis() - showHealthChange, 0, 3000, 30, 75);
 			p.text(msg + healthChange, loc.x, loc.y - h);
+		}
+		
+		if (showNewItem + 3000 > p.millis())
+		{
+			
+			p.fill(0);;
+			p.stroke(255);;
+			p.strokeWeight(1);
+			p.rectMode(PConstants.CENTER);
+			p.rect(p.width/2, 50, 200, 50);
+			p.fill(255);
+			p.textSize(16);
+			p.text("+1 " + newItem, p.width/2, 50);
 		}
 		
 		

@@ -27,6 +27,7 @@ public class Slugs extends PApplet
 	
 	ArrayList<Player> players;
 	ArrayList<HealthCrate> healthCrates;
+	ArrayList<ItemBox> itemCrates;
 	
 	// hashmap of inventory item instances
 	HashMap<String, InventoryItem> itemStore;
@@ -56,6 +57,7 @@ public class Slugs extends PApplet
 		loadWeapons("weapons.xml");
 		
 		healthCrates = new ArrayList<HealthCrate>();
+		itemCrates = new ArrayList<ItemBox>();
 		
 		gameState = 0;
 	}
@@ -109,21 +111,44 @@ public class Slugs extends PApplet
 		{
 			healthCrates.add(new HealthCrate(this, world, map.randomSpawn()));
 		}
-		for (HealthCrate h: healthCrates)
+		for (int i = 0; i < healthCrates.size(); i++)
 		{
 			
-			if (h.used)
+			if (healthCrates.get(i).used)
 			{
-				for(Body body: h.bodyList)
+				for(Body body: healthCrates.get(i).bodyList)
 				{
 					world.destroyBody(body);
 				}
-				h.bodyList.clear();
-				healthCrates.remove(h);
+				healthCrates.get(i).bodyList.clear();
+				healthCrates.remove(i);
 			}
 			else
 			{
-				h.display();
+				healthCrates.get(i).display();
+			}
+		}
+		
+		// occasionally drop a health crate
+		if (random(1) < 0.007)
+		{
+			itemCrates.add(new ItemBox(this, world, map.randomSpawn(), "Bazooka", itemStore));
+		}
+		for (int i = 0; i < itemCrates.size(); i++)
+		{
+			
+			if (itemCrates.get(i).used)
+			{
+				for(Body body: itemCrates.get(i).bodyList)
+				{
+					world.destroyBody(body);
+				}
+				itemCrates.get(i).bodyList.clear();
+				itemCrates.remove(i);
+			}
+			else
+			{
+				itemCrates.get(i).display();
 			}
 		}
 		
@@ -325,6 +350,22 @@ public class Slugs extends PApplet
 			HealthCrate h = (HealthCrate) a;
 			p.heal(h.health);
 			h.used = true;
+		}
+		
+		if (a instanceof Player && b instanceof ItemBox)
+		{
+			Player p = (Player) a;
+			ItemBox i = (ItemBox) b;
+			p.giveItem(i.itemName);
+			i.used = true;
+		}
+		
+		if (b instanceof Player && a instanceof ItemBox)
+		{
+			Player p = (Player) b;
+			ItemBox i = (ItemBox) a;
+			p.giveItem(i.itemName);
+			i.used = true;
 		}
 	}
 		

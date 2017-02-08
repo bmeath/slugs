@@ -12,6 +12,7 @@ public class ItemBox extends Entity
 {
 	PolygonShape shape;
 	String itemName;
+	public boolean used;
 	
 	public ItemBox(Slugs p, Box2DProcessing world, Vec2 spawnPoint, String itemName, Map<String, InventoryItem> items) 
 	{
@@ -26,6 +27,10 @@ public class ItemBox extends Entity
 			// tool boxes have blue colour
 			colour = p.color(95, 152, 221); 
 		}
+		
+		this.used = false; 
+		this.itemName = itemName;
+		
 		// define the shape
 		shape = new PolygonShape();
 		
@@ -38,11 +43,17 @@ public class ItemBox extends Entity
 		
 		// affix shape to body
 		bodyList.get(0).createFixture(fd);
+		bodyList.get(0).setUserData(this);
 	}
 	
 	protected void update()
 	{
-		
+		Vec2 centre = getPixelLocation();
+		p.stroke(0);
+		p.strokeWeight(1);
+		p.noFill();
+		p.line(centre.x - 7, centre.y - 7, centre.x + 7, centre.y + 7);
+		p.line(centre.x - 7, centre.y + 7, centre.x + 7, centre.y - 7);
 	}
 
 }
