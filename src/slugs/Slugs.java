@@ -105,14 +105,28 @@ public class Slugs extends PApplet
 		}
 		
 		// occasionally drop a health crate
-		if (random(1) < 0.005)
+		if (random(1) < 0.0005)
 		{
 			healthCrates.add(new HealthCrate(this, world, map.randomSpawn()));
 		}
 		for (HealthCrate h: healthCrates)
 		{
-			h.display();
+			
+			if (h.used)
+			{
+				for(Body body: h.bodyList)
+				{
+					world.destroyBody(body);
+				}
+				h.bodyList.clear();
+				healthCrates.remove(h);
+			}
+			else
+			{
+				h.display();
+			}
 		}
+		
 		if (!gm.paused())
 		{
 			world.step();
@@ -302,12 +316,7 @@ public class Slugs extends PApplet
 			Player p = (Player) a;
 			HealthCrate h = (HealthCrate) b;
 			p.heal(h.health);
-			for(Body body: h.bodyList)
-			{
-				world.destroyBody(body);
-			}
-			h.bodyList.clear();
-			healthCrates.remove(h);
+			h.used = true;
 		}
 		
 		if (b instanceof Player && a instanceof HealthCrate)
@@ -315,12 +324,7 @@ public class Slugs extends PApplet
 			Player p = (Player) b;
 			HealthCrate h = (HealthCrate) a;
 			p.heal(h.health);
-			for(Body body: h.bodyList)
-			{
-				world.destroyBody(body);
-			}
-			h.bodyList.clear();
-			healthCrates.remove(h);
+			h.used = true;
 		}
 	}
 		

@@ -11,10 +11,12 @@ public class HealthCrate extends Entity
 
 	public int health;
 	PolygonShape shape;
+	public boolean used;
 
 	public HealthCrate(Slugs p, Box2DProcessing world, Vec2 spawnPoint) 
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, true, 1, 0.3f, 0.5f);
+		this.health = 25;
 		colour = p.color(255, 255, 255);
 		// define the shape
 		shape = new PolygonShape();
@@ -26,6 +28,7 @@ public class HealthCrate extends Entity
 		// affix shape to body
 		bodyList.get(0).createFixture(fd);
 		bodyList.get(0).setUserData(this);
+		used = false;
 	}
 	
 	protected void update()

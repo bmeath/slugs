@@ -243,9 +243,9 @@ public class Player extends Entity
 	    this.name = name;
 	    
 	    /* set to large negative number at start,
-	     * otherwise a zero damage text will appear above players head
+	     * otherwise a zero change in health text will appear above players head
 	     */
-	    showDamageTaken = - 2001;
+	    showHealthChange = - 2001;
 	}
 	
 	// create player with default size
@@ -354,12 +354,21 @@ public class Player extends Entity
 		p.text(name, loc.x, loc.y - 23);
 		p.text(health, loc.x, loc.y - 35);
 		
-		if (showDamageTaken + 2000 > p.millis())
+		if (showHealthChange + 2000 > p.millis())
 		{
-			p.fill(255, 0, 0);
+			String msg = "";
+			if (healthChange < 0)
+			{
+				p.fill(255, 0, 0);
+			}
+			else
+			{
+				msg = "+";
+				p.fill(0, 255, 0);
+			}
 			p.textSize(16);
-			int h = (int) PApplet.map(p.millis() - showDamageTaken, 0, 3000, 30, 75);
-			p.text(-damageTaken, loc.x, loc.y - h);
+			int h = (int) PApplet.map(p.millis() - showHealthChange, 0, 3000, 30, 75);
+			p.text(msg + healthChange, loc.x, loc.y - h);
 		}
 		
 		
@@ -376,7 +385,7 @@ public class Player extends Entity
 			health = 0;
 		}
 		// store damage taken for displaying it above head
-		healthChange = damage;
+		healthChange = -damage;
 		showHealthChange = p.millis();
 	}
 	
@@ -387,6 +396,9 @@ public class Player extends Entity
 		{
 			this.health = maxHealth;
 		}
+		// store health gained for displaying it above head
+		healthChange = health;
+		showHealthChange = p.millis();
 	}
 	
 	public float getFallDistance()
