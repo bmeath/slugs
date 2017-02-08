@@ -84,11 +84,12 @@ public class Terrain
 		bodies.add(b);
 		
 		// indestructible boundary to keep everything on screen
-		Vec2[] boundaryPoints = new Vec2[4];
+		Vec2[] boundaryPoints = new Vec2[5];
 		boundaryPoints[0] = world.coordPixelsToWorld(new Vec2(0, 0));
 		boundaryPoints[1] = world.coordPixelsToWorld(new Vec2(0, p.height));
 		boundaryPoints[2] = world.coordPixelsToWorld(new Vec2(p.width, p.height));
 		boundaryPoints[3] = world.coordPixelsToWorld(new Vec2(p.width, 0));
+		boundaryPoints[4] = world.coordPixelsToWorld(new Vec2(0, 0));
 		shape = new ChainShape();
 		shape.createChain(boundaryPoints, boundaryPoints.length);
 		fd.shape = shape;

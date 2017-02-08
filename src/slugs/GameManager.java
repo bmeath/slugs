@@ -1,6 +1,7 @@
 package slugs;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jbox2d.common.Vec2;
@@ -11,13 +12,12 @@ public class GameManager
 {
 	Slugs p;
 	PauseMenu pauseMenu;
-	Player[] players;
+	ArrayList<Player> players;
 	private int turnTime;
 	private int turnStart;
 	private int current;
 	private int healthMem;
 	Vec2 timerPos;
-	private int turnEndDelay = 0;
 	
 	
 	class PauseMenu
@@ -150,7 +150,7 @@ public class GameManager
 		}
 	}
 	
-	public GameManager(Slugs p, Player[] players, int turnLength) 
+	public GameManager(Slugs p, ArrayList<Player> players, int turnLength) 
 	{
 		this.p = p;
 		pauseMenu = new PauseMenu(250, 150);
@@ -166,19 +166,20 @@ public class GameManager
 	{
 		pauseMenu.display();
 		showPlayerStats();
-		updatePlayer();
 		
-		if (timer() == 0 || players[current].usedItem() || players[current].health != healthMem)
+		if (timer() == 0 || players.get(current).usedItem() || players.get(current).health != healthMem)
 		{
-			if (p.millis() < turnEndDelay + 5000)
-			{
-				players[current].stop();
-				players[current].currentItem = null;
-				turnEndDelay = p.millis();
-			}
-			else
-			{
-				if (players.length <= 1)
+			players.get(current).stop();
+			players.get(current).currentItem = null;
+				for (int i = 0; i < players.size(); i++)
+				{
+					if (players.get(i).health == 0)
+					{
+						players.remove(i);
+					}
+				}
+				
+				if (players.size() <= 1)
 				{
 					
 					p.gameState = 2;
@@ -187,14 +188,17 @@ public class GameManager
 				{
 					nextTurn();
 				}
-			}
+		}
+		else
+		{
+			updatePlayer();
 		}
 	}
 	
 	private void showPlayerStats()
 	{
 		float x = p.width/2 - 100;
-		float y = p.height - (players.length * 30);
+		float y = p.height - (players.size() * 30);
 		for (Player player: players)
 		{
 			// heath bar
@@ -236,15 +240,8 @@ public class GameManager
 	
 	private void nextTurn()
 	{
-		for (Player p: players)
-		{
-			if (p.health == 0)
-			{
-				
-			}
-		}
-		current = (current + 1) % players.length;
-		healthMem = players[current].health;
+		current = (current + 1) % players.size();
+		healthMem = players.get(current).health;
 		turnStart = p.millis();
 	}
 	
@@ -262,42 +259,42 @@ public class GameManager
 	{
 		if (p.checkKey(' '))
 		{
-			players[current].useItem();
+			players.get(current).useItem();
 		}
 		
 		if (p.checkKey(PConstants.LEFT))
 		{
-			players[current].goLeft();
+			players.get(current).goLeft();
 		}
 		else if (p.checkKey(PConstants.RIGHT))
 		{
-			players[current].goRight();
+			players.get(current).goRight();
 		}
 		else
 		{
-			players[current].stop();
+			players.get(current).stop();
 		}
 		
 		//forward jump
 		if (p.checkKey(PConstants.ENTER))
 		{
-			players[current].jumpForward();
+			players.get(current).jumpForward();
 		}
 		
 		// backward jump (like backflip in Worms)
 		if (p.checkKey(PConstants.BACKSPACE))
 		{
-			players[current].jumpBack();
+			players.get(current).jumpBack();
 		}
 		
 		if (p.checkKey(PConstants.UP))
 		{
-			players[current].pressUp();
+			players.get(current).pressUp();
 		}
 		
 		if (p.checkKey(PConstants.DOWN))
 		{
-			players[current].pressDown();
+			players.get(current).pressDown();
 		}
 	}
 
@@ -307,12 +304,12 @@ public class GameManager
 		{
 			if (mouseButton == PConstants.LEFT)
 			{
-				players[current].itemMenu.click();
+				players.get(current).itemMenu.click();
 			}
 			
 			if (mouseButton == PConstants.RIGHT)
 			{
-				players[current].itemMenu.toggle();
+				players.get(current).itemMenu.toggle();
 			}
 		}
 		else
@@ -326,9 +323,9 @@ public class GameManager
 
 	public String getResult() {
 		String msg= "";
-		if (players.length == 1)
+		if (players.size() == 1)
 		{
-			msg = players[0].name + " wins!";
+			msg = players.get(0).name + " wins!";
 		}
 		else
 		{

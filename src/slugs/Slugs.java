@@ -1,12 +1,13 @@
 package slugs;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jbox2d.dynamics.contacts.Contact;
 
 import processing.core.*;
 import processing.data.XML;
-import processing.sound.*;
+//import processing.sound.*;
 
 import shiffman.box2d.*;
 
@@ -23,7 +24,7 @@ public class Slugs extends PApplet
 	public Terrain map;
 	GameManager gm;
 	
-	Player[] players;
+	ArrayList<Player> players;
 	
 	// hashmap of inventory item instances
 	HashMap<String, InventoryItem> itemStore;
@@ -31,7 +32,7 @@ public class Slugs extends PApplet
 	// hashmap of quantities of each item a player has
 	HashMap<String, Integer> itemQuantities;
 	
-	public SoundFile explosion; // source: https://www.freesound.org/people/Nbs%20Dark/sounds/94185/
+	//public SoundFile explosion; // source: https://www.freesound.org/people/Nbs%20Dark/sounds/94185/
 	
 	public void settings()
 	{
@@ -40,13 +41,13 @@ public class Slugs extends PApplet
 	
 	public void setup()
 	{
-		explosion = new SoundFile(Slugs.this, "explosion.wav");
+		//explosion = new SoundFile(this, "explosion.wav");
 		world = new Box2DProcessing(this);
 		world.createWorld();
 		world.listenForCollisions();
 		world.setGravity(0f, -30f);
 		map = new Terrain(this, world, 0.5f);
-		players = new Player[2];
+		players = new ArrayList<Player>();
 		
 		itemQuantities = new HashMap<String, Integer>();
 		itemStore = new HashMap<String, InventoryItem>();
@@ -83,8 +84,8 @@ public class Slugs extends PApplet
 		
 		if (mousePressed)
 		{
-			players[0] = new Player("Player 1", this, world, map.randomSpawn(), itemQuantities, itemStore);
-			players[1] = new Player("Player 2", this, world, map.randomSpawn(), itemQuantities, itemStore);
+			players.add(new Player("Player 1", this, world, map.randomSpawn(), itemQuantities, itemStore));
+			players.add(new Player("Player 2", this, world, map.randomSpawn(), itemQuantities, itemStore));
 			gm = new GameManager(this, players, 45);
 			gameState = 1;
 		}
@@ -111,7 +112,7 @@ public class Slugs extends PApplet
 		textSize(30);
 		fill(255);
 		text(gm.getResult(), width/2, height/2);
-		text("Click screen to exit", width/2, (int) (0.75 * height));
+		text("Click screen to play again", width/2, (int) (0.75 * height));
 		if (mousePressed)
 		{
 			setup();

@@ -358,8 +358,8 @@ public class Player extends Entity
 		{
 			p.fill(255, 0, 0);
 			p.textSize(16);
-			int h = (int) PApplet.map(p.millis() - showDamageTaken, 0, 3000, 20, 75);
-			p.text(damageTaken, loc.x, loc.y - h);
+			int h = (int) PApplet.map(p.millis() - showDamageTaken, 0, 3000, 30, 75);
+			p.text(-damageTaken, loc.x, loc.y - h);
 		}
 		
 		
@@ -377,6 +377,7 @@ public class Player extends Entity
 		}
 		// store damage taken for displaying it above head
 		damageTaken = damage;
+		showDamageTaken = p.millis();
 	}
 	
 	public void heal(int health)

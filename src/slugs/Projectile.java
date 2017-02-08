@@ -1,12 +1,14 @@
 package slugs;
 
+import java.util.ArrayList;
+
 import org.jbox2d.collision.shapes.CircleShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.BodyType;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
-import processing.sound.*;
+//import processing.sound.*;
 
 import shiffman.box2d.Box2DProcessing;
 
@@ -21,11 +23,11 @@ public class Projectile extends Entity
 	boolean hit;
 	int timeStart;
 	int timeout;
-	Player[] players;
+	ArrayList<Player> players;
 	Terrain map;
 	
 	
-	public Projectile(Slugs p, Box2DProcessing world, Player[] players, Terrain map, BombWeapon source, Vec2 spawnPoint, int maxDamage, float restitution, boolean explodeOnImpact, int timeout, int clusterCount, Vec2 force)
+	public Projectile(Slugs p, Box2DProcessing world, ArrayList<Player> players, Terrain map, BombWeapon source, Vec2 spawnPoint, int maxDamage, float restitution, boolean explodeOnImpact, int timeout, int clusterCount, Vec2 force)
 	{
 		super(p, world, spawnPoint, BodyType.DYNAMIC, false, 10, 1, restitution);
 		
@@ -67,7 +69,7 @@ public class Projectile extends Entity
 	
 	public void explode()
 	{
-		p.explosion.play();
+		//p.explosion.play();
 		this.hit = true;
 		Vec2 loc = getPixelLocation();
 		float radius = getDamageRadius();
