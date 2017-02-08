@@ -9,7 +9,7 @@ import org.jbox2d.dynamics.BodyType;
 import processing.core.PApplet;
 import processing.core.PConstants;
 //import processing.sound.*;
-
+import processing.core.PImage;
 import shiffman.box2d.Box2DProcessing;
 
 public class Projectile extends Entity
@@ -25,11 +25,14 @@ public class Projectile extends Entity
 	int timeout;
 	ArrayList<Player> players;
 	Terrain map;
+	PImage img;
+	int xScale;
 	
 	
-	public Projectile(Slugs p, Box2DProcessing world, ArrayList<Player> players, Terrain map, BombWeapon source, Vec2 spawnPoint, int maxDamage, float restitution, boolean explodeOnImpact, int timeout, int clusterCount, Vec2 force)
+	public Projectile(Slugs p, Box2DProcessing world, ArrayList<Player> players, Terrain map, BombWeapon source, Vec2 spawnPoint, 
+			int maxDamage, float restitution, boolean explodeOnImpact, int timeout, int clusterCount, Vec2 force, boolean fixedRotation, PImage img, int xScale)
 	{
-		super(p, world, spawnPoint, BodyType.DYNAMIC, false, 10, 1, restitution);
+		super(p, world, spawnPoint, BodyType.DYNAMIC, fixedRotation, 10, 1, restitution);
 		
 		this.players = players;
 		this.map = map;
@@ -60,6 +63,8 @@ public class Projectile extends Entity
 		this.source = source;
 		hit = false;
 		this.timeout = timeout;
+		this.img = img;
+		this.xScale = xScale;
 	}
 	
 	public float getDamageRadius()
@@ -105,6 +110,14 @@ public class Projectile extends Entity
 				explode();
 			}
 		}
+		Vec2 loc = getPixelLocation();
+		p.pushMatrix();
+		p.translate(loc.x, loc.y);
+		p.rotate(-bodyList.get(0).getAngle());
+		p.imageMode(PConstants.CENTER);
+		p.scale(xScale, 1);
+		p.image(img, 0, 0, 24, 24);
+		p.popMatrix();
 	}
 
 }

@@ -198,7 +198,10 @@ public class Slugs extends PApplet
 				float clusterRestitution;
 				boolean explodeOnImpact;
 				int timeout;
+				boolean fixedRotation;
+				String imgPath;
 				
+				imgPath = weapons[i].getChild("image").getContent();
 				projectileCount = projectile.getInt("amount");
 				if (projectile.getString("explode-on-impact").equals("true"))
 				{
@@ -220,7 +223,14 @@ public class Slugs extends PApplet
 					timeout = 0;
 				}
 				damage = projectile.getChild("damage").getIntContent();
-				
+				if (projectile.getChild("rotates").getContent().equals("true"))
+				{
+					fixedRotation = false;
+				}
+				else
+				{
+					fixedRotation = true;
+				}
 				XML cluster = projectile.getChild("cluster");
 				clusterCount = cluster.getInt("amount");
 				if( clusterCount > 0)
@@ -231,28 +241,28 @@ public class Slugs extends PApplet
 					clusterRestitution = cluster.getChild("bounciness").getFloatContent(0);
 					weapon = new BombWeapon(this, world, players, map, projectileCount, damage, restitution,
 							clusterCount, clusterDamage, clusterVelocity, clusterRestitution, 
-							explodeOnImpact, timeout);
+							explodeOnImpact, timeout, fixedRotation, imgPath);
 				}
 				else
 				{
-					weapon = new BombWeapon(this, world, players, map, projectileCount, damage, restitution, explodeOnImpact, timeout);
+					weapon = new BombWeapon(this, world, players, map, projectileCount, damage, restitution, explodeOnImpact, timeout, fixedRotation, imgPath);
 				}
 				itemStore.put(name, weapon);
 				itemQuantities.put(name, defaultAmount);
 			}
 			if (type.equals("melee"))
 			{
-				
+				// TODO: implement meleeWeapon
 			}
 			
 			if (type.equals("bullet"))
 			{
-				
+				// TODO: implement gun
 			}
 			
 			if (type.equals("airdrop"))
 			{
-				
+				// TODO: implement air drop weapon
 			}
 		}
 	}

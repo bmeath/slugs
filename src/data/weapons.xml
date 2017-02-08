@@ -6,13 +6,14 @@ weapon types:
 	melee
 	airdrop
 projectile types:
-	bullet
-	bomb 
+	bomb
 -->
 <weapons>
 	<weapon type="bomb" default-amount="20">
 	    <name>Bazooka</name>
+	    <image>rocket.png</image>
 	    <projectile amount="1" explode-on-impact="true">
+	    	<rotates>true</rotates>
 	        <damage>45</damage>
 	   		<bounciness></bounciness>
 	    	<cluster amount="0">
@@ -24,7 +25,9 @@ projectile types:
 	</weapon>
 	<weapon type="bomb" default-amount="20">
 	    <name>Grenade</name>
+	    <image>grenade.png</image>
 	    <projectile amount="1" explode-on-impact="false" timeout="3">
+	    	<rotates>true</rotates>
 	        <damage>45</damage>
 	   		<bounciness>0</bounciness>
 	    	<cluster amount="0">
@@ -36,7 +39,9 @@ projectile types:
 	</weapon>
 	<weapon type="bomb" default-amount="20">
 	    <name>Dynamite</name>
+	    <image>dynamite.png</image>
 	    <projectile amount="1" explode-on-impact="false" timeout="3">
+	    	<rotates>false</rotates>
 	        <damage>60</damage>
 	   		<bounciness>0</bounciness>
 	    	<cluster amount="0">

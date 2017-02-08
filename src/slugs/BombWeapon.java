@@ -7,6 +7,7 @@ import org.jbox2d.dynamics.Body;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
+import processing.core.PImage;
 import shiffman.box2d.Box2DProcessing;
 
 public class BombWeapon extends Weapon
@@ -26,10 +27,12 @@ public class BombWeapon extends Weapon
 	private final int maxPower= 15000;
 	ArrayList<Player> players;
 	Terrain map;
+	boolean fixedRotation;
+	PImage img;
 
 	public BombWeapon(Slugs p, Box2DProcessing world, ArrayList<Player> players, Terrain map, int projectileCount, 
 			int maxDamage, float restitution, int clusterCount, int clusterDamage, float clusterVelocity, 
-			float clusterRestitution, boolean explodeOnImpact, int timeout)
+			float clusterRestitution, boolean explodeOnImpact, int timeout, boolean fixedRotation, String imgPath)
 	{
 		super(p, maxDamage);
 		this.p = p;
@@ -44,11 +47,15 @@ public class BombWeapon extends Weapon
 		power = 0;
 		this.explodeOnImpact = explodeOnImpact;
 		this.timeout = timeout;
+		this.fixedRotation = fixedRotation;
+		this.img = new PImage();
+		this.img = p.loadImage(imgPath);
 	}
 	
-	public BombWeapon(Slugs p, Box2DProcessing world, ArrayList<Player> players, Terrain map, int projectileCount, int maxDamage, float restitution, boolean explodeOnImpact, int timeout)
+	public BombWeapon(Slugs p, Box2DProcessing world, ArrayList<Player> players, Terrain map, int projectileCount, 
+			int maxDamage, float restitution, boolean explodeOnImpact, int timeout, boolean fixedRotation, String imgPath)
 	{
-		this(p, world, players, map, projectileCount, maxDamage, restitution, 0, 0, 0, 0, explodeOnImpact, timeout);
+		this(p, world, players, map, projectileCount, maxDamage, restitution, 0, 0, 0, 0, explodeOnImpact, timeout, fixedRotation, imgPath);
 	}
 	
 	public void display()
@@ -99,7 +106,8 @@ public class BombWeapon extends Weapon
 				}
 			}
 			
-			projectiles.add(new Projectile(p, world, players, map, this, loc, maxDamage, restitution, explodeOnImpact, timeout, clusterCount, projectileForce));
+			projectiles.add(new Projectile(p, world, players, map, this, loc, maxDamage, restitution, explodeOnImpact, timeout,
+					clusterCount, projectileForce, fixedRotation, img, (owner.dir ? -1 : 1)));
 			projectileCount--;
 			power = 0;
 		}
