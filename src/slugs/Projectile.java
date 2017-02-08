@@ -8,7 +8,6 @@ import org.jbox2d.dynamics.BodyType;
 
 import processing.core.PApplet;
 import processing.core.PConstants;
-//import processing.sound.*;
 import processing.core.PImage;
 import shiffman.box2d.Box2DProcessing;
 
@@ -74,7 +73,6 @@ public class Projectile extends Entity
 	
 	public void explode()
 	{
-		//p.explosion.play();
 		this.hit = true;
 		Vec2 loc = getPixelLocation();
 		float radius = getDamageRadius();

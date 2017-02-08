@@ -35,8 +35,6 @@ public class Slugs extends PApplet
 	// hashmap of quantities of each item a player has
 	HashMap<String, Integer> itemQuantities;
 	
-	//public SoundFile explosion; // source: https://www.freesound.org/people/Nbs%20Dark/sounds/94185/
-	
 	public void settings()
 	{
 		size(1280, 720);
@@ -44,7 +42,6 @@ public class Slugs extends PApplet
 	
 	public void setup()
 	{
-		//explosion = new SoundFile(this, "explosion.wav");
 		world = new Box2DProcessing(this);
 		world.createWorld();
 		world.listenForCollisions();
