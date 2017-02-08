@@ -3,8 +3,7 @@ Slugs: A game based upon the classic turn-based strategy Worms.
 Made for my second year semester 2 Programming assignment.  
 Date of submission: 08/02/2016
 
-### Requirements
-* JDK 
+### Referenced External Libraries
 * Processing library
 * jbox2d
 * Box2DProcessing
