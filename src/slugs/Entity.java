@@ -102,6 +102,7 @@ public abstract class Entity
 		p.stroke(0);
 		p.strokeWeight(1);
 		
+		// draw all attached fixtures
 		for (Fixture f = b.getFixtureList(); f != null; f = f.getNext())
 		{
 			Object o = f.getShape();

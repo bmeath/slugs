@@ -23,7 +23,7 @@ import shiffman.box2d.Box2DProcessing;
 public class Terrain
 {
 	Slugs p;
-	int maxVertices = 6000;
+	int maxVertices = 6000; // most complex single shape I could create was under 5000 vertices
 	BodyDef bd;
 	FixtureDef fd;
 	Area screenMap;
@@ -32,7 +32,7 @@ public class Terrain
 	Body boundary;
 	Box2DProcessing world;
 	Area crater;
-	private boolean old;
+	private boolean old; // if terrain is flagged as old, rebuild it
 	
 	/* steepness is a factor to control how severe the hills are
 	 * where 1 is very rough
@@ -161,15 +161,17 @@ public class Terrain
 	
 	public Vec2 randomSpawn()
 	{
-		// 40 pixels default height above ground
+		// call parameterised version with 40 pixels default height above ground
 		return randomSpawn(40);
 	}
 	
 	// make a crater of given diameter at a given location in the terrain
 	public void damage(Vec2 loc, float diameter)
 	{
+		// translate and scale the crater shape as required
 		AffineTransform t = new AffineTransform(diameter, 0, 0, diameter, loc.x, loc.y);
-		screenMap.subtract(crater.createTransformedArea(t));
+		screenMap.subtract(crater.createTransformedArea(t)); 
+		// flag the entity body/bodies as old
 		old = true;
 	}
 	
@@ -191,6 +193,8 @@ public class Terrain
 		ChainShape shape = new ChainShape();
 		Body b = world.createBody(bd);
 		int index = 0;
+		
+		// remake fixtures/bodies based on Area object
 		for (PathIterator i = screenMap.getPathIterator(null); !i.isDone(); i.next())
 		{
 			float[] point = new float[6];

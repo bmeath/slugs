@@ -48,6 +48,7 @@ public class ItemBox extends Entity
 	
 	protected void update()
 	{
+		// draw black cross on box
 		Vec2 centre = getPixelLocation();
 		p.stroke(0);
 		p.strokeWeight(1);

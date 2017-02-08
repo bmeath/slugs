@@ -21,23 +21,33 @@ public class Player extends Entity
 {
 	String name;
 	
+	// vectors for player movement
 	Vec2 left;
 	Vec2 right;
 	Vec2 farLeft;
 	Vec2 farRight;
 	Vec2 highJump;
 	Vec2 jump;
+	
 	int lastLanded;
 	int jumpCooldown;
+	private boolean grounded;
+	
 	boolean dir; // true if facing right, false otherwise
 	boolean showInventory;
 	InventoryItem currentItem;
+	// how much of each item the player has
 	HashMap<String, Integer> inventory;
+	// item instance references
 	HashMap<String, InventoryItem> itemStore;
 	
 	PImage leftSlug, rightSlug;
+
+	// the player has no feet, but a motorised wheel
 	RevoluteJoint motor;
-	private boolean grounded;
+	
+	
+	
 	int health;
 	private final int maxHealth = 250;
 	float fallY;
@@ -48,18 +58,22 @@ public class Player extends Entity
 	int showHealthChange;
 	int healthChange;
 	
+	// used when player picks up item
 	int showNewItem;
 	String newItem;
 	
 	class ItemMenu
 	{
 		private Vec2 dimensions;
+		
 		// memorise the width, as dimensions will be altered during open/close animation
 		private float widthMem;
+		
 		private boolean show;
 		private final int rows = 4;
 		private final int cols = 8;
 		
+		// areas on the screen are mapped to different items
 		HashMap<Rectangle, String> itemButtons = new HashMap<Rectangle, String>();
 		
 		
@@ -71,6 +85,8 @@ public class Player extends Entity
 			show = false;
 			int dx = (int) (dimensions.x / rows);
 			int dy = (int) (dimensions.y / cols);
+			
+			// create rectangles for each item
 			Iterator<String> i = inventory.keySet().iterator();
 			for (int y = (int) ( p.height - dimensions.y) ; y < p.height; y += dy)
 			{
@@ -116,19 +132,23 @@ public class Player extends Entity
 					dimensions.x -= 10;
 				}
 			}
+			
+			
+			
+			// item name field
 			p.rectMode(PConstants.CORNER);
 			p.stroke(255);
 			p.strokeWeight(2);
-			// item name field
 			p.rect(p.width - dimensions.x, p.height - dimensions.y - 21, dimensions.x, 20);
-			p.noStroke();
+			
 			// black background
+			p.noStroke();
 			p.rect(p.width - dimensions.x, p.height - dimensions.y - 1, dimensions.x, dimensions.y);
 			
 			p.noFill();
 			p.stroke(127);
 			p.strokeWeight(1);
-			if(dimensions.x == widthMem)
+			if(dimensions.x == widthMem) // if menu open animation is finished
 			{	
 				for (Rectangle r: itemButtons.keySet())
 				{
@@ -140,7 +160,7 @@ public class Player extends Entity
 						p.stroke(127, 176, 255);
 						p.textAlign(PConstants.LEFT, PConstants.CENTER);
 						p.fill(255);
-						// item name
+						// display item name in info box if mouse over it
 						p.text(iName, p.width - dimensions.x + 5, p.height - dimensions.y - 12);
 					}
 					else
@@ -149,7 +169,8 @@ public class Player extends Entity
 						p.stroke(127);
 					}
 					
-					if (!itemButtons.get(r).equals("")) // if there is an item associated with that button
+					// show icon and quantity if there is an item associated with that button
+					if (!itemButtons.get(r).equals("")) 
 					{
 						p.imageMode(PConstants.CORNER);
 						p.image(itemStore.get(iName).img, r.x, r.y, 20, 20);
@@ -163,14 +184,15 @@ public class Player extends Entity
 				}
 			}
 			
+			// border rectangle
 			p.strokeWeight(2);
 			p.stroke(255);
 			p.noFill();
-			// outer rectangle
 			p.rect(p.width - dimensions.x, p.height - dimensions.y - 1, dimensions.x, dimensions.y);
 		}
 
-		public void click() {
+		public void click() 
+		{
 			if (show)
 			{
 				for (Rectangle r: itemButtons.keySet())
@@ -198,11 +220,11 @@ public class Player extends Entity
 		farRight = new Vec2(800 * scaleFactor, 0);
 		jump = new Vec2(0, 1000 * scaleFactor);
 		highJump = new Vec2(0, 1500 * scaleFactor);
+		
 		dir = true;
 		lastLanded = p.millis();
 		jumpCooldown = 750;
 		
-		colour = p.color(125, 255, 125);
 		leftSlug = p.loadImage("leftslug.png");
 		rightSlug = p.loadImage("rightslug.png");
 		
@@ -214,12 +236,11 @@ public class Player extends Entity
 		float w = world.scalarPixelsToWorld(4 * scaleFactor);
 		float h = world.scalarPixelsToWorld(7 * scaleFactor);
 		shape.setAsBox(w, h);
-		
 		fd.shape = shape;
 		bodyList.get(0).createFixture(fd);
 		bodyList.get(0).setUserData(this);
 		
-		// create wheel
+		// create wheel which player uses to move
 		BodyDef wheelBD = new BodyDef();
 		wheelBD.type = BodyType.DYNAMIC;
 		
@@ -234,6 +255,7 @@ public class Player extends Entity
 	    bodyList.get(1).createFixture(fd);
 	    bodyList.get(1).setUserData(this);
 	    
+	    // attach wheel to main body of player using a revolute joint
 	    RevoluteJointDef revJD = new RevoluteJointDef();
 	    revJD.initialize(bodyList.get(0), bodyList.get(1), bodyList.get(1).getWorldCenter());
 	    revJD.motorSpeed = 0;
@@ -250,7 +272,7 @@ public class Player extends Entity
 	    this.name = name;
 	    
 	    /* set to large negative number at start,
-	     * otherwise a zero change in health text will appear above players head
+	     * otherwise a health change number will appear above head at start
 	     */
 	    showHealthChange = -2001;
 	    showNewItem = -3001;
@@ -353,6 +375,7 @@ public class Player extends Entity
 		}
 		
 		p.pushMatrix();
+		// picture of the slug
 		p.imageMode(PConstants.CENTER);
 		Vec2 loc = getPixelLocation();
 		p.image(dir ? rightSlug : leftSlug, loc.x, loc.y, 24, 24);
@@ -480,6 +503,7 @@ public class Player extends Entity
 		}
 	}
 
+	// check if player has used their item, if so: delete it
 	public boolean usedItem() 
 	{
 		if (currentItem != null)
@@ -492,7 +516,7 @@ public class Player extends Entity
 		}
 		return false;
 	}
-
+	
 	public void pressUp() {
 		if (currentItem != null)
 		{

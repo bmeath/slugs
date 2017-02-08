@@ -20,9 +20,12 @@ public class Slugs extends PApplet
 	}
 	
 	boolean[] keys = new boolean[1000];
+	// create the physics world object
 	Box2DProcessing world;
 	int gameState;
 	public Terrain map;
+	
+	// manages turns, and manages key presses for currently active player
 	GameManager gm;
 	
 	ArrayList<Player> players;
@@ -49,8 +52,12 @@ public class Slugs extends PApplet
 		map = new Terrain(this, world, 0.5f);
 		players = new ArrayList<Player>();
 		
+		// create player inventory (item names mapped to their quantity)
 		itemQuantities = new HashMap<String, Integer>();
+		// create list of all unique item instances, for players to clone and use
 		itemStore = new HashMap<String, InventoryItem>();
+		
+		// create weapons using data in XML file
 		loadWeapons("weapons.xml");
 		
 		healthCrates = new ArrayList<HealthCrate>();
@@ -111,6 +118,7 @@ public class Slugs extends PApplet
 		{
 			healthCrates.add(new HealthCrate(this, world, map.randomSpawn()));
 		}
+		
 		for (int i = 0; i < healthCrates.size(); i++)
 		{
 			
@@ -129,11 +137,12 @@ public class Slugs extends PApplet
 			}
 		}
 		
-		// occasionally drop a health crate
+		// occasionally drop an item crate
 		if (random(1) < 0.00025)
 		{
 			itemCrates.add(new ItemBox(this, world, map.randomSpawn(), "Bazooka", itemStore));
 		}
+		
 		for (int i = 0; i < itemCrates.size(); i++)
 		{
 			
@@ -304,9 +313,9 @@ public class Slugs extends PApplet
 		Object a = c.getFixtureA().getBody().getUserData();
 		Object b = c.getFixtureB().getBody().getUserData();
 		
-		/* check if the player is standing on something.
-		 * we don't really care what it is they're standing on.
+		/* check if the player is standing on terrain
 		 */
+		
 		if (a instanceof Player && b instanceof Terrain)
 		{
 			Player player = (Player) a;

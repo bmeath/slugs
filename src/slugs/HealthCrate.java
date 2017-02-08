@@ -33,6 +33,7 @@ public class HealthCrate extends Entity
 	
 	protected void update()
 	{
+		// draw red plus on box
 		Vec2 centre = getPixelLocation();
 		p.stroke(255, 0, 0);
 		p.strokeWeight(3);

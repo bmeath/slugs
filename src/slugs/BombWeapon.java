@@ -15,6 +15,9 @@ public class BombWeapon extends Weapon
 	ArrayList<Projectile> projectiles;
 	Slugs p;
 	Box2DProcessing world;
+	ArrayList<Player> players;
+	Terrain map;
+	
 	float restitution;
 	float maxVelocity;
 	int clusterCount;
@@ -24,10 +27,9 @@ public class BombWeapon extends Weapon
 	float power;
 	boolean explodeOnImpact;
 	int timeout;
-	private final int maxPower= 15000;
-	ArrayList<Player> players;
-	Terrain map;
 	boolean fixedRotation;
+	
+	private final int maxPower= 15000;
 
 	public BombWeapon(Slugs p, Box2DProcessing world, ArrayList<Player> players, Terrain map, int projectileCount, 
 			int maxDamage, float restitution, int clusterCount, int clusterDamage, float clusterVelocity, 
@@ -137,6 +139,7 @@ public class BombWeapon extends Weapon
 		}
 		proj.bodyList.clear();
 		projectiles.remove(proj);
+		// check if player has used all ammo in weapon
 		if (projectiles.isEmpty())
 		{
 			used = true;

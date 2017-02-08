@@ -19,13 +19,15 @@ public class Projectile extends Entity
 	Projectile[] clusters;
 	Vec2 angle;
 	BombWeapon source;
-	boolean hit;
-	int timeStart;
-	int timeout;
-	ArrayList<Player> players;
+	boolean hit; // wether projectile has hit something or exploded
+	
+	int timeStart; // time this was instantiated at
+	int timeout; // time left before explosion
+	
+	ArrayList<Player> players; // used to deal damage as needed
 	Terrain map;
 	PImage img;
-	int xScale;
+	int xScale; // used to flip image horizontally or not
 	
 	
 	public Projectile(Slugs p, Box2DProcessing world, ArrayList<Player> players, Terrain map, BombWeapon source, Vec2 spawnPoint, 
@@ -51,6 +53,7 @@ public class Projectile extends Entity
 		
 		fd.shape = shape;
 		bodyList.get(0).createFixture(fd);
+		
 		if (explodeOnImpact)
 		{
 			bodyList.get(0).setUserData(this);
@@ -77,6 +80,7 @@ public class Projectile extends Entity
 		Vec2 loc = getPixelLocation();
 		float radius = getDamageRadius();
 		map.damage(loc, radius);
+		
 		for(Player player: players)
 		{
 			Vec2 playerLoc = player.getPixelLocation();
@@ -108,6 +112,8 @@ public class Projectile extends Entity
 				explode();
 			}
 		}
+		
+		// display picture of the projectile
 		Vec2 loc = getPixelLocation();
 		p.pushMatrix();
 		p.translate(loc.x, loc.y);
