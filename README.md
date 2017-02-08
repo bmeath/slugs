@@ -4,16 +4,16 @@ Made for my second year semester 2 Programming assignment.
 Date of submission: 08/02/2016
 
 ### Referenced External Libraries
-* Processing library
-* jbox2d
+* Processing
+* jbox2d (Java port of Box2D)
 * Box2DProcessing
 
 ### Description  
 This a turn-based strategy game.  
-I wrote this as a Java package with Processing imported,
-rather than through the Processing Editor,  
+I wrote this as a Java package with processing.core imported,
+rather than as a Processing sketch,  
 so I could better understand Java.  
-I used jbox2d (the Java port of Box2D) to handle all physics.  
+I used jbox2d to handle all physics (collisions, movement).  
 I used the helper library Box2DProcessing to bridge the gap between Processing and jbox2d.  
 
 
