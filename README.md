@@ -30,5 +30,10 @@ I used the helper library Box2DProcessing to bridge the gap between Processing a
 * RIGHT CLICK: open inventory
 * LEFT CLICK: select option from menu/inventory
 
+### Notable features
+* Destructible terrain
+* Floating terrain (shown in [this part](https://youtu.be/ok1-J_-BAZQ?t=2m27s) of the demo video )
+* Custom weapons can be added using XML file
+
 ### Demonstration
 [![Video](http://img.youtube.com/vi/ok1-J_-BAZQ/0.jpg)](https://www.youtube.com/watch?v=ok1-J_-BAZQ)
