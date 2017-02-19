@@ -4,9 +4,9 @@ Made for my second year semester 2 Programming assignment.
 Date of submission: 08/02/2016
 
 ### Referenced External Libraries
-* Processing
-* jbox2d (Java port of Box2D)
-* Box2DProcessing
+* [processing.core](https://github.com/processing/processing/tree/master/core)
+* [jbox2d](https://github.com/jbox2d/jbox2d)
+* [Box2DProcessing](https://github.com/shiffman/Box2D-for-Processing)
 
 ### Description  
 This a turn-based strategy game.  
